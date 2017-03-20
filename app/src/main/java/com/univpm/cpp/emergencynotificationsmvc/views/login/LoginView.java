@@ -2,12 +2,12 @@ package com.univpm.cpp.emergencynotificationsmvc.views.login;
 
 import android.support.v4.app.Fragment;
 
-import com.univpm.cpp.emergencynotificationsmvc.views.View;
+import com.univpm.cpp.emergencynotificationsmvc.views.ViewMvc;
 
 /**
  * Questa interfaccia rappresenta al schermata di login nell'applicazione
  */
-public interface LoginView extends View {
+public interface LoginView extends ViewMvc {
 
     interface LoginBtnViewMcvListener {
         /**
@@ -33,7 +33,7 @@ public interface LoginView extends View {
     }
 
     /**
-     * Imposta un listener che verrà notificato da questa View
+     * Imposta un listener che verrà notificato da questa ViewMvc
      * @param listener
      */
     void setLoginListener(LoginBtnViewMcvListener listener);

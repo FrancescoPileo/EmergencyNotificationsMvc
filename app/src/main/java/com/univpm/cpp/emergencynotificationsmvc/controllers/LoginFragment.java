@@ -29,7 +29,7 @@ public class LoginFragment extends Fragment implements
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        // Instanzio le View MVC relazionate con questo fragment
+        // Instanzio le ViewMvc MVC relazionate con questo fragment
         mLoginView = new LoginViewImpl(inflater, container);
         mLoginView.setLoginListener(this);
         mLoginView.setGuestListener(this);

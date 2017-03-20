@@ -75,9 +75,9 @@ public class LoginViewImpl implements LoginView {
 
 
         //todo va bien, cambiare il nome onUsernameKey
-        /*usernameETxt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        /*usernameETxt.setOnFocusChangeListener(new ViewMvc.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
+            public void onFocusChange(ViewMvc view, boolean b) {
                 if (!b){
                     usernameListener.onUsernameKey(getUsername());
                 }
