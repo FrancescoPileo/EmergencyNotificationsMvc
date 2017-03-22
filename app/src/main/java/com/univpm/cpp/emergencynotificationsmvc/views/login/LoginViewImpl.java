@@ -23,9 +23,9 @@ import com.univpm.cpp.emergencynotificationsmvc.R;
 public class LoginViewImpl implements LoginView {
 
     private View mRootView;
-    private LoginBtnViewMcvListener loginListener;
-    private LogAsGuestBtnViewMvcListner guestListener;
-    private RegisterBtnViewMvcListener registrationListener;
+    private LoginBtnViewListener loginListener;
+    private LogAsGuestBtnViewListner guestListener;
+    private RegistrationBtnViewListener registrationListener;
 
 
     /**
@@ -104,17 +104,17 @@ public class LoginViewImpl implements LoginView {
     }
 
     @Override
-    public void setLoginListener(LoginBtnViewMcvListener listener) {
+    public void setLoginListener(LoginBtnViewListener listener) {
         loginListener = listener;
     }
 
     @Override
-    public void setRegistrationListener(RegisterBtnViewMvcListener listener) {
+    public void setRegistrationListener(RegistrationBtnViewListener listener) {
         registrationListener = listener;
     }
 
     @Override
-    public void setGuestListener(LogAsGuestBtnViewMvcListner listener) {
+    public void setGuestListener(LogAsGuestBtnViewListner listener) {
         guestListener = listener;
     }
 

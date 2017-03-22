@@ -9,22 +9,20 @@ import com.univpm.cpp.emergencynotificationsmvc.views.ViewMvc;
  */
 public interface LoginView extends ViewMvc {
 
-    interface LoginBtnViewMcvListener {
+    interface LoginBtnViewListener {
         /**
          *  Questo callback è invocato quando è premuto il bottone di accesso
          */
         void onLoginClick(String username, String password);
     }
-
-    interface RegisterBtnViewMvcListener {
+    interface RegistrationBtnViewListener {
         /**
          * Questo callback è invocato quando è premute il bottone di registrazione
          */
-
         void onRegistrationClick();
     }
 
-    interface LogAsGuestBtnViewMvcListner {
+    interface LogAsGuestBtnViewListner {
         /**
          * Questo callback è invocato quando è premute il bottone di accesso
          * come utente non registrato
@@ -36,11 +34,11 @@ public interface LoginView extends ViewMvc {
      * Imposta un listener che verrà notificato da questa ViewMvc
      * @param listener
      */
-    void setLoginListener(LoginBtnViewMcvListener listener);
+    void setLoginListener(LoginBtnViewListener listener);
 
-    void setRegistrationListener(RegisterBtnViewMvcListener listener);
+    void setRegistrationListener(RegistrationBtnViewListener listener);
 
-    void setGuestListener(LogAsGuestBtnViewMvcListner listener);
+    void setGuestListener(LogAsGuestBtnViewListner listener);
 
     String getUsername();
 

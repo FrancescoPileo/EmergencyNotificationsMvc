@@ -18,15 +18,16 @@ import com.univpm.cpp.emergencynotificationsmvc.views.login.LoginView;
 import com.univpm.cpp.emergencynotificationsmvc.views.login.LoginViewImpl;
 
 public class LoginFragment extends Fragment implements
-        LoginView.LogAsGuestBtnViewMvcListner,
-        LoginView.LoginBtnViewMcvListener,
-        LoginView.RegisterBtnViewMvcListener
+        LoginView.LogAsGuestBtnViewListner,
+        LoginView.LoginBtnViewListener,
+        LoginView.RegistrationBtnViewListener
 {
 
     private LoginView mLoginView;
     private UserModel mUserModel;
     private UserLoginTask mAuthTask;
 
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         // Instanzio le ViewMvc MVC relazionate con questo fragment
