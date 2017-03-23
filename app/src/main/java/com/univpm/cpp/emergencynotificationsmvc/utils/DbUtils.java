@@ -86,4 +86,27 @@ public class DbUtils {
         return user;
     }
 
+    public static boolean newUser(User user){
+        String mobilephone = "NULL";
+        if (user.getMobilephone() != null){
+            mobilephone = user.getMobilephone();
+        }
+
+        String age = "NULL";
+        if (user.getAge()!= -1){
+            age = String.valueOf(user.getAge());
+        }
+
+        int rows = 0;
+        try {
+            rows = executeManipulationQuery("INSERT INTO `User`(`idUser`, `name`, `surname`, `username`, `age`, `mobilephone`, `email`, `password`) " +
+                    "VALUES (NULL,'" + user.getName() + "','" + user.getSurname() + "' , '" + user.getUsername() + "', " + age +
+                    ", '" + mobilephone + "', '" + user.getEmail() + "','" + user.getPassword() + "')");
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rows != 0;
+    }
+
 }

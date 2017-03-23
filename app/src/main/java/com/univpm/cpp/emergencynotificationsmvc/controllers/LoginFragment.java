@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -97,7 +98,15 @@ public class LoginFragment extends Fragment implements
 
     @Override
     public void onRegistrationClick() {
-        //todo passa a registration fragment
+        /*
+        Fragment newFragment = new RegistrationFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+        transaction.replace(R.id.fragment_container, newFragment);
+        transaction.addToBackStack(null);
+
+        transaction.commit();
+        */
     }
 
     /**
@@ -117,8 +126,6 @@ public class LoginFragment extends Fragment implements
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-            Log.w("Duration", String.valueOf(shortAnimTime));
             User user = mUserModel.getUser(username);
             if (user != null){
                 return user.getPassword().equals(password);
