@@ -2,7 +2,7 @@ package com.univpm.cpp.emergencynotificationsmvc.models.user;
 
 import java.sql.ResultSet;
 
-public class User {
+public class User extends UserGuest{
 
     private int id;
     private String name;
@@ -14,8 +14,7 @@ public class User {
     private String password;
 
     public User(){
-        this.id = -1;
-        this.name = null;
+        super();
         this.surname = null;
         this.username = null;
         this.age = -1;
@@ -25,8 +24,7 @@ public class User {
     }
 
     public User(int id, String name, String surname, String username, int age, String mobilephone, String email, String password){
-        this.id = id;
-        this.name = name;
+        super(id, name);
         this.surname = surname;
         this.username = username;
         this.age = age;
