@@ -97,7 +97,7 @@ public class LoginFragment extends Fragment implements
 
     @Override
     public void onRegistrationClick() {
-        Log.w("Registration", "ok");
+        //todo passa a registration fragment
     }
 
     /**
