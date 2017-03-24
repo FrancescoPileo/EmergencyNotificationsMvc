@@ -123,7 +123,6 @@ public class LoginFragment extends Fragment implements
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
             User user = mUserModel.getUser(username);
             if (user != null){
                 return user.getPassword().equals(password);

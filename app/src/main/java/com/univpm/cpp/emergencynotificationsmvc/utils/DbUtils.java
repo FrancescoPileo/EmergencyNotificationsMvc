@@ -77,7 +77,17 @@ public class DbUtils {
         try {
             ResultSet rs = executeSelectQuery("SELECT * FROM User WHERE username='" + username + "'");
             if (rs.next()) {
-                user = new User(rs);
+
+                user = new User();
+
+                user.setId(rs.getInt("idUser"));
+                user.setName(rs.getString("name"));
+                user.setSurname(rs.getString("surname"));
+                user.setUsername(rs.getString("username"));
+                user.setAge(rs.getInt("age"));
+                user.setMobilephone(rs.getString("mobilephone"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
             }
             connection.close();
         } catch (Exception e) {

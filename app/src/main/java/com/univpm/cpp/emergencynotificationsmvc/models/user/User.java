@@ -31,17 +31,6 @@ public class User extends UserGuest{
         this.password = password;
     }
 
-    public User(ResultSet userRS) throws Exception{
-        this.id = userRS.getInt("idUser");
-        this.name = userRS.getString("name");
-        this.surname = userRS.getString("surname");
-        this.username = userRS.getString("username");
-        this.age = userRS.getInt("age");
-        this.mobilephone = userRS.getString("mobilephone");
-        this.email = userRS.getString("email");
-        this.password = userRS.getString("password");
-    }
-
     public String getSurname() {
         return surname;
     }

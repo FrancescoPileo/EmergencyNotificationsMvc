@@ -17,6 +17,7 @@ import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.views.registration.RegistrationView;
 import com.univpm.cpp.emergencynotificationsmvc.views.registration.RegistrationViewImpl;
 
+//todo controllo email
 public class RegistrationFragment extends Fragment implements
         RegistrationView.RegisterBtnViewListener,
         RegistrationView.UsernameChangeViewListener
@@ -97,11 +98,6 @@ public class RegistrationFragment extends Fragment implements
             f = false;
         } else if (!(password.length() > 8 && password.matches(".*[0-9].*")
                 && password.matches(".*[a-z].*") && password.matches(".*[A-Z].*"))){
-            Log.w("lunghezza", String.valueOf(password.length() > 8));
-            Log.w("numeri", String.valueOf(password.matches(".*[0-9].*")));
-            Log.w("minuscole", String.valueOf(password.matches(".*[a-z].*")));
-            Log.w("maiuscole", String.valueOf(password.matches(".*[A-Z].*")));
-
             mRegistrationView.setPasswordError(getString(R.string.error_char_password));
             f = false;
         }
