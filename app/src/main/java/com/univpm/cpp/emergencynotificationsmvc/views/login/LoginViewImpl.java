@@ -74,17 +74,6 @@ public class LoginViewImpl implements LoginView {
             }
         });
 
-
-        //todo va bien, cambiare il nome onUsernameKey
-        /*usernameETxt.setOnFocusChangeListener(new ViewMvc.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(ViewMvc view, boolean b) {
-                if (!b){
-                    usernameListener.onUsernameKey(getUsername());
-                }
-            }
-        });*/
-
     }
 
     private void init() {
@@ -96,6 +85,12 @@ public class LoginViewImpl implements LoginView {
         loginBtn = (Button) mRootView.findViewById(R.id.sign_in_button);
         registrationBtn = (Button) mRootView.findViewById(R.id.registration_button);
         logAsGuestBtn = (Button) mRootView.findViewById(R.id.sign_as_guest_button);
+
+        usernameETxt.setError(null);
+        passwordETxt.setError(null);
+
+        usernameETxt.requestFocus();
+
     }
 
     @Override

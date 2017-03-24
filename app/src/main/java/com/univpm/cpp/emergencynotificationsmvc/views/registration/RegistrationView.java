@@ -11,7 +11,7 @@ public interface RegistrationView extends ViewMvc {
          *  Questo callback è invocato quando è premuto il bottone di accesso
          */
         void onRegisterClick(String name, String surname, int age, String mobilephone,
-                             String username, String email, String password);
+                             String username, String email, String password, String passwordConfirm);
     }
 
     interface UsernameChangeViewListener {
@@ -31,6 +31,7 @@ public interface RegistrationView extends ViewMvc {
     String getMobilephone();
     String getEmail();
     String getPassword();
+    String getPasswordConfirm();
 
     void setNameError(String error);
     void setSurnameError(String error);
@@ -38,6 +39,7 @@ public interface RegistrationView extends ViewMvc {
     void setMobilephoneError(String error);
     void setEmailError(String error);
     void setPasswordError(String error);
+    void setPasswordConfirmError(String error);
 
     void showProgress(boolean show);
 

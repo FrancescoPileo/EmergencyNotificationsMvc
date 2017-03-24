@@ -58,7 +58,7 @@ public class DbUtils {
     private static int executeManipulationQuery(String query) throws Exception
     {
         int affectedRows = 0;
-        Connection connection = DbConnection();
+        connection = DbConnection();
         Statement stmt = connection.createStatement();
         affectedRows = stmt.executeUpdate(query);
         connection.close();
@@ -87,6 +87,7 @@ public class DbUtils {
     }
 
     public static boolean newUser(User user){
+        Log.w("DBUtils", user.getName());
         String mobilephone = "NULL";
         if (user.getMobilephone() != null){
             mobilephone = user.getMobilephone();

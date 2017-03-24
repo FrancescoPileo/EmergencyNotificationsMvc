@@ -49,8 +49,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_name"
-                    android:inputType="textPersonName"
                     android:maxLines="1"
+                    android:inputType="textCapSentences"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_surname"
                     android:maxLines="1"
-                    android:inputType="textPersonName"
+                    android:inputType="textCapSentences"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>

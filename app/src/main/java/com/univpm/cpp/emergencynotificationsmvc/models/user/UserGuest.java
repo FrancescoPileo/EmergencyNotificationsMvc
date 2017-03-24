@@ -2,8 +2,8 @@ package com.univpm.cpp.emergencynotificationsmvc.models.user;
 
 public class UserGuest {
 
-    private int id;
-    private String name;
+    protected int id;
+    protected String name;
 
     public UserGuest(){
         this.id = -1;
@@ -30,6 +30,4 @@ public class UserGuest {
     public void setName(String name) {
         this.name = name;
     }
-
-    //todo falloooo
 }

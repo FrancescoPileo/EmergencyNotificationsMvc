@@ -33,6 +33,15 @@
     <string name="error_invalid_repeatpassword">Le password inserite non sono uguali</string>
     <string name="error_registration">Errore nel finalizzare la registrazione</string>
     <string name="error_existing_username">Username già utilizzato</string>
+    <string name="error_lenght_name">max 50 caratteri</string>
+    <string name="error_lenght_surname">max 50 caratteri</string>
+    <string name="error_lenght_mobilephone">max 20 caratteri</string>
+    <string name="error_lenght_email">max 50 caratteri</string>
+    <string name="error_lenght_username">max 20 caratteri</string>
+    <string name="error_lenght_password">max 20 caratteri</string>
+    <string name="error_char_password">Deve contenere almeno 8 caratteri, di cui un numero, una lettera maiuscola ed una
+        minuscola</string>
+
 
     <!-- Strings related to preferences -->
     <string name="pref_username">username</string>

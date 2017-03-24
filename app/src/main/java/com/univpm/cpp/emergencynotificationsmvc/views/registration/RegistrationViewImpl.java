@@ -2,6 +2,7 @@ package com.univpm.cpp.emergencynotificationsmvc.views.registration;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,11 +13,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.univpm.cpp.emergencynotificationsmvc.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegistrationViewImpl implements RegistrationView {
 
@@ -31,22 +36,27 @@ public class RegistrationViewImpl implements RegistrationView {
     private EditText mobilephoneETxt;
     private EditText emailETxt;
     private EditText passwordETxt;
+    private EditText passwordConfirmETxt;
     private Button registerBtn;
     private View progressView;
     private View registrationFormView;
     private Toolbar toolbar;
 
-    public RegistrationViewImpl(LayoutInflater inflater, @Nullable ViewGroup container) {
+    private Context context;
+
+    public RegistrationViewImpl(LayoutInflater inflater, @Nullable ViewGroup container, Context context) {
         mRootView = inflater.inflate(R.layout.fragment_registration, container, false);
+        this.context = context;
 
         init();
 
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.w("View", getName());
                 if (registerListener != null) {
                     registerListener.onRegisterClick(getName(), getSurname(), getAge(),
-                            getMobilephone(), getUsername(), getEmail(), getPassword());
+                            getMobilephone(), getUsername(), getEmail(), getPassword(), getPasswordConfirm());
                 }
             }
         });
@@ -55,8 +65,8 @@ public class RegistrationViewImpl implements RegistrationView {
             @Override
             public void onFocusChange(View view, boolean b) {
                 if (!b){
-                    //todo
-                    Log.w("Controlla", "username");
+                    if (usernameListener != null)
+                        usernameListener.onUsernameChange(getUsername());
                 }
             }
         });
@@ -70,11 +80,38 @@ public class RegistrationViewImpl implements RegistrationView {
         emailETxt = (EditText) mRootView.findViewById(R.id.email);
         usernameETxt = (EditText) mRootView.findViewById(R.id.username);
         passwordETxt = (EditText) mRootView.findViewById(R.id.password);
+        passwordConfirmETxt = (EditText) mRootView.findViewById(R.id.repeatpassword);
         progressView = mRootView.findViewById(R.id.registration_progress);
         registrationFormView = mRootView.findViewById(R.id.registration_form);
         toolbar = (Toolbar) mRootView.findViewById(R.id.tool_bar);
         registerBtn = (Button) mRootView.findViewById(R.id.register_button);
+
+        nameETxt.setError(null);
+        surnameETxt.setError(null);
+        mobilephoneETxt.setError(null);
+        emailETxt.setError(null);
+        usernameETxt.setError(null);
+        passwordETxt.setError(null);
+        passwordConfirmETxt.setError(null);
+
+        nameETxt.requestFocus();
+
+        populateSpinner();
     }
+
+    private void populateSpinner () {
+
+        List<Integer> list = new ArrayList<Integer>();
+        for (int i=1; i<=100; i++){
+            list.add(i);
+        }
+        ArrayAdapter<Integer> dataAdapter = new ArrayAdapter<Integer>(context, android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ageSpn.setAdapter(dataAdapter);
+
+    }
+
+
 
     @Override
     public void setToolbar(Fragment fragment) {
@@ -138,6 +175,11 @@ public class RegistrationViewImpl implements RegistrationView {
     }
 
     @Override
+    public String getPasswordConfirm() {
+        return passwordConfirmETxt.getText().toString();
+    }
+
+    @Override
     public void setNameError(String error) {
         nameETxt.setError(error);
         nameETxt.requestFocus();
@@ -165,6 +207,12 @@ public class RegistrationViewImpl implements RegistrationView {
     public void setPasswordError(String error) {
         passwordETxt.setError(error);
         passwordETxt.requestFocus();
+    }
+
+    @Override
+    public void setPasswordConfirmError(String error) {
+        passwordConfirmETxt.setError(error);
+        passwordConfirmETxt.requestFocus();
     }
 
     @Override

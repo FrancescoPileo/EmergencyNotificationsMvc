@@ -4,8 +4,6 @@ import java.sql.ResultSet;
 
 public class User extends UserGuest{
 
-    private int id;
-    private String name;
     private String surname;
     private String username;
     private int age;
@@ -42,22 +40,6 @@ public class User extends UserGuest{
         this.mobilephone = userRS.getString("mobilephone");
         this.email = userRS.getString("email");
         this.password = userRS.getString("password");
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getSurname() {

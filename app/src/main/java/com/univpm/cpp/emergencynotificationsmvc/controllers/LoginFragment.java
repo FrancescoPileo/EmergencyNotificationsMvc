@@ -98,7 +98,6 @@ public class LoginFragment extends Fragment implements
 
     @Override
     public void onRegistrationClick() {
-        /*
         Fragment newFragment = new RegistrationFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
@@ -106,7 +105,6 @@ public class LoginFragment extends Fragment implements
         transaction.addToBackStack(null);
 
         transaction.commit();
-        */
     }
 
     /**

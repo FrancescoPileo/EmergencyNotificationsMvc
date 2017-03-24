@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +31,7 @@ public class RegistrationFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        mRegistrationView = new RegistrationViewImpl(inflater, container);
+        mRegistrationView = new RegistrationViewImpl(inflater, container, getContext());
         mRegistrationView.setRegisterListener(this);
         mRegistrationView.setUsernameListener(this);
         mRegistrationView.setToolbar(this);
@@ -57,8 +58,9 @@ public class RegistrationFragment extends Fragment implements
 
     @Override
     public void onRegisterClick(String name, String surname, int age, String mobilephone,
-                                String username, String email, String password) {
-        if (checkRegistrationFields(name, surname, age, mobilephone, username, email, password)){
+                                String username, String email, String password, String passwordConfirm) {
+        Log.w("Fragment", name);
+        if (checkRegistrationFields(name, surname, age, mobilephone, username, email, password, passwordConfirm)){
             User user = new User(-1, name, surname, username, age, mobilephone, email, password);
             mRegistrationView.showProgress(true);
             mRegTask = new RegistrationFragment.UserRegTask(user);
@@ -68,14 +70,88 @@ public class RegistrationFragment extends Fragment implements
 
     @Override
     public void onUsernameChange(String username) {
+        //mRegistrationView.showProgress(true);
         CheckUsernameTask checkUsernameTask = new CheckUsernameTask(username);
         checkUsernameTask.execute((Void) null);
     }
 
     private boolean checkRegistrationFields(String name, String surname, int age, String mobilephone,
-                                            String username, String email, String password ){
-        //todo:
-        return true;
+                                            String username, String email, String password, String passwordConfirm ){
+        boolean f = true;
+
+
+
+        if (TextUtils.isEmpty(passwordConfirm)){
+            mRegistrationView.setPasswordConfirmError(getString(R.string.error_field_required));
+            f = false;
+        } else if (!passwordConfirm.equals(password)){
+            mRegistrationView.setPasswordConfirmError(getString(R.string.error_invalid_repeatpassword));
+            f = false;
+        }
+
+        if (TextUtils.isEmpty(password)){
+            mRegistrationView.setPasswordError(getString(R.string.error_field_required));
+            f = false;
+        } else if (password.length() > 20) {
+            mRegistrationView.setPasswordError(getString(R.string.error_lenght_password));
+            f = false;
+        } else if (!(password.length() > 8 && password.matches(".*[0-9].*")
+                && password.matches(".*[a-z].*") && password.matches(".*[A-Z].*"))){
+            Log.w("lunghezza", String.valueOf(password.length() > 8));
+            Log.w("numeri", String.valueOf(password.matches(".*[0-9].*")));
+            Log.w("minuscole", String.valueOf(password.matches(".*[a-z].*")));
+            Log.w("maiuscole", String.valueOf(password.matches(".*[A-Z].*")));
+
+            mRegistrationView.setPasswordError(getString(R.string.error_char_password));
+            f = false;
+        }
+
+        if (TextUtils.isEmpty(username)){
+            mRegistrationView.setUsernameError(getString(R.string.error_field_required));
+            f = false;
+        } else if (username.length() > 20) {
+            mRegistrationView.setUsernameError(getString(R.string.error_lenght_username));
+            f = false;
+        }
+
+        if (!TextUtils.isEmpty(mobilephone)) {
+            if (mobilephone.length() > 20) {
+                mRegistrationView.setMobilephoneError(getString(R.string.error_lenght_mobilephone));
+                f = false;
+            } else if (!mobilephone.matches(".*[+0-9].*")) {
+                mRegistrationView.setMobilephoneError(getString(R.string.error_invalid_mobilephone));
+                f = false;
+            }
+        }
+
+        if (TextUtils.isEmpty(email)){
+            mRegistrationView.setEmailError(getString(R.string.error_field_required));
+            f = false;
+        } else if (email.length() > 50) {
+            mRegistrationView.setEmailError(getString(R.string.error_lenght_email));
+            f = false;
+        } else if (!(email.length() > 5 && email.contains("@") && email.contains("."))){
+            mRegistrationView.setEmailError(getString(R.string.error_invalid_email));
+            f = false;
+        }
+
+        if (TextUtils.isEmpty(surname)) {
+            mRegistrationView.setSurnameError(getString(R.string.error_field_required));
+            f = false;
+        } else if (name.length() > 50){
+            mRegistrationView.setSurnameError(getString(R.string.error_lenght_surname));
+            f = false;
+        }
+
+        if (TextUtils.isEmpty(name)) {
+            mRegistrationView.setNameError(getString(R.string.error_field_required));
+            f = false;
+        } else if (name.length() > 50){
+            mRegistrationView.setNameError(getString(R.string.error_lenght_name));
+            f = false;
+        }
+
+        return f;
     }
 
     /**
@@ -132,7 +208,7 @@ public class RegistrationFragment extends Fragment implements
         @Override
         protected void onPostExecute(final Boolean success) {
             mRegTask = null;
-            mRegistrationView.showProgress(false);
+            //mRegistrationView.showProgress(false);
             if (!success) {
                 mRegistrationView.setUsernameError(getString(R.string.error_existing_username));
             }
@@ -141,7 +217,7 @@ public class RegistrationFragment extends Fragment implements
         @Override
         protected void onCancelled() {
             mRegTask = null;
-            mRegistrationView.showProgress(false);
+            //mRegistrationView.showProgress(false);
         }
     }
 
