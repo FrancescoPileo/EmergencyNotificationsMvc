@@ -6,17 +6,12 @@
     android:layout_height="match_parent"
     tools:context="com.univpm.cpp.emergencynotificationsmvc.MainActivity">
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <fragment android:name="com.univpm.cpp.emergencynotificationsmvc.controllers.LoginFragment"
-            android:id="@+id/login_fragment"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
+    </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>

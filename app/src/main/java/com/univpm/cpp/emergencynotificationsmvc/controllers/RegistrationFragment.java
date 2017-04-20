@@ -4,11 +4,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
@@ -17,7 +19,7 @@ import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.views.registration.RegistrationView;
 import com.univpm.cpp.emergencynotificationsmvc.views.registration.RegistrationViewImpl;
 
-//todo controllo email
+//todo controllo email esistente
 public class RegistrationFragment extends Fragment implements
         RegistrationView.RegisterBtnViewListener,
         RegistrationView.UsernameChangeViewListener
@@ -173,7 +175,21 @@ public class RegistrationFragment extends Fragment implements
             mRegistrationView.showProgress(false);
 
             if (success) {
-                Log.w("Logga", "Logga"); //todo deve loggare
+                //visualizza messaggio corretta registrazione
+                CharSequence text = getString(R.string.toast_registration_ok);
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(getContext(), text, duration);
+                toast.show();
+
+                //carica il fragment di login
+                Fragment newFragment = new LoginFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                transaction.replace(R.id.fragment_container, newFragment);
+                transaction.addToBackStack(null);
+
+                transaction.commit();
             } else {
                 mRegistrationView.setPasswordError(getString(R.string.error_registration));
             }

@@ -41,7 +41,10 @@
     <string name="error_lenght_password">max 20 caratteri</string>
     <string name="error_char_password">Deve contenere almeno 8 caratteri, di cui un numero, una lettera maiuscola ed una
         minuscola</string>
+    <string name="toast_registration_ok">Registrazione effettuata</string>
 
+    <!-- Strings related to Home -->
+    <string name="title_activity_home">Home</string>
 
     <!-- Strings related to preferences -->
     <string name="pref_username">username</string>

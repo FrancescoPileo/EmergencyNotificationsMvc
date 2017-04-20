@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.univpm.cpp.emergencynotificationsmvc.R;
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferences;
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferencesImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelImpl;
@@ -136,6 +138,20 @@ public class LoginFragment extends Fragment implements
             mLoginView.showProgress(false);
 
             if (success) {
+                //salva le credenziali in locale
+                LocalPreferencesImpl localPreferences = new LocalPreferencesImpl(getContext());
+                localPreferences.rememberLogin(username, password);
+
+                //carica il fragment della home
+                Fragment newFragment = new HomeFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                transaction.replace(R.id.fragment_container, newFragment);
+                transaction.addToBackStack(null);
+
+                transaction.commit();
+
+
                 Log.w(username, password);
             } else {
                 mLoginView.setPasswordError(getString(R.string.error_invalid_credentials));
