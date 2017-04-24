@@ -2,6 +2,8 @@ package com.univpm.cpp.emergencynotificationsmvc.utils;
 
 import android.util.Log;
 
+import com.univpm.cpp.emergencynotificationsmvc.R;
+import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 
 import java.sql.Connection;
@@ -120,4 +122,25 @@ public class DbUtils {
         return rows != 0;
     }
 
+    public static Map getMapById(int idMap) {
+
+        Map map = null;
+        try {
+            ResultSet rs = executeSelectQuery("SELECT * FROM Map WHERE idMap='" + idMap + "'");
+            if (rs.next()) {
+
+                map = new Map();
+
+                map.setIdMap(rs.getInt("idMap"));
+                map.setBuilding(rs.getString("building"));
+                map.setFloor(rs.getString("floor"));
+                map.setImage(rs.getString("image"));
+            }
+            connection.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
 }

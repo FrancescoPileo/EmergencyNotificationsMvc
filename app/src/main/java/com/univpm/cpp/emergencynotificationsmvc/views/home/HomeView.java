@@ -16,7 +16,6 @@ public interface HomeView extends ViewMvc{
     void setMapSlectedListener(HomeView.MapSpnItemSelectedViewListener listener);
 
     String getMap();
-
     void showProgress(boolean show);
     void setToolbar(Fragment fragment);
 }
