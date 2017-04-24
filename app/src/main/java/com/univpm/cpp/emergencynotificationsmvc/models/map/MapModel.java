@@ -1,6 +1,8 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.map;
 
 
+import java.util.ArrayList;
+
 /**
  * Created by marcociotti on 24/04/17.
  */
@@ -11,9 +13,6 @@ public interface MapModel {
 
     public Map getMapByFloor (String building, String floor);
 
-    public boolean newMap(Map map);
+    public ArrayList<Map> getAllMaps ();
 
-    public boolean updateMap(Map map);
-
-    public boolean deleteMap(int idMap);
 }

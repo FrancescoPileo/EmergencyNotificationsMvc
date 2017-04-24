@@ -23,6 +23,7 @@ import com.univpm.cpp.emergencynotificationsmvc.utils.TouchImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class HomeViewImpl implements HomeView{
 
@@ -74,13 +75,11 @@ public class HomeViewImpl implements HomeView{
     }
 
 
-    private void populateSpinner (/*ArrayList<String> list*/) {
+    private void populateSpinner (ArrayList<Map> list) {
 
-        List<String> list = new ArrayList<String>();
-        list.add("casa");
-        list.add("ufficio");
-        list.add("portone");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, list);
+        ArrayList<Map> lista = new ArrayList<Map>();
+        lista = list;
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, lista);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mapsSpn.setAdapter(dataAdapter);
     }

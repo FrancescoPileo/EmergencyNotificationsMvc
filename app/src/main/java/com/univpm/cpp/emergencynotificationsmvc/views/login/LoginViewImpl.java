@@ -39,7 +39,6 @@ public class LoginViewImpl implements LoginView {
     private Toolbar toolbar;
     private Button loginBtn;
     private Button registrationBtn;
-
     private Button logAsGuestBtn;
 
     public LoginViewImpl(LayoutInflater inflater, @Nullable ViewGroup container){

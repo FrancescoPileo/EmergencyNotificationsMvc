@@ -3,8 +3,9 @@ package com.univpm.cpp.emergencynotificationsmvc.models.map;
 import android.media.Image;
 
 /**
- * Created by marcociotti on 24/04/17.
+ * Le mappe vengono caricate nella cartella drawable e nel db c'è solo il nome dell'immagine
  **/
+
 
 
 public class Map {
@@ -12,7 +13,7 @@ public class Map {
     private int idMap;
     private String building;
     private String floor;
-    private Image image;
+    private String imagePath;
 
 
     public Map() {
@@ -20,7 +21,7 @@ public class Map {
         super();
         this.building = null;
         this.floor = null;
-        this.image = null;
+        this.imagePath = null;
     }
 
     public int getIdMap() {
@@ -47,12 +48,8 @@ public class Map {
         this.floor = floor;
     }
 
-    public Image getImage() {
-        return image;
-    }
+    public String getImagePath() { return imagePath; }
 
-    public void setImage(String pathImg) {
-        this.image = image;
-    }
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
 }
 

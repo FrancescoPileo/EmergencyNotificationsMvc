@@ -134,7 +134,7 @@ public class DbUtils {
                 map.setIdMap(rs.getInt("idMap"));
                 map.setBuilding(rs.getString("building"));
                 map.setFloor(rs.getString("floor"));
-                map.setImage(rs.getString("image"));
+                map.setImagePath(rs.getString("image"));
             }
             connection.close();
         }
@@ -142,5 +142,52 @@ public class DbUtils {
             e.printStackTrace();
         }
         return map;
+    }
+
+    public static Map getMapByFloor(String building, String floor) {
+
+        Map map = null;
+        try {
+            ResultSet rs = executeSelectQuery("SELECT * FROM Map WHERE building='" + building + "' AND floor='" + floor + "'");
+            if (rs.next()) {
+
+                map = new Map();
+
+                map.setIdMap(rs.getInt("idMap"));
+                map.setBuilding(rs.getString("building"));
+                map.setFloor(rs.getString("floor"));
+                map.setImagePath(rs.getString("image"));
+            }
+            connection.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
+    public static ArrayList<Map> getAllMaps () {
+
+        ArrayList<Map> list = new ArrayList<Map>();
+        try {
+            ResultSet rs = executeSelectQuery("SELECT * FROM Map");
+            while (rs.next()) {
+
+                Map map = new Map();
+
+                map.setIdMap(rs.getInt("idMap"));
+                map.setBuilding(rs.getString("building"));
+                map.setFloor(rs.getString("floor"));
+                map.setImagePath(rs.getString("image"));
+
+                list.add(map);
+            }
+            connection.close();
+
+        }
+        catch (Exception e) {
+        e.printStackTrace();
+    }
+        return list;
     }
 }
