@@ -25,10 +25,27 @@ public class MapModelImpl implements MapModel {
     }
 
     @Override
+    public Map getMapByName (String name) {
+
+        Map map = null;
+        map = DbUtils.getMapByName(name);
+        return map;
+    }
+
+    @Override
     public ArrayList<Map> getAllMaps () {
 
         ArrayList<Map> list = new ArrayList<Map>();
         list = DbUtils.getAllMaps();
         return list;
     }
+
+    @Override
+    public ArrayList<String> getAllNames () {
+
+        ArrayList<String> list = new ArrayList<String>();
+        list = DbUtils.getAllNames();
+        return list;
+    }
+
 }

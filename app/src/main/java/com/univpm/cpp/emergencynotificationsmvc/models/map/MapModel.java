@@ -9,6 +9,10 @@ public interface MapModel {
 
     public Map getMapByFloor (String building, String floor);
 
+    public Map getMapByName (String name);
+
     public ArrayList<Map> getAllMaps();
+
+    public ArrayList<String> getAllNames();
 
 }

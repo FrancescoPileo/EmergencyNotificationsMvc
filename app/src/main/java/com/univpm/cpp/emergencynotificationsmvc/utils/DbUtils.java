@@ -134,6 +134,7 @@ public class DbUtils {
                 map.setIdMap(rs.getInt("idMap"));
                 map.setBuilding(rs.getString("building"));
                 map.setFloor(rs.getString("floor"));
+                map.setName(rs.getString("name"));
                 map.setImagePath(rs.getString("image"));
             }
             connection.close();
@@ -156,6 +157,30 @@ public class DbUtils {
                 map.setIdMap(rs.getInt("idMap"));
                 map.setBuilding(rs.getString("building"));
                 map.setFloor(rs.getString("floor"));
+                map.setName(rs.getString("name"));
+                map.setImagePath(rs.getString("image"));
+            }
+            connection.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
+    public static Map getMapByName(String name) {
+
+        Map map = null;
+        try {
+            ResultSet rs = executeSelectQuery("SELECT * FROM Map WHERE name='" + name + "'");
+            if (rs.next()) {
+
+                map = new Map();
+
+                map.setIdMap(rs.getInt("idMap"));
+                map.setBuilding(rs.getString("building"));
+                map.setFloor(rs.getString("floor"));
+                map.setName(rs.getString("name"));
                 map.setImagePath(rs.getString("image"));
             }
             connection.close();
@@ -178,6 +203,7 @@ public class DbUtils {
                 map.setIdMap(rs.getInt("idMap"));
                 map.setBuilding(rs.getString("building"));
                 map.setFloor(rs.getString("floor"));
+                map.setName(rs.getString("name"));
                 map.setImagePath(rs.getString("image"));
 
                 list.add(map);
@@ -190,4 +216,22 @@ public class DbUtils {
     }
         return list;
     }
+
+    public static ArrayList<String> getAllNames () {
+
+        ArrayList<String> list = new ArrayList<String>();
+        try {
+            ResultSet rs = executeSelectQuery("SELECT * FROM Map");
+            while (rs.next()) {
+                list.add(rs.getString("name"));
+            }
+            connection.close();
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 }

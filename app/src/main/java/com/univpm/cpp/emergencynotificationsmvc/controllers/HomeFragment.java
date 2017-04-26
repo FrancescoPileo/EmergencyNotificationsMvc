@@ -25,6 +25,7 @@ public class HomeFragment extends Fragment implements
     private HomeView mHomeView;
     private MapModel mMapModel;
     private SpinnerTask mSpinnerTask;
+    private MapTask mMapTask;
 
     @Nullable
     @Override
@@ -35,30 +36,17 @@ public class HomeFragment extends Fragment implements
         mSpinnerTask = new SpinnerTask();
 
         mSpinnerTask.execute((Void) null);
-        mHomeView.setMapSlectedListener(this);
+        mHomeView.setMapSelectedListener(this);
         mHomeView.setToolbar(this);
 
         return mHomeView.getRootView();
     }
 
-    private ArrayList<String> getMapsData(ArrayList<Map> list) {
-        ArrayList<Map> maplist = new ArrayList<Map>();
-        ArrayList<String> stringArrayList = new ArrayList<String>();
-        maplist = list;
-        int itemCount = maplist.size();
-        int i = 0;
-        Map map = new Map();
-        while (i < itemCount) {
-            map = maplist.get(i);
-            stringArrayList.add(map.getBuilding() + " " + map.getFloor());
-            i++;
-        }
-        return stringArrayList;
-    }
-
     @Override
-    public void onMapSpnItemSelected(String map) {
-        Log.w("Spinner", "map");
+    public void onMapSpnItemSelected(String nameMap) {
+
+        mMapTask = new MapTask(nameMap);
+        mMapTask.execute((Void) null);
     }
 
     @Override
@@ -91,7 +79,7 @@ public class HomeFragment extends Fragment implements
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            this.stringArrayList = getMapsData(mMapModel.getAllMaps());
+            this.stringArrayList = mMapModel.getAllNames();
             return true;
         }
 
@@ -104,6 +92,42 @@ public class HomeFragment extends Fragment implements
             }
             else {
                 Log.w("Spinner", "error");
+            }
+        }
+
+
+    }
+
+    public class MapTask extends AsyncTask<Void, Void, Boolean> {
+
+        private String nameMap;
+        private String path;
+
+        MapTask(String nameMap) {
+
+            this.nameMap = nameMap;
+            this.path = null;
+        }
+
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+
+                Map map = new Map();
+                map = mMapModel.getMapByName(nameMap);
+                path = map.getImagePath();
+                return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mSpinnerTask = null;
+
+            if (success) {
+                mHomeView.setMapOnView(path);
+            }
+            else {
+                Log.w("Map", "error");
             }
         }
 

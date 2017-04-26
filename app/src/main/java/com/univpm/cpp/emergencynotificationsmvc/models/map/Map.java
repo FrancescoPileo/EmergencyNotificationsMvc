@@ -13,6 +13,7 @@ public class Map {
     private int idMap;
     private String building;
     private String floor;
+    private String name;
     private String imagePath;
 
 
@@ -21,6 +22,7 @@ public class Map {
         super();
         this.building = null;
         this.floor = null;
+        this.name = null;
         this.imagePath = null;
     }
 
@@ -46,6 +48,14 @@ public class Map {
 
     public void setFloor(String floor) {
         this.floor = floor;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getImagePath() { return imagePath; }

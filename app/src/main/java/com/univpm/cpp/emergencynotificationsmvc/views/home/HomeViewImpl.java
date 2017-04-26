@@ -15,15 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.utils.TouchImageView;
 
 import java.util.ArrayList;
-import java.util.List;
-
 
 
 public class HomeViewImpl implements HomeView{
@@ -31,7 +28,7 @@ public class HomeViewImpl implements HomeView{
     private View mRootView;
 
     private View homeFormView;
-    private MapSpnItemSelectedViewListener mapSelectedLisnener;
+    private MapSpnItemSelectedViewListener mapSelectedListener;
 
     private TouchImageView mapTiv;
     private Spinner mapsSpn;
@@ -51,15 +48,15 @@ public class HomeViewImpl implements HomeView{
         mapsSpn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (mapSelectedLisnener != null){
-                    mapSelectedLisnener.onMapSpnItemSelected((String) adapterView.getItemAtPosition(i));
+                if (mapSelectedListener != null){
+                    mapSelectedListener.onMapSpnItemSelected((String) mapsSpn.getItemAtPosition(i));
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                if (mapSelectedLisnener != null){
-                    mapSelectedLisnener.onMapSpnItemSelected((String) adapterView.getItemAtPosition(0));
+                if (mapSelectedListener != null){
+                    mapSelectedListener.onMapSpnItemSelected((String) mapsSpn.getItemAtPosition(0));
                 }
             }
         });
@@ -84,8 +81,8 @@ public class HomeViewImpl implements HomeView{
     }
 
     @Override
-    public void setMapSlectedListener(MapSpnItemSelectedViewListener listener) {
-        this.mapSelectedLisnener = listener;
+    public void setMapSelectedListener(MapSpnItemSelectedViewListener listener) {
+        this.mapSelectedListener = listener;
     }
 
     @Override
@@ -139,5 +136,12 @@ public class HomeViewImpl implements HomeView{
         }
     }
 
+    @Override
+    public void setMapOnView(String path) {
+
+        String nameMap = path;
+
+        mapTiv.setImageResource(R.drawable.color_145);
+    }
 
 }
