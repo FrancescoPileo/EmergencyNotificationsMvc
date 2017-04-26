@@ -2,7 +2,10 @@ package com.univpm.cpp.emergencynotificationsmvc.views.home;
 
 import android.support.v4.app.Fragment;
 
+import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
 import com.univpm.cpp.emergencynotificationsmvc.views.ViewMvc;
+
+import java.util.ArrayList;
 
 public interface HomeView extends ViewMvc{
 
@@ -14,7 +17,7 @@ public interface HomeView extends ViewMvc{
     }
 
     void setMapSlectedListener(HomeView.MapSpnItemSelectedViewListener listener);
-
+    void populateSpinner(ArrayList<String> list);
     String getMap();
     void showProgress(boolean show);
     void setToolbar(Fragment fragment);

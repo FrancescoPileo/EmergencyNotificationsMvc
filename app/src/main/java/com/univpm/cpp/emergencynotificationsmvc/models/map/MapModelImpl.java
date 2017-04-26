@@ -5,9 +5,6 @@ import com.univpm.cpp.emergencynotificationsmvc.utils.DbUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by marcociotti on 24/04/17.
- */
 
 public class MapModelImpl implements MapModel {
 
@@ -23,7 +20,7 @@ public class MapModelImpl implements MapModel {
     public Map getMapByFloor(String building, String floor) {
 
         Map map = null;
-        map = DbUtils.getMapByFloor(String building, String floor);
+        map = DbUtils.getMapByFloor(building, floor);
         return map;
     }
 

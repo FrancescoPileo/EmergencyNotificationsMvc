@@ -23,7 +23,8 @@ import com.univpm.cpp.emergencynotificationsmvc.utils.TouchImageView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
+
 
 public class HomeViewImpl implements HomeView{
 
@@ -46,7 +47,6 @@ public class HomeViewImpl implements HomeView{
 
         init();
 
-        populateSpinner();
 
         mapsSpn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -71,17 +71,16 @@ public class HomeViewImpl implements HomeView{
         mapTiv = (TouchImageView) mRootView.findViewById(R.id.map);
         toolbar = (Toolbar) mRootView.findViewById(R.id.tool_bar);
         progressView = mRootView.findViewById(R.id.loading_progress);
-
     }
 
+    @Override
+    public void populateSpinner (ArrayList<String> list) {
 
-    private void populateSpinner (ArrayList<Map> list) {
-
-        ArrayList<Map> lista = new ArrayList<Map>();
-        lista = list;
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, lista);
+        ArrayList<String> stringArrayList = new ArrayList<String>();
+        stringArrayList = list;
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, stringArrayList);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mapsSpn.setAdapter(dataAdapter);
+        this.mapsSpn.setAdapter(dataAdapter);
     }
 
     @Override
@@ -139,5 +138,6 @@ public class HomeViewImpl implements HomeView{
             homeFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
+
 
 }
