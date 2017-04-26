@@ -3,6 +3,7 @@ package com.univpm.cpp.emergencynotificationsmvc.views.home;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -140,7 +141,6 @@ public class HomeViewImpl implements HomeView{
     public void setMapOnView(String path) {
 
         String nameMap = path;
-
         mapTiv.setImageResource(R.drawable.color_145);
     }
 
