@@ -3,6 +3,7 @@ package com.univpm.cpp.emergencynotificationsmvc.utils;
 import android.util.Log;
 
 import com.univpm.cpp.emergencynotificationsmvc.R;
+import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 
@@ -224,6 +225,54 @@ public class DbUtils {
             ResultSet rs = executeSelectQuery("SELECT * FROM Map");
             while (rs.next()) {
                 list.add(rs.getString("name"));
+            }
+            connection.close();
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public static Beacon getBeaconById(int idBeacon) {
+
+        Beacon beacon = null;
+        try {
+            ResultSet rs = executeSelectQuery("SELECT * FROM Beacon WHERE idBeacon='" + idBeacon + "'");
+            if (rs.next()) {
+
+                beacon = new Beacon();
+
+                beacon.setIdBeacon(rs.getInt("idBeacon"));
+                beacon.setIdMap(rs.getInt("idMap"));
+                beacon.setX(rs.getInt("x"));
+                beacon.setY(rs.getInt("y"));
+            }
+            connection.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return beacon;
+    }
+
+    public static ArrayList<Beacon> getBeaconsByMap(int idMap) {
+
+        ArrayList<Beacon> list = new ArrayList<Beacon>();
+
+        try {
+            ResultSet rs = executeSelectQuery("SELECT * FROM Beacon WHERE idMap='" + idMap + "");
+            while (rs.next()) {
+
+                Beacon beacon = new Beacon();
+
+                beacon.setIdBeacon(rs.getInt("idBeacon"));
+                beacon.setIdMap(rs.getInt("idMap"));
+                beacon.setX(rs.getInt("x"));
+                beacon.setY(rs.getInt("y"));
+
+                list.add(beacon);
             }
             connection.close();
 

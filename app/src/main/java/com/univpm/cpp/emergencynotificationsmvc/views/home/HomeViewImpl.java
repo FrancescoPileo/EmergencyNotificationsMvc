@@ -141,6 +141,7 @@ public class HomeViewImpl implements HomeView{
     public void setMapOnView(String path) {
 
         String nameMap = path;
+        // TODO: prendere immagine dal path della mappa 
         mapTiv.setImageResource(R.drawable.color_145);
     }
 
