@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import com.univpm.cpp.emergencynotificationsmvc.views.ViewMvc;
 
 /**
- * Questa interfaccia rappresenta al schermata di login nell'applicazione
+ * Questa interfaccia rappresenta la schermata di login nell'applicazione
  */
 public interface LoginView extends ViewMvc {
 
@@ -17,14 +17,14 @@ public interface LoginView extends ViewMvc {
     }
     interface RegistrationBtnViewListener {
         /**
-         * Questo callback è invocato quando è premute il bottone di registrazione
+         * Questo callback è invocato quando è premuto il bottone di registrazione
          */
         void onRegistrationClick();
     }
 
     interface LogAsGuestBtnViewListner {
         /**
-         * Questo callback è invocato quando è premute il bottone di accesso
+         * Questo callback è invocato quando è premuto il bottone di accesso
          * come utente non registrato
          */
         void onLogAsGuestClick();

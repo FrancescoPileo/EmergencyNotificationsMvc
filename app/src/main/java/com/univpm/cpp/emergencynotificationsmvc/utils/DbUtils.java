@@ -135,7 +135,7 @@ public class DbUtils {
                 map.setBuilding(rs.getString("building"));
                 map.setFloor(rs.getString("floor"));
                 map.setName(rs.getString("name"));
-                map.setImagePath(rs.getString("image"));
+                map.setImagePath(rs.getString("path"));
             }
             connection.close();
         }
@@ -158,7 +158,7 @@ public class DbUtils {
                 map.setBuilding(rs.getString("building"));
                 map.setFloor(rs.getString("floor"));
                 map.setName(rs.getString("name"));
-                map.setImagePath(rs.getString("image"));
+                map.setImagePath(rs.getString("path"));
             }
             connection.close();
         }
@@ -181,7 +181,7 @@ public class DbUtils {
                 map.setBuilding(rs.getString("building"));
                 map.setFloor(rs.getString("floor"));
                 map.setName(rs.getString("name"));
-                map.setImagePath(rs.getString("image"));
+                map.setImagePath(rs.getString("path"));
             }
             connection.close();
         }
@@ -204,7 +204,7 @@ public class DbUtils {
                 map.setBuilding(rs.getString("building"));
                 map.setFloor(rs.getString("floor"));
                 map.setName(rs.getString("name"));
-                map.setImagePath(rs.getString("image"));
+                map.setImagePath(rs.getString("path"));
 
                 list.add(map);
             }

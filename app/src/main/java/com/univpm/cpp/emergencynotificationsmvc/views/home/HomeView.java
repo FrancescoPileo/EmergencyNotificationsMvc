@@ -16,10 +16,10 @@ public interface HomeView extends ViewMvc{
         void onMapSpnItemSelected(String map);
     }
 
-    void setMapOnView(String path);
     void setMapSelectedListener(HomeView.MapSpnItemSelectedViewListener listener);
     void populateSpinner(ArrayList<String> list);
     String getMap();
     void showProgress(boolean show);
     void setToolbar(Fragment fragment);
+    void setMapOnView(String path);
 }
