@@ -142,6 +142,7 @@ public class HomeViewImpl implements HomeView{
     public void setMapOnView(String path) {
 
         String str = path;
+        Log.w("Path", str);
         int resID = context.getResources().getIdentifier(str , "drawable", context.getPackageName()); //drawable or drawable-mdpi
         mapTiv.setImageResource(resID);
     }
