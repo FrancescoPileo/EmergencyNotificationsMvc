@@ -21,5 +21,7 @@ public interface HomeView extends ViewMvc{
     String getMap();
     void showProgress(boolean show);
     void setToolbar(Fragment fragment);
+
+    // Prende in input il path della mappa (preso dal db), cerca la mappa nella cartella drawable e la mette in TouchImageView
     void setMapOnView(String path);
 }

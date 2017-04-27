@@ -46,7 +46,6 @@ public class HomeViewImpl implements HomeView{
 
         init();
 
-        //da controllare
         mapsSpn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -142,8 +141,7 @@ public class HomeViewImpl implements HomeView{
     public void setMapOnView(String path) {
 
         String str = path;
-        Log.w("Path", str);
-        int resID = context.getResources().getIdentifier(str , "drawable", context.getPackageName()); //drawable or drawable-mdpi
+        int resID = context.getResources().getIdentifier(str , "drawable", context.getPackageName());
         mapTiv.setImageResource(resID);
     }
 

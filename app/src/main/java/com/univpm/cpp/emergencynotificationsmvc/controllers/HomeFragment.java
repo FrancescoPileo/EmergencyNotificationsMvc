@@ -98,6 +98,8 @@ public class HomeFragment extends Fragment implements
 
     }
 
+
+    // Dato il nome della mappa preso dallo Spinner, invoca setMapOnView passandogli il path preso dal db
     public class MapTask extends AsyncTask<Void, Void, Boolean> {
 
         private String nameMap;
