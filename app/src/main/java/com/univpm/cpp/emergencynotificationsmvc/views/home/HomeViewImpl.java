@@ -3,6 +3,7 @@ package com.univpm.cpp.emergencynotificationsmvc.views.home;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,19 +46,19 @@ public class HomeViewImpl implements HomeView{
 
         init();
 
-
+        //da controllare
         mapsSpn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (mapSelectedListener != null){
-                    mapSelectedListener.onMapSpnItemSelected((String) mapsSpn.getItemAtPosition(i));
+                    mapSelectedListener.onMapSpnItemSelected((String) adapterView.getItemAtPosition(i));
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
                 if (mapSelectedListener != null){
-                    mapSelectedListener.onMapSpnItemSelected((String) mapsSpn.getItemAtPosition(0));
+                    mapSelectedListener.onMapSpnItemSelected((String) adapterView.getItemAtPosition(0));
                 }
             }
         });
@@ -140,9 +141,10 @@ public class HomeViewImpl implements HomeView{
     @Override
     public void setMapOnView(String path) {
 
-        String nameMap = path;
-        // TODO: prendere immagine dal path della mappa 
-        mapTiv.setImageResource(R.drawable.color_145);
+        String str = path;
+        int resID = context.getResources().getIdentifier(str , "drawable", context.getPackageName()); //drawable or drawable-mdpi
+        mapTiv.setImageResource(resID);
     }
+
 
 }
