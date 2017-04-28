@@ -4,6 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -143,6 +146,14 @@ public class HomeViewImpl implements HomeView{
         String str = path;
         int resID = context.getResources().getIdentifier(str , "drawable", context.getPackageName());
         mapTiv.setImageResource(resID);
+
+        int x = mapTiv.getWidth();
+        int y = mapTiv.getHeight();
+
+        Bitmap marker = BitmapFactory.decodeResource(context.getResources(), R.drawable.marker);
+        Canvas canvas = new Canvas();
+        canvas.drawBitmap(marker, 0 , 0, null);
+        mapTiv.draw(canvas);
     }
 
 
