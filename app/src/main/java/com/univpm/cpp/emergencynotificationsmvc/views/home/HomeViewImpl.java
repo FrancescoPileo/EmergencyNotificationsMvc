@@ -152,7 +152,7 @@ public class HomeViewImpl implements HomeView{
 
         Bitmap marker = BitmapFactory.decodeResource(context.getResources(), R.drawable.marker);
         Canvas canvas = new Canvas();
-        canvas.drawBitmap(marker, 0 , 0, null);
+        canvas.drawBitmap(marker, x , y, null);
         mapTiv.draw(canvas);
     }
 
