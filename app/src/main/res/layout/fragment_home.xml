@@ -37,7 +37,8 @@
                 android:id="@+id/home_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:weightSum="1">
 
                     <Spinner
                         android:id="@+id/maps_spinner"
@@ -46,12 +47,12 @@
                         android:layout_marginTop="@dimen/activity_vertical_margin" />
 
                     <com.univpm.cpp.emergencynotificationsmvc.utils.TouchImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="200pt"
                         android:id="@+id/map"
+                        android:layout_width="332dp"
+                        android:layout_height="427dp"
                         android:layout_alignParentStart="true"
                         android:layout_toEndOf="@+id/maps_spinner"
-                        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+                        android:layout_marginTop="@dimen/activity_vertical_margin" />
 
             </LinearLayout>
         </ScrollView>
