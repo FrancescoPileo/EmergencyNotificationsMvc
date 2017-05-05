@@ -127,6 +127,7 @@ public class HomeFragment extends Fragment implements
 
             if (success) {
                 mHomeView.setMapOnView(path);
+                mHomeView.setPosition(400, 440);   //questo non va qui ma in un altro task
             }
             else {
                 Log.w("Map", "error");

@@ -7,7 +7,9 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -21,9 +23,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -153,44 +157,35 @@ public class HomeViewImpl implements HomeView{
         String str = path;
         int resID = context.getResources().getIdentifier(str , "drawable", context.getPackageName());
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inMutable = true;
-        Bitmap map = BitmapFactory.decodeResource(context.getResources(), resID, options);
-        Bitmap marker = BitmapFactory.decodeResource(context.getResources(), R.drawable.marker);
-        Canvas canvas = new Canvas (map);
-        Paint paint = new Paint (Paint.FILTER_BITMAP_FLAG);
-        //canvas.drawBitmap(map, 0, 0, paint);
-        canvas.drawBitmap(marker, 20, 20, paint);
+        Bitmap map = BitmapFactory.decodeResource(context.getResources(), resID);
+
+
         mapTiv.setImageBitmap(map);
 
-        /*Drawable[] drawables = new Drawable[2];
-        drawables[0] = context.getDrawable(resID);
-        drawables[1] = context.getDrawable(R.drawable.marker);
-        drawables[1].setBounds(500, 500, 500, 500);
-        LayerDrawable layerDrawable = new LayerDrawable(drawables);
-        mapTiv.setImageDrawable(layerDrawable);*/
 
-        /*Bitmap map = BitmapFactory.decodeResource(context.getResources(), resID);
-        mapTiv.setImageBitmap(map);
-        Bitmap marker = BitmapFactory.decodeResource(context.getResources(), R.drawable.marker);
-        Bitmap mymarker = Bitmap.createBitmap(marker, 0, 0, 100, 100);
-        mapTiv.setImageBitmap(mymarker);*/
+        //questo l'abbiamo lasciato se ci servirà calcolare le dimensioni dello schermo, qui non serve
 
-        /*BitmapDrawable[] drawables = new BitmapDrawable[2];
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inMutable = true;
-        Bitmap marker = BitmapFactory.decodeResource(context.getResources(), R.drawable.marker, options);
-        marker.reconfigure(marker.getWidth(), marker.getHeight(), Bitmap.Config.ARGB_8888);
-        Bitmap map = BitmapFactory.decodeResource(context.getResources(), resID, options);
-        Canvas canvas = new Canvas(map);
-        Canvas canvas1 = new Canvas(marker);
-        BitmapDrawable mappa = new BitmapDrawable(map);
-        BitmapDrawable marker1 = new BitmapDrawable(marker);
-        drawables[0] = mappa;
-        drawables[1] = marker1;
-        LayerDrawable layerDrawable = new LayerDrawable(drawables);
-        mapTiv.setImageDrawable(layerDrawable);*/
+        /*WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int widthScreen = size.x;
+        int heightScreen = size.y;*/
 
+    }
+
+    @Override
+    public void setPosition (int x, int y) {
+
+        Bitmap map = mapTiv.getBitmap();
+        Bitmap marker= BitmapFactory.decodeResource(context.getResources(), R.drawable.marker);
+        Bitmap overlay = Bitmap.createBitmap(map.getWidth(), map.getHeight(), map.getConfig());
+
+        Canvas canvas = new Canvas (overlay);
+        canvas.drawBitmap(map, 0, 0, null);
+        canvas.drawBitmap(marker, x, y, null);
+
+        mapTiv.setImageBitmap(overlay);
     }
 
 }

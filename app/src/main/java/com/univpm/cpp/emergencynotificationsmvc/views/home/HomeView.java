@@ -24,4 +24,7 @@ public interface HomeView extends ViewMvc{
 
     // Prende in input il path della mappa (preso dal db), cerca la mappa nella cartella drawable e la mette in TouchImageView
     void setMapOnView(String path);
+
+    // Mette il marker posizione sulla mappa
+    void setPosition(int x, int y);
 }

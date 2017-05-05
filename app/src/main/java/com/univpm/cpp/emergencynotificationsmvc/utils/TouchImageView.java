@@ -62,6 +62,8 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
     //
     private Matrix matrix, prevMatrix;
 
+    private Bitmap bitmap;
+
     private static enum State { NONE, DRAG, ZOOM, FLING, ANIMATE_ZOOM };
     private State state;
 
@@ -159,7 +161,13 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
     public void setImageBitmap(Bitmap bm) {
         super.setImageBitmap(bm);
         savePreviousImageValues();
+        this.bitmap = bm;
         fitImageToView();
+        scaleImage(98/100, 0, 0, true);
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
     }
 
     public void setImageDrawable(Drawable drawable) {
