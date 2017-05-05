@@ -163,7 +163,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         savePreviousImageValues();
         this.bitmap = bm;
         fitImageToView();
-        scaleImage(98/100, 0, 0, true);
+        scaleImage(98/100, 0, 0, true); // scala l'immagine altrimenti è troppo grande e non viene visualizzata
     }
 
     public Bitmap getBitmap() {

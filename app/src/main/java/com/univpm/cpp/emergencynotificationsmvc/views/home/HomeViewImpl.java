@@ -156,10 +156,7 @@ public class HomeViewImpl implements HomeView{
 
         String str = path;
         int resID = context.getResources().getIdentifier(str , "drawable", context.getPackageName());
-
         Bitmap map = BitmapFactory.decodeResource(context.getResources(), resID);
-
-
         mapTiv.setImageBitmap(map);
 
 
