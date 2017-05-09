@@ -15,6 +15,10 @@ public class Map {
     private String floor;
     private String name;
     private String imagePath;
+    private int xRef;
+    private int yRef;
+    private int xRefpx;
+    private int yRefpx;
 
 
     public Map() {
@@ -61,5 +65,37 @@ public class Map {
     public String getImagePath() { return imagePath; }
 
     public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+
+    public int getxRef() {
+        return xRef;
+    }
+
+    public void setxRef(int xRef) {
+        this.xRef = xRef;
+    }
+
+    public int getyRef() {
+        return yRef;
+    }
+
+    public void setyRef(int yRef) {
+        this.yRef = yRef;
+    }
+
+    public int getxRefpx() {
+        return xRefpx;
+    }
+
+    public void setxRefpx(int xRefpx) {
+        this.xRefpx = xRefpx;
+    }
+
+    public int getyRefpx() {
+        return yRefpx;
+    }
+
+    public void setyRefpx(int yRefpx) {
+        this.yRefpx = yRefpx;
+    }
 }
 

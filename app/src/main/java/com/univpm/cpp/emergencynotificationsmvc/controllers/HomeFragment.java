@@ -28,6 +28,7 @@ public class HomeFragment extends Fragment implements
     private SpinnerTask mSpinnerTask;
     private MapTask mMapTask;
     private BluetoothManager mBluetoothManager;
+    private Map map;
 
     @Nullable
     @Override
@@ -36,6 +37,7 @@ public class HomeFragment extends Fragment implements
         mHomeView = new HomeViewImpl(inflater, container, getContext());
         mMapModel = new MapModelImpl();
         mSpinnerTask = new SpinnerTask();
+        map = new Map();
 
         mSpinnerTask.execute((Void) null);
         mHomeView.setMapSelectedListener(this);
@@ -119,7 +121,7 @@ public class HomeFragment extends Fragment implements
         @Override
         protected Boolean doInBackground(Void... params) {
 
-                Map map;
+
                 map = mMapModel.getMapByName(nameMap);
                 path = map.getImagePath();
                 return true;
@@ -132,13 +134,27 @@ public class HomeFragment extends Fragment implements
 
             if (success) {
                 mHomeView.setMapOnView(path);
-                mHomeView.setPosition(400, 440);   //questo non va qui ma in un altro task
-            }
-            else {
+                mHomeView.setPosition(getPixelsXFromMetres(400), getPixelsYFromMetres(400));   //qua gli si deve passare la x e la y del nodo posizione
+            } else {
                 Log.w("Map", "error");
             }
         }
 
+    }
 
+    private int getPixelsXFromMetres(int x) {
+
+        int xRef = map.getxRef();
+        int xRefpx = map.getxRefpx();
+
+        return (int) (xRefpx-((xRef - x)/6.52));
+    }
+
+    private int getPixelsYFromMetres(int y) {
+
+        int yRef = map.getyRef();
+        int yRefpx = map.getyRefpx();
+
+        return (int) (yRefpx-((yRef - y)/6.72));
     }
 }

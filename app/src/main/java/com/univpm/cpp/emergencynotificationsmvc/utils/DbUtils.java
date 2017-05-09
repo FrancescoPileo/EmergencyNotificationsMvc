@@ -137,6 +137,10 @@ public class DbUtils {
                 map.setFloor(rs.getString("floor"));
                 map.setName(rs.getString("name"));
                 map.setImagePath(rs.getString("path"));
+                map.setxRef(rs.getInt("xRef"));
+                map.setyRef(rs.getInt("yRef"));
+                map.setxRefpx(rs.getInt("xRefpx"));
+                map.setyRefpx(rs.getInt("yRefpx"));
             }
             connection.close();
         }
@@ -183,6 +187,10 @@ public class DbUtils {
                 map.setFloor(rs.getString("floor"));
                 map.setName(rs.getString("name"));
                 map.setImagePath(rs.getString("path"));
+                map.setxRef(rs.getInt("xRef"));
+                map.setyRef(rs.getInt("yRef"));
+                map.setxRefpx(rs.getInt("xRefpx"));
+                map.setyRefpx(rs.getInt("yRefpx"));
             }
             connection.close();
         }
