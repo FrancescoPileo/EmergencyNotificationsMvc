@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Spinner;
 
+import com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.BluetoothManager;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.MapModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.MapModelImpl;
@@ -26,6 +27,7 @@ public class HomeFragment extends Fragment implements
     private MapModel mMapModel;
     private SpinnerTask mSpinnerTask;
     private MapTask mMapTask;
+    private BluetoothManager mBluetoothManager;
 
     @Nullable
     @Override
@@ -38,6 +40,8 @@ public class HomeFragment extends Fragment implements
         mSpinnerTask.execute((Void) null);
         mHomeView.setMapSelectedListener(this);
         mHomeView.setToolbar(this);
+
+        mBluetoothManager = new BluetoothManager(getContext(), getActivity());
 
         return mHomeView.getRootView();
     }
