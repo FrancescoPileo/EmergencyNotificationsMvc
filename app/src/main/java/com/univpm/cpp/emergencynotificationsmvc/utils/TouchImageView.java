@@ -37,7 +37,7 @@ import android.widget.ImageView;
 import android.widget.OverScroller;
 import android.widget.Scroller;
 
-public class TouchImageView extends ImageView {
+public class TouchImageView extends android.support.v7.widget.AppCompatImageView {
 
     private static final String DEBUG = "DEBUG";
 
@@ -61,6 +61,8 @@ public class TouchImageView extends ImageView {
     // saved prior to the screen rotating.
     //
     private Matrix matrix, prevMatrix;
+
+    private Bitmap bitmap;
 
     private static enum State { NONE, DRAG, ZOOM, FLING, ANIMATE_ZOOM };
     private State state;
@@ -159,10 +161,15 @@ public class TouchImageView extends ImageView {
     public void setImageBitmap(Bitmap bm) {
         super.setImageBitmap(bm);
         savePreviousImageValues();
+        this.bitmap = bm;
         fitImageToView();
+        scaleImage(98/100, 0, 0, true); // scala l'immagine altrimenti è troppo grande e non viene visualizzata
     }
 
-    @Override
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
     public void setImageDrawable(Drawable drawable) {
         super.setImageDrawable(drawable);
         savePreviousImageValues();

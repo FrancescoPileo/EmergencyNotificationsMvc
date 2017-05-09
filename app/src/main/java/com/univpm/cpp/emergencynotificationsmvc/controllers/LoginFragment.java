@@ -151,9 +151,10 @@ public class LoginFragment extends Fragment implements
 
                 transaction.commit();
 
-
                 Log.w(username, password);
-            } else {
+            }
+
+            else {
                 mLoginView.setPasswordError(getString(R.string.error_invalid_credentials));
             }
         }

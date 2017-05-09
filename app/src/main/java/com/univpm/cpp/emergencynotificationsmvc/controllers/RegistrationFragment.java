@@ -112,6 +112,7 @@ public class RegistrationFragment extends Fragment implements
             f = false;
         }
 
+        // todo da controllare
         if (!TextUtils.isEmpty(mobilephone)) {
             if (mobilephone.length() > 20) {
                 mRegistrationView.setMobilephoneError(getString(R.string.error_lenght_mobilephone));

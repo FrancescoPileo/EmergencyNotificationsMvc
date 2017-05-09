@@ -2,6 +2,9 @@ package com.univpm.cpp.emergencynotificationsmvc.utils;
 
 import android.util.Log;
 
+import com.univpm.cpp.emergencynotificationsmvc.R;
+import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
+import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 
 import java.sql.Connection;
@@ -118,6 +121,166 @@ public class DbUtils {
             e.printStackTrace();
         }
         return rows != 0;
+    }
+
+    public static Map getMapById(int idMap) {
+
+        Map map = null;
+        try {
+            ResultSet rs = executeSelectQuery("SELECT * FROM Map WHERE idMap='" + idMap + "'");
+            if (rs.next()) {
+
+                map = new Map();
+
+                map.setIdMap(rs.getInt("idMap"));
+                map.setBuilding(rs.getString("building"));
+                map.setFloor(rs.getString("floor"));
+                map.setName(rs.getString("name"));
+                map.setImagePath(rs.getString("path"));
+            }
+            connection.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
+    public static Map getMapByFloor(String building, String floor) {
+
+        Map map = null;
+        try {
+            ResultSet rs = executeSelectQuery("SELECT * FROM Map WHERE building='" + building + "' AND floor='" + floor + "'");
+            if (rs.next()) {
+
+                map = new Map();
+
+                map.setIdMap(rs.getInt("idMap"));
+                map.setBuilding(rs.getString("building"));
+                map.setFloor(rs.getString("floor"));
+                map.setName(rs.getString("name"));
+                map.setImagePath(rs.getString("path"));
+            }
+            connection.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
+    public static Map getMapByName(String name) {
+
+        Map map = null;
+        try {
+            ResultSet rs = executeSelectQuery("SELECT * FROM Map WHERE name='" + name + "'");
+            if (rs.next()) {
+
+                map = new Map();
+
+                map.setIdMap(rs.getInt("idMap"));
+                map.setBuilding(rs.getString("building"));
+                map.setFloor(rs.getString("floor"));
+                map.setName(rs.getString("name"));
+                map.setImagePath(rs.getString("path"));
+            }
+            connection.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
+    public static ArrayList<Map> getAllMaps () {
+
+        ArrayList<Map> list = new ArrayList<Map>();
+        try {
+            ResultSet rs = executeSelectQuery("SELECT * FROM Map");
+            while (rs.next()) {
+
+                Map map = new Map();
+
+                map.setIdMap(rs.getInt("idMap"));
+                map.setBuilding(rs.getString("building"));
+                map.setFloor(rs.getString("floor"));
+                map.setName(rs.getString("name"));
+                map.setImagePath(rs.getString("path"));
+
+                list.add(map);
+            }
+            connection.close();
+
+        }
+        catch (Exception e) {
+        e.printStackTrace();
+    }
+        return list;
+    }
+
+    public static ArrayList<String> getAllNames () {
+
+        ArrayList<String> list = new ArrayList<String>();
+        try {
+            ResultSet rs = executeSelectQuery("SELECT * FROM Map");
+            while (rs.next()) {
+                list.add(rs.getString("name"));
+            }
+            connection.close();
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public static Beacon getBeaconById(int idBeacon) {
+
+        Beacon beacon = null;
+        try {
+            ResultSet rs = executeSelectQuery("SELECT * FROM Beacon WHERE idBeacon='" + idBeacon + "'");
+            if (rs.next()) {
+
+                beacon = new Beacon();
+
+                beacon.setIdBeacon(rs.getInt("idBeacon"));
+                beacon.setIdMap(rs.getInt("idMap"));
+                beacon.setX(rs.getInt("x"));
+                beacon.setY(rs.getInt("y"));
+            }
+            connection.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return beacon;
+    }
+
+    public static ArrayList<Beacon> getBeaconsByMap(int idMap) {
+
+        ArrayList<Beacon> list = new ArrayList<Beacon>();
+
+        try {
+            ResultSet rs = executeSelectQuery("SELECT * FROM Beacon WHERE idMap='" + idMap + "");
+            while (rs.next()) {
+
+                Beacon beacon = new Beacon();
+
+                beacon.setIdBeacon(rs.getInt("idBeacon"));
+                beacon.setIdMap(rs.getInt("idMap"));
+                beacon.setX(rs.getInt("x"));
+                beacon.setY(rs.getInt("y"));
+
+                list.add(beacon);
+            }
+            connection.close();
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
 }
