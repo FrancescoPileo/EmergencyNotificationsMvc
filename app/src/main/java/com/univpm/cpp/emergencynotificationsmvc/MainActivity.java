@@ -1,29 +1,30 @@
 package com.univpm.cpp.emergencynotificationsmvc;
 
+import android.Manifest;
 import android.content.Context;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 
-import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.controllers.HomeFragment;
 import com.univpm.cpp.emergencynotificationsmvc.controllers.LoginFragment;
-import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferences;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferencesImpl;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final int REQUEST_BT_PERMISSIONS = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        checkBtPermissions();
 
         LocalPreferencesImpl localPreferences = new LocalPreferencesImpl(getApplicationContext());
         Fragment newFragment = null;
@@ -53,5 +54,14 @@ public class MainActivity extends AppCompatActivity {
         //todo sistemare on back pressed
         finish();
         //super.onBackPressed();
+    }
+
+    public void checkBtPermissions() {
+        this.requestPermissions(
+                new String[]{
+                        Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN,
+                        Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
+                },
+                REQUEST_BT_PERMISSIONS);
     }
 }

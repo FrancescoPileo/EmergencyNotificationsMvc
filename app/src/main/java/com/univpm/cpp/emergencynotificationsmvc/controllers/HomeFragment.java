@@ -1,5 +1,6 @@
 package com.univpm.cpp.emergencynotificationsmvc.controllers;
 
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,10 +12,13 @@ import android.view.ViewGroup;
 import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeView;
 import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeViewImpl;
 
+
+
 public class HomeFragment extends Fragment implements
         HomeView.MapSpnItemSelectedViewListener{
 
     private HomeView mHomeView;
+    private com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.BluetoothManager mBluetoothManager;
 
     @Nullable
     @Override
@@ -23,6 +27,8 @@ public class HomeFragment extends Fragment implements
         mHomeView = new HomeViewImpl(inflater, container, getContext());
         mHomeView.setMapSlectedListener(this);
         mHomeView.setToolbar(this);
+
+        mBluetoothManager = new com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.BluetoothManager(getContext(), getActivity());
 
         return mHomeView.getRootView();
     }
@@ -43,12 +49,11 @@ public class HomeFragment extends Fragment implements
     }
 
     @Override
+    public void onResume() { super.onResume(); }
+
+    @Override
     public void onStop() {
         super.onStop();
     }
-
-
-    
-
 
 }
