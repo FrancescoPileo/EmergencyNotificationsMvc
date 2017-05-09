@@ -71,7 +71,7 @@ public class HomeFragment extends Fragment implements
 
         SpinnerTask() {
 
-            this.stringArrayList = new ArrayList<String>();
+            this.stringArrayList = new ArrayList<>();
             this.stringArrayList = null;
         }
 
@@ -115,10 +115,11 @@ public class HomeFragment extends Fragment implements
         @Override
         protected Boolean doInBackground(Void... params) {
 
-                Map map = new Map();
+                Map map;
                 map = mMapModel.getMapByName(nameMap);
                 path = map.getImagePath();
                 return true;
+
         }
 
         @Override
