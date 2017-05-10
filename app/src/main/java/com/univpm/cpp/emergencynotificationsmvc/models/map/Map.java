@@ -15,6 +15,7 @@ public class Map {
     private String floor;
     private String name;
     private String imagePath;
+    private float scale;
     private int xRef;
     private int yRef;
     private int xRefpx;
@@ -25,6 +26,7 @@ public class Map {
 
         super();
         this.building = null;
+        this.scale = 1;
         this.floor = null;
         this.name = null;
         this.imagePath = null;
@@ -68,6 +70,14 @@ public class Map {
 
     public int getxRef() {
         return xRef;
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
     }
 
     public void setxRef(int xRef) {

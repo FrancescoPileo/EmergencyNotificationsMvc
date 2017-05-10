@@ -174,13 +174,17 @@ public class HomeViewImpl implements HomeView{
     @Override
     public void setPosition (int x, int y) {
 
+        Log.w("Coordinates", String.valueOf(x) + ", " + String.valueOf(y));
+
         Bitmap map = mapTiv.getBitmap();
         Bitmap marker= BitmapFactory.decodeResource(context.getResources(), R.drawable.marker);
         Bitmap overlay = Bitmap.createBitmap(map.getWidth(), map.getHeight(), map.getConfig());
 
+        Log.w("Map dimension", String.valueOf(map.getWidth()) + ", " + String.valueOf(map.getHeight()));
+
         Canvas canvas = new Canvas (overlay);
         canvas.drawBitmap(map, 0, 0, null);
-        canvas.drawBitmap(marker, x, y, null);
+        canvas.drawBitmap(marker, x - marker.getWidth()/2, map.getHeight() - y - marker.getHeight(), null);
 
         mapTiv.setImageBitmap(overlay);
     }

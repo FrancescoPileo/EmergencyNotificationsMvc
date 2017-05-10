@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
+import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValues;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 
@@ -99,6 +100,22 @@ public class DbUtils {
         return user;
     }
 
+    public static boolean newValues(EnviromentalValues values){
+        int rows = 0;
+        try {
+            rows = executeManipulationQuery("INSERT INTO `EnviromentalValues`(`idEnv`, `idBeacon`, `time`, `temperature`, `humidity`, " +
+                    "`accX`, `accY`, `accZ`, `gyrX`, `gyrY`, `gyrZ`, `magX`, `magY`, `magZ`) " +
+                    "VALUES (NULL,'" + values.getIdBeacon() + "','" + values.getTime() + "' , '" + values.getTemperature() + "', " + values.getHumidity() +
+                    ", '" + values.getAccX() + "', '" + values.getAccY() + "','" + values.getAccZ() + "','"
+                    + values.getGyrX() + "','" + values.getGyrY() + "','" + values.getGyrZ() + "','"
+                    + values.getMagX() + "','" + values.getMagY() + "','" + values.getMagZ() + "')");
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rows != 0;
+    }
+
     public static boolean newUser(User user){
         Log.w("DBUtils", user.getName());
         String mobilephone = "NULL";
@@ -186,6 +203,7 @@ public class DbUtils {
                 map.setBuilding(rs.getString("building"));
                 map.setFloor(rs.getString("floor"));
                 map.setName(rs.getString("name"));
+                map.setScale(rs.getFloat("scale"));
                 map.setImagePath(rs.getString("path"));
                 map.setxRef(rs.getInt("xRef"));
                 map.setyRef(rs.getInt("yRef"));

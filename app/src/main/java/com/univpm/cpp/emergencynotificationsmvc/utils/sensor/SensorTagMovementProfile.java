@@ -1,4 +1,4 @@
-package com.univpm.cpp.emergencynotificationsmvc.models.sensor;
+package com.univpm.cpp.emergencynotificationsmvc.utils.sensor;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCharacteristic;

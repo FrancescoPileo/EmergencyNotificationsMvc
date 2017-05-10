@@ -2,6 +2,7 @@ package com.univpm.cpp.emergencynotificationsmvc.controllers;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +13,9 @@ import android.view.ViewGroup;
 import android.widget.Spinner;
 
 import com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.BluetoothManager;
+import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
+import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModel;
+import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.MapModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.MapModelImpl;
@@ -25,10 +29,13 @@ public class HomeFragment extends Fragment implements
 
     private HomeView mHomeView;
     private MapModel mMapModel;
+    private BeaconModel mBeaconModel;
     private SpinnerTask mSpinnerTask;
     private MapTask mMapTask;
     private BluetoothManager mBluetoothManager;
     private Map map;
+
+
 
     @Nullable
     @Override
@@ -36,6 +43,7 @@ public class HomeFragment extends Fragment implements
 
         mHomeView = new HomeViewImpl(inflater, container, getContext());
         mMapModel = new MapModelImpl();
+        mBeaconModel = new BeaconModelImpl();
         mSpinnerTask = new SpinnerTask();
         map = new Map();
 
@@ -44,8 +52,33 @@ public class HomeFragment extends Fragment implements
         mHomeView.setToolbar(this);
 
         mBluetoothManager = new BluetoothManager(getContext(), getActivity());
+        mBluetoothManager.scanning();
+        start();
 
         return mHomeView.getRootView();
+    }
+
+    private boolean started = false;
+    private Handler handler = new Handler();
+
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            mBluetoothManager.scanning();
+            if(started) {
+                start();
+            }
+        }
+    };
+
+    public void stop() {
+        started = false;
+        handler.removeCallbacks(runnable);
+    }
+
+    public void start() {
+        started = true;
+        handler.postDelayed(runnable, 60000);
     }
 
     @Override
@@ -62,11 +95,13 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void onPause() {
+        //stop();
         super.onPause();
     }
 
     @Override
     public void onStop() {
+        //stop();
         super.onStop();
     }
 
@@ -123,6 +158,7 @@ public class HomeFragment extends Fragment implements
 
 
                 map = mMapModel.getMapByName(nameMap);
+
                 path = map.getImagePath();
                 return true;
 
@@ -134,7 +170,7 @@ public class HomeFragment extends Fragment implements
 
             if (success) {
                 mHomeView.setMapOnView(path);
-                mHomeView.setPosition(getPixelsXFromMetres(400), getPixelsYFromMetres(400));   //qua gli si deve passare la x e la y del nodo posizione
+                mHomeView.setPosition(getPixelsXFromMetres(91), getPixelsYFromMetres(467));   //qua gli si deve passare la x e la y del nodo posizione
             } else {
                 Log.w("Map", "error");
             }
@@ -144,17 +180,22 @@ public class HomeFragment extends Fragment implements
 
     private int getPixelsXFromMetres(int x) {
 
+        float scale = map.getScale();
         int xRef = map.getxRef();
         int xRefpx = map.getxRefpx();
 
-        return (int) (xRefpx-((xRef - x)/6.52));
+        return (int) (xRefpx-((xRef - x)*scale));
     }
 
     private int getPixelsYFromMetres(int y) {
 
+        float scale = map.getScale();
         int yRef = map.getyRef();
         int yRefpx = map.getyRefpx();
 
-        return (int) (yRefpx-((yRef - y)/6.72));
+        return (int) (yRefpx-((yRef - y)*scale));
     }
+
+
+
 }

@@ -68,7 +68,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.univpm.cpp.emergencynotificationsmvc.models.sensor.GattInfo;
+import com.univpm.cpp.emergencynotificationsmvc.utils.sensor.GattInfo;
 
 import java.lang.reflect.Method;
 import java.util.LinkedList;

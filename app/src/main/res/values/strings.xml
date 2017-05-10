@@ -45,7 +45,7 @@
 
     <!-- Strings related to Home -->
     <string name="title_activity_home">Home</string>
-    <string-array name="device_filter"><!--<item>SensorTag</item><item>SensorTag2</item><item>CC2650 SensorTag</item>--></string-array>
+    <string-array name="device_filter"><item>CC2650 SensorTag</item></string-array>
     <string name="bt_not_supported">Bluetooth non supportato</string>
     <string name="ble_not_supported">BLE non supportato</string>
     <string name="bt_turned_off">Bluetooth spento</string>
