@@ -92,6 +92,36 @@ public class DbUtils {
                 user.setMobilephone(rs.getString("mobilephone"));
                 user.setEmail(rs.getString("email"));
                 user.setPassword(rs.getString("password"));
+                user.setGuest(rs.getBoolean("isGuest"));
+            }
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    /**
+     * Ottiene l'utente con l'username specificato
+     * @return oggetto User che rappresenta l'utente, null se non vi è utente con quell'username
+     */
+    public static User getLastGuestUser(){
+        User user = null;
+        try {
+            ResultSet rs = executeSelectQuery("SELECT * FROM User WHERE isGuest='1' ORDER BY idUser DESC LIMIT 1");
+            if (rs.next()) {
+
+                user = new User();
+
+                user.setId(rs.getInt("idUser"));
+                user.setName(rs.getString("name"));
+                user.setSurname(rs.getString("surname"));
+                user.setUsername(rs.getString("username"));
+                user.setAge(rs.getInt("age"));
+                user.setMobilephone(rs.getString("mobilephone"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setGuest(rs.getBoolean("isGuest"));
             }
             connection.close();
         } catch (Exception e) {
@@ -133,6 +163,18 @@ public class DbUtils {
             rows = executeManipulationQuery("INSERT INTO `User`(`idUser`, `name`, `surname`, `username`, `age`, `mobilephone`, `email`, `password`) " +
                     "VALUES (NULL,'" + user.getName() + "','" + user.getSurname() + "' , '" + user.getUsername() + "', " + age +
                     ", '" + mobilephone + "', '" + user.getEmail() + "','" + user.getPassword() + "')");
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rows != 0;
+    }
+
+    public static boolean newGuestUser(int index){
+        int rows = 0;
+        try {
+            rows = executeManipulationQuery("INSERT INTO `User`(`username`, `isGuest`) " +
+                    "VALUES ('guest#" + String.valueOf(index) + "' ,'1')");
             connection.close();
         } catch (Exception e) {
             e.printStackTrace();

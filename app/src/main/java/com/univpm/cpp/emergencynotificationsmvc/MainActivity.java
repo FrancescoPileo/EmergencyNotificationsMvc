@@ -26,20 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
         checkBtPermissions();
 
-        LocalPreferencesImpl localPreferences = new LocalPreferencesImpl(getApplicationContext());
-        Fragment newFragment = null;
-        Log.w("Loged", String.valueOf(localPreferences.alreadyLoged()));
-
-        if (localPreferences.alreadyLoged()){
-            //carica il fragment della home
-            newFragment = new HomeFragment();
-        } else {
-            //carica il fragment di login
-            newFragment = new LoginFragment();
-        }
-
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, newFragment);
+        transaction.replace(R.id.fragment_container, new LoginFragment());
         transaction.addToBackStack(null);
         transaction.commit();
     }

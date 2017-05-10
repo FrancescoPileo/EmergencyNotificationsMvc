@@ -38,4 +38,16 @@ public class LocalPreferencesImpl implements  LocalPreferences {
     public void setContext(Context context) {
         this.context = context;
     }
+
+    @Override
+    public String getUsername() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(LOGIN_PERFERENCES, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(getContext().getString(R.string.pref_username), null);
+    }
+
+    @Override
+    public String getPassword() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(LOGIN_PERFERENCES, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(getContext().getString(R.string.pref_password), null);
+    }
 }

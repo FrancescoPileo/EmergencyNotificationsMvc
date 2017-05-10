@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.univpm.cpp.emergencynotificationsmvc.R;
-import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferences;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferencesImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModel;
@@ -29,6 +28,7 @@ public class LoginFragment extends Fragment implements
     private LoginView mLoginView;
     private UserModel mUserModel;
     private UserLoginTask mAuthTask;
+    private LastUserGuestTask mLastUserGuestTask;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,6 +43,13 @@ public class LoginFragment extends Fragment implements
         // Instanzio i Models MVC relazionati con questo fragment
         mUserModel = new UserModelImpl();
 
+        //Controllo se è aperta un sessione di login
+        LocalPreferencesImpl localPreferences = new LocalPreferencesImpl(getContext());
+        if (localPreferences.alreadyLoged()){
+            mLoginView.showProgress(true);
+            mAuthTask = new UserLoginTask(localPreferences.getUsername(), localPreferences.getPassword());
+            mAuthTask.execute((Void) null);
+        }
 
         return mLoginView.getRootView();
     }
@@ -93,9 +100,12 @@ public class LoginFragment extends Fragment implements
         return f;
     }
 
+    //da fare in un task
     @Override
     public void onLogAsGuestClick() {
-        Log.w("Guest", "ok");
+        mLoginView.showProgress(true);
+        mLastUserGuestTask = new LastUserGuestTask();
+        mLastUserGuestTask.execute((Void) null);
     }
 
     @Override
@@ -140,7 +150,9 @@ public class LoginFragment extends Fragment implements
             if (success) {
                 //salva le credenziali in locale
                 LocalPreferencesImpl localPreferences = new LocalPreferencesImpl(getContext());
-                localPreferences.rememberLogin(username, password);
+                if (!localPreferences.alreadyLoged()) {
+                    localPreferences.rememberLogin(username, password);
+                }
 
                 //carica il fragment della home
                 Fragment newFragment = new HomeFragment();
@@ -150,8 +162,6 @@ public class LoginFragment extends Fragment implements
                 transaction.addToBackStack(null);
 
                 transaction.commit();
-
-                Log.w(username, password);
             }
 
             else {
@@ -166,5 +176,84 @@ public class LoginFragment extends Fragment implements
         }
     }
 
+    public class LastUserGuestTask extends AsyncTask<Void, Void, Boolean> {
+
+        private  User lastGuestUser;
+
+        LastUserGuestTask() {
+            this.lastGuestUser = null;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+
+            lastGuestUser = mUserModel.getLastGuestUser();
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mLastUserGuestTask = null;
+
+            if (success) {
+                int index = 1;
+                if (lastGuestUser != null){
+                    Log.w("lastGuest", lastGuestUser.getUsername());
+                    index = Integer.parseInt(lastGuestUser.getUsername().substring(6));
+                }
+                RegisterNewGuestTask task = new RegisterNewGuestTask(index + 1);
+                task.execute((Void) null);
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mLastUserGuestTask = null;
+            mLoginView.showProgress(false);
+        }
+
+    }
+
+    public class RegisterNewGuestTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final int index;
+
+        RegisterNewGuestTask(int index) {
+            this.index = index;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            return mUserModel.newGuestUser(index);
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mLoginView.showProgress(false);
+            if (success) {
+                //todo salvare le credenziali in locale
+                //salva le credenziali in locale
+                //LocalPreferencesImpl localPreferences = new LocalPreferencesImpl(getContext());
+                //localPreferences.rememberLogin(username, null);
+
+                //carica il fragment della home
+                Fragment newFragment = new HomeFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                transaction.replace(R.id.fragment_container, newFragment);
+                transaction.addToBackStack(null);
+
+                transaction.commit();
+
+            } else {
+                Log.w("Errore: ", "utente guest");
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mLoginView.showProgress(false);
+        }
+    }
 
 }

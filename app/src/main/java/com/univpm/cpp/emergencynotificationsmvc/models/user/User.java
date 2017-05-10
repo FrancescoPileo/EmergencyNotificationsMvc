@@ -10,6 +10,7 @@ public class User extends UserGuest{
     private String mobilephone;
     private String email;
     private String password;
+    private boolean isGuest;
 
     public User(){
         super();
@@ -19,6 +20,7 @@ public class User extends UserGuest{
         this.mobilephone = null;
         this.email = null;
         this.password = null;
+        this.isGuest = false;
     }
 
     public User(int id, String name, String surname, String username, int age, String mobilephone, String email, String password){
@@ -77,5 +79,13 @@ public class User extends UserGuest{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isGuest() {
+        return isGuest;
+    }
+
+    public void setGuest(boolean guest) {
+        isGuest = guest;
     }
 }
