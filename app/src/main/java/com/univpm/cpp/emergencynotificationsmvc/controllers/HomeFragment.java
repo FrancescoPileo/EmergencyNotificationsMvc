@@ -328,6 +328,10 @@ public class HomeFragment extends Fragment implements
         return (int) (yRefpx-((yRef - y)*scale));
     }
 
+
+    /* @param user di cui si vuole trovare l'ultima posizione
+     * controlla tutte le posizioni dell'utente
+     * @return la posizione più recente */
     private Position findLastPosition(User user) {
 
         int cont;
@@ -353,7 +357,7 @@ public class HomeFragment extends Fragment implements
                     e.printStackTrace();
                 }
 
-                if (time2.after(time1)) lastPosition = positions.get(cont);
+                if (time2.after(time1)) lastPosition = positions.get(cont); //timeaftertime is a famous song by Cyndi Lauper
 
             }
         }
