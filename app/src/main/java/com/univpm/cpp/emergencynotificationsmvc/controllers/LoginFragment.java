@@ -154,6 +154,9 @@ public class LoginFragment extends Fragment implements
                     localPreferences.rememberLogin(username, password);
                 }
 
+                //comunica al server il login
+
+
                 //carica il fragment della home
                 Fragment newFragment = new HomeFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -175,6 +178,21 @@ public class LoginFragment extends Fragment implements
             mLoginView.showProgress(false);
         }
     }
+
+    /*
+    public class LogTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final String username;
+
+        LogTask(String username){
+            this.username = username;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+
+        }
+    }*/
 
     public class LastUserGuestTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -198,7 +216,7 @@ public class LoginFragment extends Fragment implements
             if (success) {
                 int index = 1;
                 if (lastGuestUser != null){
-                    Log.w("lastGuest", lastGuestUser.getUsername());
+                    //Log.w("lastGuest", lastGuestUser.getUsername());
                     index = Integer.parseInt(lastGuestUser.getUsername().substring(6));
                 }
                 RegisterNewGuestTask task = new RegisterNewGuestTask(index + 1);
