@@ -17,9 +17,22 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.univpm.cpp.emergencynotificationsmvc.R;
+import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
+import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModel;
+import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValues;
 import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValuesModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValuesModelImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferences;
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferencesImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.node.NodeModel;
+import com.univpm.cpp.emergencynotificationsmvc.models.node.NodeModelImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.position.Position;
+import com.univpm.cpp.emergencynotificationsmvc.models.position.PositionModel;
+import com.univpm.cpp.emergencynotificationsmvc.models.position.PositionModelImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
+import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModel;
+import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.utils.sensor.MovementInfo;
 import com.univpm.cpp.emergencynotificationsmvc.utils.sensor.Sensor;
 import com.univpm.cpp.emergencynotificationsmvc.utils.sensor.GenericBluetoothProfile;
@@ -69,6 +82,11 @@ public class BluetoothManager {
 
     private EnviromentalValuesModel mEnvValuesModel;
     private StoreTask storeTask;
+    private LocalPreferences mLocalPreferences;
+    private UserModel mUserModel;
+    private BeaconModel mBeaconModel;
+    private PositionModel mPositionModel;
+
 
 
     public BluetoothManager(Context context, Activity activity){
@@ -82,6 +100,10 @@ public class BluetoothManager {
         activity.registerReceiver(mReceiver, mFilter);
 
         mEnvValuesModel = new EnviromentalValuesModelImpl();
+        mLocalPreferences = new LocalPreferencesImpl(getContext());
+        mUserModel = new UserModelImpl();
+        mPositionModel = new PositionModelImpl();
+        mBeaconModel = new BeaconModelImpl();
 
         if (BluetoothLeService.getInstance() != null){
             init();
@@ -551,6 +573,7 @@ public class BluetoothManager {
     public class StoreTask extends AsyncTask<Void, Void, Boolean> {
 
         private EnviromentalValues values;
+        private Position position;
 
         StoreTask(EnviromentalValues values) {
             this.values = values;
@@ -559,7 +582,12 @@ public class BluetoothManager {
 
         @Override
         protected Boolean doInBackground(Void... params) {
+
             mEnvValuesModel.newValues(values);
+            User user = mUserModel.getUser(mLocalPreferences.getUsername());
+            Beacon beacon = mBeaconModel.getBeaconById(values.getIdBeacon());
+            position = new Position(-1, beacon.getIdNode(), user.getId(), values.getTime());
+            mPositionModel.newPosition(position);
             return true;
 
         }
@@ -567,7 +595,7 @@ public class BluetoothManager {
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success) {
-
+                Log.w("Store", "ok");
             }
             else {
                 Log.w("Store", "error");

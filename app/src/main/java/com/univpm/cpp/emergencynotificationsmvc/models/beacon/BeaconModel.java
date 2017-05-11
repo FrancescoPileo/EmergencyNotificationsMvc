@@ -8,8 +8,6 @@ import java.util.ArrayList;
 
 public interface BeaconModel {
 
-    public Beacon getBeaconById(int idBeacon);
-
-    public ArrayList<Beacon> getBeaconsByMap(int idMap);
+    public Beacon getBeaconById(String idBeacon);
 
 }

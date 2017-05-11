@@ -11,18 +11,11 @@ import java.util.ArrayList;
 public class BeaconModelImpl implements BeaconModel {
 
     @Override
-    public Beacon getBeaconById (int idBeacon) {
+    public Beacon getBeaconById (String idBeacon) {
 
         Beacon beacon = null;
         beacon = DbUtils.getBeaconById(idBeacon);
         return beacon;
     }
 
-    @Override
-    public ArrayList<Beacon> getBeaconsByMap(int idMap) {
-
-        ArrayList<Beacon> list = new ArrayList<Beacon>();
-        list = DbUtils.getBeaconsByMap(idMap);
-        return list;
-    }
 }

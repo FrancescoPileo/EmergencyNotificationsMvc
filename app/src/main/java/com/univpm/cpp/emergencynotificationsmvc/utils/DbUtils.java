@@ -6,6 +6,8 @@ import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValues;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
+import com.univpm.cpp.emergencynotificationsmvc.models.node.Node;
+import com.univpm.cpp.emergencynotificationsmvc.models.position.Position;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 
 import java.sql.Connection;
@@ -303,7 +305,7 @@ public class DbUtils {
         return list;
     }
 
-    public static Beacon getBeaconById(int idBeacon) {
+    public static Beacon getBeaconById(String idBeacon) {
 
         Beacon beacon = null;
         try {
@@ -312,10 +314,9 @@ public class DbUtils {
 
                 beacon = new Beacon();
 
-                beacon.setIdBeacon(rs.getInt("idBeacon"));
-                beacon.setIdMap(rs.getInt("idMap"));
-                beacon.setX(rs.getInt("x"));
-                beacon.setY(rs.getInt("y"));
+                beacon.setIdBeacon(rs.getString("idBeacon"));
+                beacon.setIdNode(rs.getInt("idNode"));
+
             }
             connection.close();
         }
@@ -325,22 +326,45 @@ public class DbUtils {
         return beacon;
     }
 
-    public static ArrayList<Beacon> getBeaconsByMap(int idMap) {
+    public static Node getNodeById(int idNode) {
 
-        ArrayList<Beacon> list = new ArrayList<Beacon>();
+        Node node = null;
+        try {
+            ResultSet rs = executeSelectQuery("SELECT * FROM Beacon WHERE idBeacon='" + idNode + "'");
+            if (rs.next()) {
+
+                node = new Node();
+
+                node.setIdNode(rs.getInt("idNode"));
+                node.setIdMap(rs.getInt("idMap"));
+                node.setX(rs.getInt("x"));
+                node.setY(rs.getInt("y"));
+
+            }
+            connection.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return node;
+    }
+
+    public static ArrayList<Node> getNodeByMap(int idMap) {
+
+        ArrayList<Node> list = new ArrayList<Node>();
 
         try {
-            ResultSet rs = executeSelectQuery("SELECT * FROM Beacon WHERE idMap='" + idMap + "");
+            ResultSet rs = executeSelectQuery("SELECT * FROM Node WHERE idMap='" + idMap + "");
             while (rs.next()) {
 
-                Beacon beacon = new Beacon();
+                Node node = new Node();
 
-                beacon.setIdBeacon(rs.getInt("idBeacon"));
-                beacon.setIdMap(rs.getInt("idMap"));
-                beacon.setX(rs.getInt("x"));
-                beacon.setY(rs.getInt("y"));
+                node.setIdNode(rs.getInt("idNode"));
+                node.setIdMap(rs.getInt("idMap"));
+                node.setX(rs.getInt("x"));
+                node.setY(rs.getInt("y"));
 
-                list.add(beacon);
+                list.add(node);
             }
             connection.close();
 
@@ -349,6 +373,45 @@ public class DbUtils {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public static boolean newPosition(Position position){
+
+        int rows = 0;
+        try {
+            rows = executeManipulationQuery("INSERT INTO `Position`(`idPosition`, `idNode`, `idUser`, `time` )" +
+                    "VALUES (NULL,'" + position.getIdPosition() + "','" + position.getIdNode() + "' , '" + position.getIdUser() + "', " + position.getTime()  + "')");
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rows != 0;
+    }
+
+    public static ArrayList<Position> getPositionByIdUser(int idUser) {
+
+        ArrayList<Position> positions = new ArrayList<Position>();
+
+        try {
+            ResultSet rs = executeSelectQuery("SELECT * FROM Position WHERE idUser='" + idUser + "");
+            while (rs.next()) {
+
+                Position position = new Position();
+
+                position.setIdNode(rs.getInt("idNode"));
+                position.setIdPosition(rs.getInt("idPosition"));
+                position.setIdUser(rs.getInt("idUser"));
+                position.setTime(rs.getString("time"));
+
+                positions.add(position);
+            }
+            connection.close();
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return positions;
     }
 
 }

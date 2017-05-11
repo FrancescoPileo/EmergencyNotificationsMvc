@@ -6,48 +6,33 @@ package com.univpm.cpp.emergencynotificationsmvc.models.beacon;
 
 public class Beacon {
 
-    private int idBeacon;
-    private int idMap;
-    private int x;
-    private int y;
+    private String idBeacon;
+    private int idNode;
 
     public Beacon() {
 
         super();
-        this.idMap = -1;
-        this.x = -1;
-        this.y = -1;
+        this.idNode = -1;
     }
 
-    public int getIdBeacon() {
+    public Beacon(String idBeacon, int idNode) {
+        this.idBeacon = idBeacon;
+        this.idNode = idNode;
+    }
+
+    public String getIdBeacon() {
         return idBeacon;
     }
 
-    public void setIdBeacon(int idBeacon) {
+    public void setIdBeacon(String idBeacon) {
         this.idBeacon = idBeacon;
     }
 
-    public int getIdMap() {
-        return idMap;
+    public int getIdNode() {
+        return idNode;
     }
 
-    public void setIdMap(int idMap) {
-        this.idMap = idMap;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
+    public void setIdNode(int idNode) {
+        this.idNode = idNode;
     }
 }
