@@ -17,6 +17,7 @@ public class PositionModelImpl implements PositionModel {
 
     @Override
     public ArrayList<Position> getPositionByIdUser(int idUser) {
-        return DbUtils.getPositionByIdUser(idUser);
+        ArrayList<Position> list = DbUtils.getPositionByIdUser(idUser);
+        return list;
     }
 }

@@ -40,20 +40,47 @@
                 android:orientation="vertical"
                 android:weightSum="1">
 
-                    <Spinner
-                        android:id="@+id/maps_spinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/activity_vertical_margin" />
+                <TextView
+                    android:id="@+id/positionText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/mapName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center" />
 
                 <com.univpm.cpp.emergencynotificationsmvc.utils.TouchImageView
                     android:id="@+id/map"
                     android:layout_width="match_parent"
-                    android:layout_height="400dp"
+                    android:layout_height="382dp"
                     android:layout_alignParentStart="true"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:layout_toEndOf="@+id/maps_spinner"
-                    android:layout_weight="0.86" />
+                    android:labelFor="@+id/maps_spinner" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingTop="20dp">
+
+                    <TextView
+                        android:id="@+id/spinnerLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:gravity="center_vertical"
+                        android:text="Seleziona una mappa:" />
+
+                    <Spinner
+                        android:id="@+id/maps_spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
 
             </LinearLayout>
         </ScrollView>

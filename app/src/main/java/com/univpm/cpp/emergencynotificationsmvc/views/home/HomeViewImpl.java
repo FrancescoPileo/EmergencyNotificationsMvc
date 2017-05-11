@@ -31,6 +31,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.utils.TouchImageView;
@@ -45,7 +46,11 @@ public class HomeViewImpl implements HomeView{
     private View homeFormView;
     private MapSpnItemSelectedViewListener mapSelectedListener;
 
+    private TextView positionText;
+    private TextView textMapName;
     private TouchImageView mapTiv;
+
+    private TextView textSpinnerLabel;
     private Spinner mapsSpn;
 
     private View progressView;
@@ -78,6 +83,9 @@ public class HomeViewImpl implements HomeView{
 
     private void init() {
 
+        positionText = (TextView) mRootView.findViewById(R.id.positionText);
+        textMapName = (TextView) mRootView.findViewById(R.id.mapName);
+        textSpinnerLabel = (TextView) mRootView.findViewById(R.id.spinnerLabel);
         mapsSpn = (Spinner) mRootView.findViewById(R.id.maps_spinner);
         mapTiv = (TouchImageView) mRootView.findViewById(R.id.map);
         toolbar = (Toolbar) mRootView.findViewById(R.id.tool_bar);
@@ -189,4 +197,16 @@ public class HomeViewImpl implements HomeView{
         mapTiv.setImageBitmap(overlay);
     }
 
+
+    @Override
+    public void setPositionText(String text) {
+
+        positionText.setText(text);
+    }
+
+    @Override
+    public void setMapName(String mapName) {
+
+        textMapName.setText(mapName);
+    }
 }

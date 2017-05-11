@@ -330,7 +330,7 @@ public class DbUtils {
 
         Node node = null;
         try {
-            ResultSet rs = executeSelectQuery("SELECT * FROM Beacon WHERE idBeacon='" + idNode + "'");
+            ResultSet rs = executeSelectQuery("SELECT * FROM Node WHERE idNode='" + idNode + "'");
             if (rs.next()) {
 
                 node = new Node();
@@ -390,16 +390,16 @@ public class DbUtils {
 
     public static ArrayList<Position> getPositionByIdUser(int idUser) {
 
-        ArrayList<Position> positions = new ArrayList<Position>();
+        ArrayList<Position> positions = new ArrayList<>();
 
         try {
-            ResultSet rs = executeSelectQuery("SELECT * FROM Position WHERE idUser='" + idUser + "");
+            ResultSet rs = executeSelectQuery("SELECT * FROM Position WHERE idUser='" + idUser + "'");
             while (rs.next()) {
 
                 Position position = new Position();
 
-                position.setIdNode(rs.getInt("idNode"));
                 position.setIdPosition(rs.getInt("idPosition"));
+                position.setIdNode(rs.getInt("idNode"));
                 position.setIdUser(rs.getInt("idUser"));
                 position.setTime(rs.getString("time"));
 

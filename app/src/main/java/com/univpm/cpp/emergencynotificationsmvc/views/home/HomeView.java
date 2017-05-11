@@ -27,4 +27,8 @@ public interface HomeView extends ViewMvc{
 
     // Mette il marker posizione sulla mappa
     void setPosition(int x, int y);
+
+    void setPositionText (String text);
+
+    void setMapName (String mapName);
 }
