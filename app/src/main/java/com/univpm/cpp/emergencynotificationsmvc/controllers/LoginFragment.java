@@ -12,12 +12,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.univpm.cpp.emergencynotificationsmvc.R;
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferences;
+import com.univpm.cpp.emergencynotificationsmvc.models.session.Session;
+import com.univpm.cpp.emergencynotificationsmvc.models.session.SessionModel;
+import com.univpm.cpp.emergencynotificationsmvc.models.session.SessionModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferencesImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.views.login.LoginView;
 import com.univpm.cpp.emergencynotificationsmvc.views.login.LoginViewImpl;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class LoginFragment extends Fragment implements
         LoginView.LogAsGuestBtnViewListner,
@@ -155,6 +163,8 @@ public class LoginFragment extends Fragment implements
                 }
 
                 //comunica al server il login
+                SessionTask mSessionTask = new SessionTask(username);
+                mSessionTask.execute((Void) null);
 
 
                 //carica il fragment della home
@@ -179,20 +189,43 @@ public class LoginFragment extends Fragment implements
         }
     }
 
-    /*
-    public class LogTask extends AsyncTask<Void, Void, Boolean> {
+
+    public class SessionTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String username;
+        private Session session;
 
-        LogTask(String username){
+        SessionTask(String username){
             this.username = username;
         }
 
         @Override
         protected Boolean doInBackground(Void... voids) {
 
+            Log.w("Log", "start");
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date time = new Date();
+            session = new Session();
+            session.setUsername(username);
+            session.setTimeIn(dateFormat.format(time));
+            SessionModel mSessionModel = new SessionModelImpl();
+            return mSessionModel.newSession(session);
         }
-    }*/
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (success){
+                LocalPreferences localPreferences = new LocalPreferencesImpl(getContext());
+                localPreferences.storeSession(session);
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+
+    }
 
     public class LastUserGuestTask extends AsyncTask<Void, Void, Boolean> {
 

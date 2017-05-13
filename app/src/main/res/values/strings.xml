@@ -53,5 +53,6 @@
     <!-- Strings related to preferences -->
     <string name="pref_username">username</string>
     <string name="pref_password">password</string>
+    <string name="pref_session_time_in">time_in</string>
 
 </resources>

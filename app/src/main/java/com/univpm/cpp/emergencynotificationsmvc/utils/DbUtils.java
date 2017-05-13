@@ -2,7 +2,7 @@ package com.univpm.cpp.emergencynotificationsmvc.utils;
 
 import android.util.Log;
 
-import com.univpm.cpp.emergencynotificationsmvc.R;
+import com.univpm.cpp.emergencynotificationsmvc.models.session.Session;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValues;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
@@ -412,6 +412,30 @@ public class DbUtils {
             e.printStackTrace();
         }
         return positions;
+    }
+
+    public static boolean newSession(Session session){
+        int rows = 0;
+        try {
+            rows = executeManipulationQuery("INSERT INTO `Session`(`username`, `timeIn`) " +
+                    "VALUES ('" + session.getUsername() + "','" + session.getTimeIn() + "')");
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rows != 0;
+    }
+
+    public static boolean updateSession(Session session){
+        int rows = 0;
+        try {
+            rows = executeManipulationQuery("UPDATE `Session` SET timeOut='" + session.getTimeOut() +
+                    "' WHERE  username=' " + session.getUsername() + "' AND timeIn='" + session.getTimeIn() + "'");
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rows != 0;
     }
 
 }

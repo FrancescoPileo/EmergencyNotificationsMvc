@@ -10,10 +10,21 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.BluetoothLeService;
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferences;
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferencesImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.session.Session;
+import com.univpm.cpp.emergencynotificationsmvc.models.session.SessionModel;
+import com.univpm.cpp.emergencynotificationsmvc.models.session.SessionModelImpl;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class EmergencyNotificationsMvc extends Application {
 
@@ -66,19 +77,7 @@ public class EmergencyNotificationsMvc extends Application {
 
     }
 
-/*
-    @Override
-    public void onClose () {
-        if (mBluetoothLeService != null) {
-            if (mScanning)
-                scanLeDevice(false);
-            unregisterReceiver(mReceiver);
-            unbindService(mServiceConnection);
-            mBluetoothLeService.close();
-            mBluetoothLeService = null;
-        }
-    }
-*/
+
 
     // Code to manage Service life cycle.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -149,4 +148,5 @@ public class EmergencyNotificationsMvc extends Application {
             }
         }
     };
+
 }
