@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
 
-import com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.BluetoothManager;
+import com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.MyBluetoothManager;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferences;
@@ -49,7 +49,7 @@ public class HomeFragment extends Fragment implements
     private SpinnerTask mSpinnerTask;
     private FirstMapTask mFirstMapTask;
     private MapTask mMapTask;
-    private BluetoothManager mBluetoothManager;
+    private MyBluetoothManager mMyBluetoothManager;
     private LocalPreferences mLocalPreferences;
     private Map map;
     private User user;
@@ -78,8 +78,8 @@ public class HomeFragment extends Fragment implements
         mHomeView.setMapSelectedListener(this);
         mHomeView.setToolbar(this);
 
-        mBluetoothManager = new BluetoothManager(getContext(), getActivity());
-        mBluetoothManager.scanning();
+        mMyBluetoothManager = new MyBluetoothManager(getContext(), getActivity());
+        mMyBluetoothManager.scanning();
         start();
 
         return mHomeView.getRootView();
@@ -91,7 +91,7 @@ public class HomeFragment extends Fragment implements
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            mBluetoothManager.scanning();
+            mMyBluetoothManager.scanning();
             if(started) {
                 start();
             }

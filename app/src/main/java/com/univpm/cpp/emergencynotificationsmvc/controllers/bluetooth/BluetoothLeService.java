@@ -93,6 +93,7 @@ public class BluetoothLeService extends Service {
 	public final static String ACTION_DATA_READ = "com.example.ti.ble.common.ACTION_DATA_READ";
 	public final static String ACTION_DATA_NOTIFY = "com.example.ti.ble.common.ACTION_DATA_NOTIFY";
 	public final static String ACTION_DATA_WRITE = "com.example.ti.ble.common.ACTION_DATA_WRITE";
+	public static final String ACTION_BLESRV_INIT = "com.univpm.cpp.emergencynotificationsmvc.INIT";
 	public final static String EXTRA_DATA = "com.example.ti.ble.common.EXTRA_DATA";
 	public final static String EXTRA_UUID = "com.example.ti.ble.common.EXTRA_UUID";
 	public final static String EXTRA_STATUS = "com.example.ti.ble.common.EXTRA_STATUS";
@@ -323,12 +324,12 @@ public class BluetoothLeService extends Service {
 	 */
 	public boolean initialize() {
 		// For API level 18 and above, get a reference to BluetoothAdapter through
-		// BluetoothManager.
+		// MyBluetoothManager.
 		mThis = this;
 		if (mBluetoothManager == null) {
 			mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 			if (mBluetoothManager == null) {
-				// Log.e(TAG, "Unable to initialize BluetoothManager.");
+				// Log.e(TAG, "Unable to initialize MyBluetoothManager.");
 				return false;
 			}
 		}
@@ -630,7 +631,7 @@ public class BluetoothLeService extends Service {
 	 */
 	public void disconnect(String address) {
 		if (mBtAdapter == null) {
-			// Log.w(TAG, "disconnect: BluetoothAdapter not initialized");
+			// Log.w(TAG, "onDisconnect: BluetoothAdapter not initialized");
 			return;
 		}
 		final BluetoothDevice device = mBtAdapter.getRemoteDevice(address);
@@ -641,7 +642,7 @@ public class BluetoothLeService extends Service {
 			if (connectionState != BluetoothProfile.STATE_DISCONNECTED) {
 				mBluetoothGatt.disconnect();
 			} else {
-				// Log.w(TAG, "Attempt to disconnect in state: " + connectionState);
+				// Log.w(TAG, "Attempt to onDisconnect in state: " + connectionState);
 			}
 		}
 	}

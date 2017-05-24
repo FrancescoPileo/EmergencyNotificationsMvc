@@ -1,8 +1,11 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.user;
 
-import java.sql.ResultSet;
+import com.univpm.cpp.emergencynotificationsmvc.models.Jsonable;
 
-public class User extends UserGuest{
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class User extends UserGuest implements Jsonable {
 
     private String surname;
     private String username;
@@ -31,6 +34,40 @@ public class User extends UserGuest{
         this.mobilephone = mobilephone;
         this.email = email;
         this.password = password;
+    }
+
+    public User(String jsonString){
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            this.id = jsonObject.getInt("iduser");
+            this.name = jsonObject.optString("name", null);
+            this.surname = jsonObject.optString("surname", null);
+            this.age = jsonObject.optInt("age", -1);
+            this.mobilephone = jsonObject.optString("mobilephone", null);
+            this.email = jsonObject.optString("email", null);
+            this.password = jsonObject.optString("password", null);
+            this.isGuest = jsonObject.optBoolean("isguest", false);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("name", this.getName());
+            jsonObject.put("surname", this.getSurname());
+            jsonObject.put("username", this.getUsername());
+            jsonObject.put("age", this.getAge());
+            jsonObject.put("mobilephone", this.getMobilephone());
+            jsonObject.put("email", this.getEmail());
+            jsonObject.put("password", this.getPassword());
+            jsonObject.put("isguest", this.isGuest());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
     public String getSurname() {

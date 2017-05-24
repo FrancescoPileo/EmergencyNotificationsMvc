@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+        Log.w("On stop", "");
         Intent intent = new Intent(this, CloseSessionService.class);
         startService(intent);
         super.onStop();
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onHandleIntent(@Nullable Intent intent) {
             Log.w("SessionService", "run");
-            LocalPreferences localPreferences = new LocalPreferencesImpl(getApplicationContext());
+            /*LocalPreferences localPreferences = new LocalPreferencesImpl(getApplicationContext());
             Session session = new Session();
             session.setUsername(localPreferences.getUsername());
             session.setTimeIn(localPreferences.getTimeIn());
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             session.setTimeOut(dateFormat.format(time));
 
             SessionModel mSessionModel = new SessionModelImpl();
-            mSessionModel.updateSession(session);
+            mSessionModel.updateSession(session);*/
         }
     }
 }

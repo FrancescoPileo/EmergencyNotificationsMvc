@@ -51,7 +51,7 @@ public class EmergencyNotificationsMvc extends Application {
         }
 
         // Initializes a Bluetooth adapter. For API level 18 and above, get a
-        // reference to BluetoothAdapter through BluetoothManager.
+        // reference to BluetoothAdapter through MyBluetoothManager.
         mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBtAdapter = mBluetoothManager.getAdapter();
 

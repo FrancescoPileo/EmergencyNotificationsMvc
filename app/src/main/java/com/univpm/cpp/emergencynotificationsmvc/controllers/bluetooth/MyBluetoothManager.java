@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
+import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -25,8 +26,6 @@ import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalVal
 import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValuesModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferences;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferencesImpl;
-import com.univpm.cpp.emergencynotificationsmvc.models.node.NodeModel;
-import com.univpm.cpp.emergencynotificationsmvc.models.node.NodeModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.position.Position;
 import com.univpm.cpp.emergencynotificationsmvc.models.position.PositionModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.position.PositionModelImpl;
@@ -46,7 +45,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class BluetoothManager {
+import static com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.BluetoothLeService.ACTION_BLESRV_INIT;
+
+public class MyBluetoothManager {
 
     Context context;
     Activity activity;
@@ -59,10 +60,9 @@ public class BluetoothManager {
     private boolean mBleSupported = true;
     private boolean mScanning = false;
 
-    public static final String INIT_ACTION= "com.univpm.cpp.emergencynotificationsmvc.INIT";
     private IntentFilter mFilter;
     private BluetoothAdapter mBtAdapter = null;
-    private static android.bluetooth.BluetoothManager mBluetoothManager;
+    private static BluetoothManager mBluetoothManager;
     private BluetoothLeService mBluetoothLeService = null;
     private int mConnIndex = NO_DEVICE;
 
@@ -89,13 +89,13 @@ public class BluetoothManager {
 
 
 
-    public BluetoothManager(Context context, Activity activity){
+    public MyBluetoothManager(Context context, Activity activity){
 
         this.context = context;
         this.activity = activity;
 
         //BluetoothLeService ready broadcast
-        mFilter = new IntentFilter(INIT_ACTION);
+        mFilter = new IntentFilter(ACTION_BLESRV_INIT);
         mFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         activity.registerReceiver(mReceiver, mFilter);
 
@@ -158,7 +158,7 @@ public class BluetoothManager {
         mFilter2.addAction(BluetoothLeService.ACTION_DATA_WRITE);
         activity.registerReceiver(mGattUpdateReceiver, mFilter2);
 
-        if (mInitialised) {
+        if (mInitialised && mBtAdapter.isEnabled()) {
             //Inizia la scansione dei dispositivi ble
             startScan();
 
@@ -294,7 +294,7 @@ public class BluetoothManager {
         }
     }
 
-    public void disconnect(){
+    public void onDisconnect(){
         activity.unregisterReceiver(mGattUpdateReceiver);
         storeValues();
         int connState = mBluetoothManager.getConnectionState(mSensor.getBluetoothDevice(),
@@ -356,11 +356,11 @@ public class BluetoothManager {
             final String action = intent.getAction();
             final int status = intent.getIntExtra(BluetoothLeService.EXTRA_STATUS, BluetoothGatt.GATT_FAILURE);
 
-            if (INIT_ACTION.equals(action)) {
+            if (ACTION_BLESRV_INIT.equals(action)) {
                 //BluetoothLeService ok
                 init();
                 if (scanQueue){
-                    Log.w("ScanQueue", "matteo si sbaglia");
+                    //Log.w("ScanQueue", "matteo si sbaglia");
                     scanning();
                     scanQueue = false;
                 }
@@ -369,7 +369,11 @@ public class BluetoothManager {
                 switch (mBtAdapter.getState()) {
                     case BluetoothAdapter.STATE_ON:
                         mConnIndex = NO_DEVICE;
-                        //startBluetoothLeService();
+                        if (scanQueue){
+                            //Log.w("ScanQueue", "matteo si sbaglia");
+                            scanning();
+                            scanQueue = false;
+                        }
                         break;
                     case BluetoothAdapter.STATE_OFF:
                         Toast.makeText(context, R.string.bt_turned_off, Toast.LENGTH_LONG).show();
@@ -399,7 +403,7 @@ public class BluetoothManager {
                     setError("Connect failed. Status: " + status);
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 //todo gestire
-                // GATT disconnect
+                // GATT onDisconnect
                 //stopDeviceActivity();
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                     //mScanView.setStatus(mBluetoothDevice.getName() + " disconnected", STATUS_DURATION);
@@ -481,7 +485,7 @@ public class BluetoothManager {
                     stopNotify.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            disconnect();
+                            onDisconnect();
                             firstNotify = true;
                         }
                     }, 5000);
