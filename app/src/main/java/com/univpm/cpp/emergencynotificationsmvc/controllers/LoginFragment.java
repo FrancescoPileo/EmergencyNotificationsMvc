@@ -282,10 +282,9 @@ public class LoginFragment extends Fragment implements
         protected void onPostExecute(final Boolean success) {
             mLoginView.showProgress(false);
             if (success) {
-                //todo salvare le credenziali in locale
                 //salva le credenziali in locale
-                //LocalPreferencesImpl localPreferences = new LocalPreferencesImpl(getContext());
-                //localPreferences.rememberLogin(username, null);
+                LocalPreferencesImpl localPreferences = new LocalPreferencesImpl(getContext());
+                localPreferences.rememberLogin("Guest-" + String.valueOf(index),null);
 
                 //carica il fragment della home
                 Fragment newFragment = new HomeFragment();

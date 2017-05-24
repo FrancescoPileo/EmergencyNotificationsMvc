@@ -195,8 +195,8 @@ public class HomeFragment extends Fragment implements
         @Override
         protected Boolean doInBackground(Void... params) {
 
-
             user = mUserModel.getUser(mLocalPreferences.getUsername());
+
             Position lastPosition = findLastPosition(user);
 
             if (lastPosition.getIdPosition() == -1) {

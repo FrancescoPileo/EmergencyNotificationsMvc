@@ -204,6 +204,7 @@ public class RegistrationFragment extends Fragment implements
 
     }
 
+
     public class CheckUsernameTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String username;

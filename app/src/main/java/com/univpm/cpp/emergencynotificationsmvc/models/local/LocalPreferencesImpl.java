@@ -28,7 +28,7 @@ public class LocalPreferencesImpl implements  LocalPreferences {
     @Override
     public boolean alreadyLoged() {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(LOGIN_PERFERENCES, Context.MODE_PRIVATE);
-        String login = sharedPreferences.getString(getContext().getString(R.string.pref_username), null);
+        String login = sharedPreferences.getString(getContext().getString(R.string.pref_password), null);
         return (login != null);
     }
 

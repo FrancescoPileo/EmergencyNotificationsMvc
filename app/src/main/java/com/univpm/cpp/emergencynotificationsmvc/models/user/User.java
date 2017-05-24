@@ -40,6 +40,7 @@ public class User extends UserGuest implements Jsonable {
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
             this.id = jsonObject.getInt("iduser");
+            this.username = jsonObject.getString("username");
             this.name = jsonObject.optString("name", null);
             this.surname = jsonObject.optString("surname", null);
             this.age = jsonObject.optInt("age", -1);
@@ -124,5 +125,18 @@ public class User extends UserGuest implements Jsonable {
 
     public void setGuest(boolean guest) {
         isGuest = guest;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "surname='" + surname + '\'' +
+                ", username='" + username + '\'' +
+                ", age=" + age +
+                ", mobilephone='" + mobilephone + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", isGuest=" + isGuest +
+                '}';
     }
 }

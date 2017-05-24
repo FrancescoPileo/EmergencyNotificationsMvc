@@ -1,6 +1,8 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.user;
 
 
+import android.util.Log;
+
 import com.univpm.cpp.emergencynotificationsmvc.utils.DbUtils;
 import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
 
@@ -30,7 +32,19 @@ public class UserModelImpl implements UserModel {
     @Override
     public User getLastGuestUser() {
         User user = null;
-        user = DbUtils.getLastGuestUser();
+        String response = null;
+        try {
+            response = HttpUtils.sendGet("appuser/lastguest");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //user = DbUtils.getUser(username);
+        if (response != null){
+            Log.w("Response", "ok");
+            user = new User(response);
+        }
+
+        Log.w("Utente", user.toString());
         return user;
     }
 
@@ -48,7 +62,10 @@ public class UserModelImpl implements UserModel {
 
     @Override
     public boolean newGuestUser(int index) {
-        return DbUtils.newGuestUser(index);
+        User user = new User();
+        user.setUsername("Guest-" + String.valueOf(index));
+        user.setGuest(true);
+        return newUser(user);
     }
 
     @Override
