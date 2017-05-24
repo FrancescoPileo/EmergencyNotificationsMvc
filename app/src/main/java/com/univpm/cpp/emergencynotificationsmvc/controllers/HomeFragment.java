@@ -5,8 +5,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
 
+import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.MyBluetoothManager;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModelImpl;
@@ -38,7 +43,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class HomeFragment extends Fragment implements
-        HomeView.MapSpnItemSelectedViewListener {
+        HomeView.MapSpnItemSelectedViewListener,
+        HomeView.LogoutBtnViewListener{
 
     private HomeView mHomeView;
     private MapModel mMapModel;
@@ -76,13 +82,43 @@ public class HomeFragment extends Fragment implements
 
         mSpinnerTask.execute((Void) null);
         mHomeView.setMapSelectedListener(this);
+        mHomeView.setLogoutListener(this);
         mHomeView.setToolbar(this);
+
 
         mMyBluetoothManager = new MyBluetoothManager(getContext(), getActivity());
         mMyBluetoothManager.scanning();
         start();
 
         return mHomeView.getRootView();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        //super.onCreateOptionsMenu(menu, inflater);
+        mHomeView.setToolbarItems(menu, inflater);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        mHomeView.executeToolbarItemAction(id);
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onLogoutClick() {
+        mLocalPreferences.deleteLogin();
+
+        //carica il fragment di login
+        Fragment newFragment = new LoginFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+        transaction.replace(R.id.fragment_container, newFragment);
+        transaction.addToBackStack(null);
+
+        transaction.commit();
     }
 
     private boolean started = false;
@@ -140,10 +176,15 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void onStop() {
-        //stop();
+        stop();
         super.onStop();
     }
 
+    @Override
+    public void onResume() {
+        //start();
+        super.onResume();
+    }
 
     public class SpinnerTask extends AsyncTask<Void, Void, Boolean> {
 

@@ -26,6 +26,15 @@ public class LocalPreferencesImpl implements  LocalPreferences {
     }
 
     @Override
+    public void deleteLogin() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(LOGIN_PERFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(getContext().getString(R.string.pref_username));
+        editor.remove(getContext().getString(R.string.pref_password));
+        editor.commit();
+    }
+
+    @Override
     public boolean alreadyLoged() {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(LOGIN_PERFERENCES, Context.MODE_PRIVATE);
         String login = sharedPreferences.getString(getContext().getString(R.string.pref_password), null);

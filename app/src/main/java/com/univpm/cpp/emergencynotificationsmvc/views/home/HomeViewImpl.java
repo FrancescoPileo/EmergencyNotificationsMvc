@@ -25,6 +25,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -35,6 +37,7 @@ import android.widget.TextView;
 
 import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.utils.TouchImageView;
+import com.univpm.cpp.emergencynotificationsmvc.views.login.LoginView;
 
 import java.util.ArrayList;
 
@@ -44,6 +47,7 @@ public class HomeViewImpl implements HomeView{
     private View mRootView;
 
     private View homeFormView;
+    private LogoutBtnViewListener logoutListener;
     private MapSpnItemSelectedViewListener mapSelectedListener;
 
     private TextView positionText;
@@ -108,14 +112,35 @@ public class HomeViewImpl implements HomeView{
     }
 
     @Override
+    public void setLogoutListener(LogoutBtnViewListener listener) {
+        this.logoutListener = listener;
+    }
+
+    @Override
     public String getMap() {
         return null; //todo
     }
 
     @Override
     public void setToolbar(Fragment fragment) {
+        fragment.setHasOptionsMenu(true);
+        AppCompatActivity activity = ((AppCompatActivity)fragment.getActivity());
         toolbar.setTitle(R.string.title_activity_home);
-        ((AppCompatActivity)fragment.getActivity()).setSupportActionBar(toolbar);
+        activity.setSupportActionBar(toolbar);
+    }
+
+    @Override
+    public void setToolbarItems(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+    }
+
+    @Override
+    public void executeToolbarItemAction(int itemId){
+        switch (itemId){
+            case R.id.action_logout:
+                logoutListener.onLogoutClick();
+                break;
+        }
     }
 
     @Override

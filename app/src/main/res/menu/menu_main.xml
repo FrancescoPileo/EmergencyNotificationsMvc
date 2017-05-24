@@ -15,6 +15,5 @@ tools:context=".MainActivity">
     android:title="Logout"
     android:icon="@drawable/ic_logout"
     app:showAsAction="ifRoom"
-    ></item>
-
+    />
 </menu>

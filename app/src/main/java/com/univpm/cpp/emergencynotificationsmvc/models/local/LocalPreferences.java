@@ -8,6 +8,8 @@ public interface LocalPreferences {
 
     public void rememberLogin(String username, String password);
 
+    public void deleteLogin();
+
     public void storeSession(Session session);
 
     public void deleteSession();
@@ -19,7 +21,5 @@ public interface LocalPreferences {
     public String getPassword();
 
     public String getTimeIn();
-
-
 
 }
