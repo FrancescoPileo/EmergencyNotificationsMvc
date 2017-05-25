@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
@@ -33,6 +34,9 @@ import com.univpm.cpp.emergencynotificationsmvc.models.node.NodeModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.position.Position;
 import com.univpm.cpp.emergencynotificationsmvc.models.position.PositionModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.position.PositionModelImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.session.Session;
+import com.univpm.cpp.emergencynotificationsmvc.models.session.SessionModel;
+import com.univpm.cpp.emergencynotificationsmvc.models.session.SessionModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelImpl;
@@ -59,6 +63,7 @@ public class HomeFragment extends Fragment implements
     private LocalPreferences mLocalPreferences;
     private Map map;
     private User user;
+    private Session session;
     private Node positionNode;              //è il nodo relativo alla posizione dell'utente
     private boolean firstTime;
 
@@ -80,11 +85,17 @@ public class HomeFragment extends Fragment implements
         positionNode = new Node();
         firstTime = true;
 
+        //prende l'utente corrente
+        user = mUserModel.getUser(mLocalPreferences.getUsername());
+
+        //inizia la sessione
+        SessionTask mSessionTask = new SessionTask(user.getUsername());
+        mSessionTask.execute((Void) null);
+
         mSpinnerTask.execute((Void) null);
         mHomeView.setMapSelectedListener(this);
         mHomeView.setLogoutListener(this);
         mHomeView.setToolbar(this);
-
 
         mMyBluetoothManager = new MyBluetoothManager(getContext(), getActivity());
         mMyBluetoothManager.scanning();
@@ -109,16 +120,10 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void onLogoutClick() {
-        mLocalPreferences.deleteLogin();
 
-        //carica il fragment di login
-        Fragment newFragment = new LoginFragment();
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-        transaction.replace(R.id.fragment_container, newFragment);
-        transaction.addToBackStack(null);
-
-        transaction.commit();
+        //termina la sessione poi fa il logout
+        EndSessionTask mEndSessionTask = new EndSessionTask();
+        mEndSessionTask.execute((Void) null);
     }
 
     private boolean started = false;
@@ -236,7 +241,6 @@ public class HomeFragment extends Fragment implements
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            user = mUserModel.getUser(mLocalPreferences.getUsername());
 
             Position lastPosition = findLastPosition(user);
 
@@ -411,6 +415,85 @@ public class HomeFragment extends Fragment implements
         return lastPosition;
     }
 
+    public class SessionTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final String username;
+
+        SessionTask(String username){
+            this.username = username;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+
+            Log.w("Log", "start");
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date time = new Date();
+            session = new Session();
+            session.setUsername(username);
+            session.setTimeIn(dateFormat.format(time));
+            SessionModel mSessionModel = new SessionModelImpl();
+            return mSessionModel.newSession(session);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (success){
+                LocalPreferences localPreferences = new LocalPreferencesImpl(getContext());
+                localPreferences.storeSession(session);
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+
+    }
+
+
+    public class EndSessionTask extends AsyncTask<Void, Void, Boolean> {
+
+
+        EndSessionTask(){
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date time = new Date();
+            session.setTimeOut(dateFormat.format(time));
+            SessionModel mSessionModel = new SessionModelImpl();
+            return mSessionModel.updateSession(session);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (success){
+
+                mLocalPreferences.deleteLogin();
+                mLocalPreferences.deleteSession();
+
+                //carica il fragment di login
+                Fragment newFragment = new LoginFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                transaction.replace(R.id.fragment_container, newFragment);
+                transaction.addToBackStack(null);
+
+                transaction.commit();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+
+    }
 
 
 }

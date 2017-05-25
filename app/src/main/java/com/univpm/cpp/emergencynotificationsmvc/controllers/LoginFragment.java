@@ -162,11 +162,6 @@ public class LoginFragment extends Fragment implements
                     localPreferences.rememberLogin(username, password);
                 }
 
-                //comunica al server il login
-                SessionTask mSessionTask = new SessionTask(username);
-                mSessionTask.execute((Void) null);
-
-
                 //carica il fragment della home
                 Fragment newFragment = new HomeFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -190,42 +185,7 @@ public class LoginFragment extends Fragment implements
     }
 
 
-    public class SessionTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String username;
-        private Session session;
-
-        SessionTask(String username){
-            this.username = username;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-
-            Log.w("Log", "start");
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date time = new Date();
-            session = new Session();
-            session.setUsername(username);
-            session.setTimeIn(dateFormat.format(time));
-            SessionModel mSessionModel = new SessionModelImpl();
-            return mSessionModel.newSession(session);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean success) {
-            if (success){
-                LocalPreferences localPreferences = new LocalPreferencesImpl(getContext());
-                localPreferences.storeSession(session);
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-        }
-
-    }
 
     public class LastUserGuestTask extends AsyncTask<Void, Void, Boolean> {
 

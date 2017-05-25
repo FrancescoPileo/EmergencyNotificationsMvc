@@ -1,7 +1,12 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.session;
 
+import com.univpm.cpp.emergencynotificationsmvc.models.Jsonable;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 //todo vedere come funzionano le date
-public class Session {
+public class Session implements Jsonable {
 
     protected int id;
     protected String username;
@@ -20,6 +25,18 @@ public class Session {
         this.username = username;
         this.timeIn = timeIn;
         this.timeOut = timeOut;
+    }
+
+    public Session(String jsonString){
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            this.id = jsonObject.getInt("iduser");
+            this.username = jsonObject.getString("username");
+            this.timeIn = jsonObject.getString("sessiontimestart");
+            this.timeOut = jsonObject.getString("sessiontimestop");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public int getId() {
@@ -52,5 +69,20 @@ public class Session {
 
     public void setTimeOut(String timeOut) {
         this.timeOut = timeOut;
+    }
+
+    @Override
+    public JSONObject toJson() {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("idsession", this.getId());
+            jsonObject.put("username", this.getUsername());
+            jsonObject.put("sessiontimestart", this.getTimeIn());
+            jsonObject.put("sessiontimestop", this.getTimeOut());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 }
