@@ -40,11 +40,10 @@ public class UserModelImpl implements UserModel {
         }
         //user = DbUtils.getUser(username);
         if (response != null){
-            Log.w("Response", "ok");
             user = new User(response);
+            Log.w("Response", user.getUsername());
         }
 
-        Log.w("Utente", user.toString());
         return user;
     }
 

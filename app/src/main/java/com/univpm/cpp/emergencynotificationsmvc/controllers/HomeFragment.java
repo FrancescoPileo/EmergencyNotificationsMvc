@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
@@ -85,11 +86,8 @@ public class HomeFragment extends Fragment implements
         positionNode = new Node();
         firstTime = true;
 
-        //prende l'utente corrente
-        user = mUserModel.getUser(mLocalPreferences.getUsername());
-
         //inizia la sessione
-        SessionTask mSessionTask = new SessionTask(user.getUsername());
+        SessionTask mSessionTask = new SessionTask();
         mSessionTask.execute((Void) null);
 
         mSpinnerTask.execute((Void) null);
@@ -417,21 +415,19 @@ public class HomeFragment extends Fragment implements
 
     public class SessionTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String username;
-
-        SessionTask(String username){
-            this.username = username;
-        }
+        SessionTask(){}
 
         @Override
         protected Boolean doInBackground(Void... voids) {
 
             Log.w("Log", "start");
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date time = new Date();
+            user = mUserModel.getUser(mLocalPreferences.getUsername());
+            /*DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");*/
+            Date date = new Date();
+            Timestamp time = new Timestamp(date.getTime());
             session = new Session();
-            session.setUsername(username);
-            session.setTimeIn(dateFormat.format(time));
+            session.setUser(user);
+            session.setTimeIn(String.valueOf(time));
             SessionModel mSessionModel = new SessionModelImpl();
             return mSessionModel.newSession(session);
         }
@@ -455,17 +451,14 @@ public class HomeFragment extends Fragment implements
     public class EndSessionTask extends AsyncTask<Void, Void, Boolean> {
 
 
-        EndSessionTask(){
-
-        }
+        EndSessionTask(){}
 
         @Override
         protected Boolean doInBackground(Void... voids) {
 
-
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date time = new Date();
-            session.setTimeOut(dateFormat.format(time));
+            Date date = new Date();
+            Timestamp time = new Timestamp(date.getTime());
+            session.setTimeOut(String.valueOf(time));
             SessionModel mSessionModel = new SessionModelImpl();
             return mSessionModel.updateSession(session);
         }
@@ -486,6 +479,8 @@ public class HomeFragment extends Fragment implements
 
                 transaction.commit();
             }
+
+            else Log.w("Non esce", "non esce");
         }
 
         @Override

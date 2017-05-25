@@ -1,6 +1,7 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.session;
 
 import com.univpm.cpp.emergencynotificationsmvc.models.Jsonable;
+import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,20 +10,20 @@ import org.json.JSONObject;
 public class Session implements Jsonable {
 
     protected int id;
-    protected String username;
+    protected User user;
     protected String timeIn;
     protected String timeOut;
 
     public Session(){
         this.id = -1;
-        this.username = null;
+        this.user = null;
         this.timeIn = null;
         this.timeOut = null;
     }
 
-    public Session(int id, String username, String timeIn, String timeOut) {
+    public Session(int id, User user, String timeIn, String timeOut) {
         this.id = id;
-        this.username = username;
+        this.user = user;
         this.timeIn = timeIn;
         this.timeOut = timeOut;
     }
@@ -31,7 +32,7 @@ public class Session implements Jsonable {
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
             this.id = jsonObject.getInt("iduser");
-            this.username = jsonObject.getString("username");
+            this.user = new User(jsonObject.getString("username"));
             this.timeIn = jsonObject.getString("sessiontimestart");
             this.timeOut = jsonObject.getString("sessiontimestop");
         } catch (JSONException e) {
@@ -47,12 +48,12 @@ public class Session implements Jsonable {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public User getUser() {
+        return user;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getTimeIn() {
@@ -77,10 +78,12 @@ public class Session implements Jsonable {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("idsession", this.getId());
-            jsonObject.put("username", this.getUsername());
+            jsonObject.put("username", this.user.toJson());
             jsonObject.put("sessiontimestart", this.getTimeIn());
             jsonObject.put("sessiontimestop", this.getTimeOut());
-        } catch (JSONException e) {
+        }
+
+        catch (JSONException e) {
             e.printStackTrace();
         }
         return jsonObject;

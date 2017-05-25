@@ -207,7 +207,7 @@ public class LoginFragment extends Fragment implements
             mLastUserGuestTask = null;
 
             if (success) {
-                int index = 1;
+                int index = 0;
                 if (lastGuestUser != null){
                     //Log.w("lastGuest", lastGuestUser.getUsername());
                     index = Integer.parseInt(lastGuestUser.getUsername().substring(6));
