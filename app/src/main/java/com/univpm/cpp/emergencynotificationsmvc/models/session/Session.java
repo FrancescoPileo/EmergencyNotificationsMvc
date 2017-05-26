@@ -6,6 +6,11 @@ import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.sql.Timestamp;
+import java.util.TimeZone;
+
 //todo vedere come funzionano le date
 public class Session implements Jsonable {
 
@@ -31,11 +36,23 @@ public class Session implements Jsonable {
     public Session(String jsonString){
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
-            this.id = jsonObject.getInt("iduser");
-            this.user = new User(jsonObject.getString("username"));
-            this.timeIn = jsonObject.getString("sessiontimestart");
-            this.timeOut = jsonObject.getString("sessiontimestop");
-        } catch (JSONException e) {
+            User user1 = new User(jsonObject.getJSONObject("username").toString());
+            this.id = jsonObject.getInt("idsession");
+            this.user = user1;
+
+            Long unixseconds = jsonObject.getLong("sessiontimestart");
+            Date dateStart = new Date(unixseconds);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC+1"));
+            this.timeIn = sdf.format(dateStart);
+
+            unixseconds = jsonObject.optLong("sessiontimestop", -1);
+            if (unixseconds != -1) {
+                Date dateStop = new Date(unixseconds);
+                this.timeOut = sdf.format(dateStop);}
+            else this.timeOut = null;
+        }
+        catch (JSONException e) {
             e.printStackTrace();
         }
     }
@@ -77,15 +94,25 @@ public class Session implements Jsonable {
 
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("idsession", this.getId());
-            jsonObject.put("username", this.user.toJson());
-            jsonObject.put("sessiontimestart", this.getTimeIn());
-            jsonObject.put("sessiontimestop", this.getTimeOut());
+            if (this.getId() != -1) jsonObject.accumulate("idsession", this.getId());
+            jsonObject.accumulate("username", this.getUser().toJson());
+            jsonObject.accumulate("sessiontimestart", this.getTimeIn());
+            jsonObject.accumulate("sessiontimestop", this.getTimeOut());
         }
 
         catch (JSONException e) {
             e.printStackTrace();
         }
         return jsonObject;
+    }
+
+    @Override
+    public String toString() {
+        return "Session{" +
+                "id=" + id +
+                ", user=" + user +
+                ", timeIn='" + timeIn + '\'' +
+                ", timeOut='" + timeOut + '\'' +
+                '}';
     }
 }

@@ -12,7 +12,7 @@ import java.net.URL;
 
 public class HttpUtils {
 
-    private static final String SERVER_HOST = "192.168.1.2:8080";
+    private static final String SERVER_HOST = "192.168.1.5:8080";
     private static final String SERVER_NAME = "EmergencyNotificationsServer";
 
 
@@ -33,6 +33,8 @@ public class HttpUtils {
         int responseCode = con.getResponseCode();
         String responseString = null;
 
+       Log.w("Responsecode:" , String.valueOf(responseCode));
+
         if (responseCode == HttpURLConnection.HTTP_OK){
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(con.getInputStream()));
@@ -47,7 +49,7 @@ public class HttpUtils {
             responseString = response.toString();
 
             //print result
-            Log.w("Response:" , response.toString());
+            Log.w("ResponseToGetRequest:" , response.toString());
 
         }
 
@@ -68,7 +70,7 @@ public class HttpUtils {
 
         // Send post request
         OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-        Log.w("JsonString", obj.toJson().toString());
+        Log.w("JsonString_PostRequest", obj.toJson().toString());
         wr.write(obj.toJson().toString());
         wr.flush();
 
@@ -90,7 +92,7 @@ public class HttpUtils {
         Log.w("Response:" , response.toString());
         */
 
-        Log.w("Response", String.valueOf(responseCode));
+        Log.w("Response_PostRequest", String.valueOf(responseCode));
        return (responseCode == HttpURLConnection.HTTP_NO_CONTENT);
     }
 

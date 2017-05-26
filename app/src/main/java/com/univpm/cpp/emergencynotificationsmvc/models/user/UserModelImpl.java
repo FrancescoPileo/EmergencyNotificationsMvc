@@ -22,7 +22,7 @@ public class UserModelImpl implements UserModel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //user = DbUtils.getUser(username);
+
         if (response != null){
             user = new User(response);
         }
@@ -38,10 +38,8 @@ public class UserModelImpl implements UserModel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //user = DbUtils.getUser(username);
         if (response != null){
             user = new User(response);
-            Log.w("Response", user.getUsername());
         }
 
         return user;

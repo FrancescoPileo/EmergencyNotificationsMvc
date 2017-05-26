@@ -1,5 +1,6 @@
 package com.univpm.cpp.emergencynotificationsmvc.controllers;
 
+import android.content.pm.PackageInstaller;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
@@ -46,6 +46,7 @@ import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeViewImpl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class HomeFragment extends Fragment implements
         HomeView.MapSpnItemSelectedViewListener,
@@ -57,8 +58,10 @@ public class HomeFragment extends Fragment implements
     private UserModel mUserModel;
     private NodeModel mNodeModel;
     private PositionModel mPositionModel;
+    private SessionModel mSessionModel;
     private SpinnerTask mSpinnerTask;
     private FirstMapTask mFirstMapTask;
+    private InitTask mInitTask;
     private MapTask mMapTask;
     private MyBluetoothManager mMyBluetoothManager;
     private LocalPreferences mLocalPreferences;
@@ -81,15 +84,16 @@ public class HomeFragment extends Fragment implements
         mLocalPreferences = new LocalPreferencesImpl(getContext());
         mBeaconModel = new BeaconModelImpl();
         mPositionModel = new PositionModelImpl();
+        mSessionModel = new SessionModelImpl();
         mSpinnerTask = new SpinnerTask();
+        mInitTask = new InitTask();
+        user = new User();
         map = new Map();
         positionNode = new Node();
+        session = new Session();
         firstTime = true;
 
-        //inizia la sessione
-        SessionTask mSessionTask = new SessionTask();
-        mSessionTask.execute((Void) null);
-
+        mInitTask.execute((Void) null);
         mSpinnerTask.execute((Void) null);
         mHomeView.setMapSelectedListener(this);
         mHomeView.setLogoutListener(this);
@@ -187,6 +191,36 @@ public class HomeFragment extends Fragment implements
     public void onResume() {
         //start();
         super.onResume();
+    }
+
+
+    public class InitTask extends AsyncTask<Void, Void, Boolean> {
+
+
+        InitTask(){}
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+
+            user = mUserModel.getUser(mLocalPreferences.getUsername());
+            session = mSessionModel.getLastSession(user);
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (success){
+            }
+
+            else Log.w("Errore", "ErroreInitTask");
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+
     }
 
     public class SpinnerTask extends AsyncTask<Void, Void, Boolean> {
@@ -413,39 +447,7 @@ public class HomeFragment extends Fragment implements
         return lastPosition;
     }
 
-    public class SessionTask extends AsyncTask<Void, Void, Boolean> {
 
-        SessionTask(){}
-
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-
-            Log.w("Log", "start");
-            user = mUserModel.getUser(mLocalPreferences.getUsername());
-            /*DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");*/
-            Date date = new Date();
-            Timestamp time = new Timestamp(date.getTime());
-            session = new Session();
-            session.setUser(user);
-            session.setTimeIn(String.valueOf(time));
-            SessionModel mSessionModel = new SessionModelImpl();
-            return mSessionModel.newSession(session);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean success) {
-            if (success){
-                LocalPreferences localPreferences = new LocalPreferencesImpl(getContext());
-                localPreferences.storeSession(session);
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-        }
-
-    }
 
 
     public class EndSessionTask extends AsyncTask<Void, Void, Boolean> {
@@ -457,9 +459,10 @@ public class HomeFragment extends Fragment implements
         protected Boolean doInBackground(Void... voids) {
 
             Date date = new Date();
-            Timestamp time = new Timestamp(date.getTime());
-            session.setTimeOut(String.valueOf(time));
-            SessionModel mSessionModel = new SessionModelImpl();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+1"));
+            session.setTimeOut(dateFormat.format(date));
+            mSessionModel = new SessionModelImpl();
             return mSessionModel.updateSession(session);
         }
 
@@ -480,7 +483,7 @@ public class HomeFragment extends Fragment implements
                 transaction.commit();
             }
 
-            else Log.w("Non esce", "non esce");
+            else Log.w("ErroreLogout", "non esce");
         }
 
         @Override
