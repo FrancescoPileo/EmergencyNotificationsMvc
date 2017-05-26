@@ -1,6 +1,7 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.position;
 
 import com.univpm.cpp.emergencynotificationsmvc.utils.DbUtils;
+import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
 
 import java.util.ArrayList;
 
@@ -12,8 +13,14 @@ public class PositionModelImpl implements PositionModel {
 
     @Override
     public boolean newPosition(Position position) {
-        return DbUtils.newPosition(position);
-    }
+
+        Boolean success = false;
+        try {
+            success = HttpUtils.sendPost("userposition", position);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return success;    }
 
     @Override
     public ArrayList<Position> getPositionByIdUser(int idUser) {
