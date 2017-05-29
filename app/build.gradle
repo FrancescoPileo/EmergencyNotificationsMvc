@@ -35,11 +35,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
     compile 'com.android.support:design:24.2.1'
-    //compile 'com.mashape.unirest:unirest-java:1.4.9'
-    //compile 'org.apache.httpcomponents:httpclient:4.3.6'
-    //compile 'org.apache.httpcomponents:httpasyncclient:4.0.2'
-    //compile 'org.apache.httpcomponents:httpmime:4.3.6'
-    //compile 'org.json:json:20140107'
     testCompile 'junit:junit:4.12'
     compile files('libs/mysql-connector-java-5.1.41-bin.jar')
 }

@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        checkBtPermissions();
+        checkPermissions();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, new LoginFragment());
@@ -71,11 +71,12 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    public void checkBtPermissions() {
+    public void checkPermissions() {
         this.requestPermissions(
                 new String[]{
                         Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN,
-                        Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
+                        Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
                 },
                 REQUEST_BT_PERMISSIONS);
     }

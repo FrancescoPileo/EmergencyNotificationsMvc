@@ -1,19 +1,28 @@
 package com.univpm.cpp.emergencynotificationsmvc.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.util.Log;
 
 import com.univpm.cpp.emergencynotificationsmvc.models.Jsonable;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
 
 public class HttpUtils {
 
     private static final String SERVER_HOST = "172.23.170.169:8080";
-    private static final String SERVER_NAME = "EmergencyNotifications";
+    private static final String SERVER_NAME = "EmergencyNotificationsServer";
+
+    public static final String MAPS_LOCATION = Environment.getExternalStorageDirectory() + File.separator
+            + "EmergencyNotifications" + File.separator + "maps" + File.separator;
 
 
     // HTTP GET request
@@ -131,5 +140,30 @@ public class HttpUtils {
 
         Log.w("Response", String.valueOf(responseCode));
         return (responseCode == HttpURLConnection.HTTP_NO_CONTENT);
+    }
+
+
+    public static Bitmap getMapBitmap(String mapname) throws Exception {
+
+        URL urlObj = new URL("http://" + SERVER_HOST + "/" + SERVER_NAME + "/webresources/map/" + mapname + "/png");
+        HttpURLConnection connection  = (HttpURLConnection) urlObj.openConnection();
+
+        //add request header
+        String fileUrl = MAPS_LOCATION + mapname + ".png";
+        Log.w("FileUrl", fileUrl);
+        File imageFile = new File(fileUrl);
+        if (imageFile.exists()) {
+            Long lastModified = imageFile.lastModified();
+            Date lastModifiedDate = new Date(lastModified);
+            Log.w("DataModifica: ", lastModifiedDate.toString());
+            connection.setRequestProperty("If-Modified-Since", lastModifiedDate.toString());
+        }
+
+        InputStream is = connection.getInputStream();
+        Bitmap img = null;
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            img = BitmapFactory.decodeStream(is);
+        }
+        return img;
     }
 }

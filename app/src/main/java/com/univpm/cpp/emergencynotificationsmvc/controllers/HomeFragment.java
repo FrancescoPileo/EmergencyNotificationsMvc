@@ -1,9 +1,14 @@
 package com.univpm.cpp.emergencynotificationsmvc.controllers;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -14,6 +19,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
@@ -36,11 +45,15 @@ import com.univpm.cpp.emergencynotificationsmvc.models.position.PositionModelImp
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelImpl;
+import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
 import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeView;
 import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeViewImpl;
 
 import java.util.ArrayList;
 import java.util.Date;
+
+import static android.content.ContentValues.TAG;
+import static com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils.MAPS_LOCATION;
 
 public class HomeFragment extends Fragment implements
         HomeView.MapSpnItemSelectedViewListener,
@@ -210,12 +223,69 @@ public class HomeFragment extends Fragment implements
 
             if (success) {
                 mHomeView.populateSpinner(stringArrayList);
+                CheckMapsTask task = new CheckMapsTask(stringArrayList);
+                task.execute((Void) null);
+
             }
             else {
                 Log.w("Spinner", "error");
             }
         }
+    }
 
+    public class CheckMapsTask extends AsyncTask<Void, Void, Boolean> {
+
+        private ArrayList<String> stringArrayList;
+
+        CheckMapsTask(ArrayList<String> stringArrayList) {
+
+            this.stringArrayList = stringArrayList;
+        }
+
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+
+
+           for (String mapname:stringArrayList){
+               try {
+                   Bitmap bitmap = HttpUtils.getMapBitmap(mapname);
+                   if (bitmap != null)
+                   {
+                       saveBitmap(bitmap, mapname);
+                   }
+               } catch (Exception e) {
+                   e.printStackTrace();
+               }
+           }
+
+           return true;
+        }
+
+        private void saveBitmap(Bitmap bitmap, String name){
+            File dir = new File(MAPS_LOCATION);
+            if(!dir.exists())
+                dir.mkdirs();
+            File file = new File(dir, name + ".png");
+            FileOutputStream fOut = null;
+            try {
+                fOut = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+                fOut.flush();
+                fOut.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mSpinnerTask = null;
+
+
+        }
     }
 
 
