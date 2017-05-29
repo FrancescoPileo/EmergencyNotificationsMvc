@@ -33,8 +33,8 @@ public interface HomeView extends ViewMvc{
     void setToolbarItems(Menu menu, MenuInflater inflater);
     void executeToolbarItemAction(int itemId);
 
-    // Prende in input il path della mappa (preso dal db), cerca la mappa nella cartella drawable e la mette in TouchImageView
-    void setMapOnView(String path);
+    // Prende in input l'oggetto che identifica la mappa (importato dal db), cerca la mappa nella cartella maps e la mette in TouchImageView
+    void setMapOnView(Map map);
 
     // Mette il marker posizione sulla mappa
     void setPosition(int x, int y);

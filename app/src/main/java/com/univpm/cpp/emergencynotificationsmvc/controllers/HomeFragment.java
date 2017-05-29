@@ -351,13 +351,11 @@ public class HomeFragment extends Fragment implements
 
             if (lastPosition.getIdPosition() == -1) {
                 map = mMapModel.getMapByName(nameMap);
-                path = map.getImagePath();
             }
 
             else {
                 positionNode = mNodeModel.getNodeById(lastPosition.getIdNode());
                 map = mMapModel.getMapById(positionNode.getIdMap());
-                path = map.getImagePath();
             }
 
             return true;
@@ -372,7 +370,7 @@ public class HomeFragment extends Fragment implements
 
             if (success) {
 
-                mHomeView.setMapOnView(path);
+                mHomeView.setMapOnView(map);
 
                 if (positionNode.getIdNode() != -1) {
                     mHomeView.setPosition(getPixelsXFromMetres(positionNode.getX(), map), getPixelsYFromMetres(positionNode.getY(), map)); //qua gli si deve passare la x e la y del nodo posizione
@@ -413,7 +411,6 @@ public class HomeFragment extends Fragment implements
         protected Boolean doInBackground(Void... params) {
 
             map = mMapModel.getMapByName(nameMap);
-            path = map.getImagePath();
 
             if (positionNode.getIdNode() != -1) positionMap = mMapModel.getMapById(positionNode.getIdMap());
 
@@ -430,7 +427,7 @@ public class HomeFragment extends Fragment implements
 
             if (success) {
 
-                mHomeView.setMapOnView(path);
+                mHomeView.setMapOnView(map);
 
                 if (positionNode.getIdNode() != -1) {
 
@@ -462,7 +459,7 @@ public class HomeFragment extends Fragment implements
 
     private int getPixelsXFromMetres(int x, Map map) {
 
-        float scale = map.getScale();
+        double scale = map.getScale();
         int xRef = map.getxRef();
         int xRefpx = map.getxRefpx();
 
@@ -471,7 +468,7 @@ public class HomeFragment extends Fragment implements
 
     private int getPixelsYFromMetres(int y, Map map) {
 
-        float scale = map.getScale();
+        double scale = map.getScale();
         int yRef = map.getyRef();
         int yRefpx = map.getyRefpx();
 

@@ -36,9 +36,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.univpm.cpp.emergencynotificationsmvc.R;
+import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
+import com.univpm.cpp.emergencynotificationsmvc.utils.Directories;
 import com.univpm.cpp.emergencynotificationsmvc.utils.TouchImageView;
 import com.univpm.cpp.emergencynotificationsmvc.views.login.LoginView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -185,12 +188,21 @@ public class HomeViewImpl implements HomeView{
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    public void setMapOnView(String path) {
+    public void setMapOnView(Map map) {
 
-        String str = path;
-        int resID = context.getResources().getIdentifier(str , "drawable", context.getPackageName());
-        Bitmap map = BitmapFactory.decodeResource(context.getResources(), resID);
-        mapTiv.setImageBitmap(map);
+        String mapFilePath = Directories.MAPS + File.separator + map.getName() + ".png";
+        File mapFile = new File(mapFilePath);
+        Bitmap mapBmp = null;
+        if (mapFile.exists()){
+            mapBmp = BitmapFactory.decodeFile(mapFilePath);
+        } else if (context.getResources().getIdentifier(map.getName() , "drawable", context.getPackageName()) != 0){
+            int resID = context.getResources().getIdentifier(map.getName() , "drawable", context.getPackageName());
+            mapBmp = BitmapFactory.decodeResource(context.getResources(), resID);
+        } else {
+            Log.w("Map", "Errore nel caricare l'immagine della mappa");
+        }
+
+        mapTiv.setImageBitmap(mapBmp);
 
 
         //questo l'abbiamo lasciato se ci servirà calcolare le dimensioni dello schermo, qui non serve
