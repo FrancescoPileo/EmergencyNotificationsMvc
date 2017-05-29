@@ -1,5 +1,6 @@
 package com.univpm.cpp.emergencynotificationsmvc.controllers;
 
+import android.content.pm.PackageInstaller;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
@@ -42,6 +44,9 @@ import com.univpm.cpp.emergencynotificationsmvc.models.node.NodeModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.position.Position;
 import com.univpm.cpp.emergencynotificationsmvc.models.position.PositionModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.position.PositionModelImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.session.Session;
+import com.univpm.cpp.emergencynotificationsmvc.models.session.SessionModel;
+import com.univpm.cpp.emergencynotificationsmvc.models.session.SessionModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelImpl;
@@ -51,6 +56,7 @@ import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeViewImpl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TimeZone;
 
 import static android.content.ContentValues.TAG;
 import static com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils.MAPS_LOCATION;
@@ -65,13 +71,16 @@ public class HomeFragment extends Fragment implements
     private UserModel mUserModel;
     private NodeModel mNodeModel;
     private PositionModel mPositionModel;
+    private SessionModel mSessionModel;
     private SpinnerTask mSpinnerTask;
     private FirstMapTask mFirstMapTask;
+    private InitTask mInitTask;
     private MapTask mMapTask;
     private MyBluetoothManager mMyBluetoothManager;
     private LocalPreferences mLocalPreferences;
     private Map map;
     private User user;
+    private Session session;
     private Node positionNode;              //è il nodo relativo alla posizione dell'utente
     private boolean firstTime;
 
@@ -88,16 +97,20 @@ public class HomeFragment extends Fragment implements
         mLocalPreferences = new LocalPreferencesImpl(getContext());
         mBeaconModel = new BeaconModelImpl();
         mPositionModel = new PositionModelImpl();
+        mSessionModel = new SessionModelImpl();
         mSpinnerTask = new SpinnerTask();
+        mInitTask = new InitTask();
+        user = new User();
         map = new Map();
         positionNode = new Node();
+        session = new Session();
         firstTime = true;
 
+        mInitTask.execute((Void) null);
         mSpinnerTask.execute((Void) null);
         mHomeView.setMapSelectedListener(this);
         mHomeView.setLogoutListener(this);
         mHomeView.setToolbar(this);
-
 
         mMyBluetoothManager = new MyBluetoothManager(getContext(), getActivity());
         mMyBluetoothManager.scanning();
@@ -122,16 +135,10 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void onLogoutClick() {
-        mLocalPreferences.deleteLogin();
 
-        //carica il fragment di login
-        Fragment newFragment = new LoginFragment();
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-        transaction.replace(R.id.fragment_container, newFragment);
-        transaction.addToBackStack(null);
-
-        transaction.commit();
+        //termina la sessione poi fa il logout
+        EndSessionTask mEndSessionTask = new EndSessionTask();
+        mEndSessionTask.execute((Void) null);
     }
 
     private boolean started = false;
@@ -197,6 +204,36 @@ public class HomeFragment extends Fragment implements
     public void onResume() {
         //start();
         super.onResume();
+    }
+
+
+    public class InitTask extends AsyncTask<Void, Void, Boolean> {
+
+
+        InitTask(){}
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+
+            user = mUserModel.getUser(mLocalPreferences.getUsername());
+            session = mSessionModel.getLastSession(user);
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (success){
+            }
+
+            else Log.w("Errore", "ErroreInitTask");
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+
     }
 
     public class SpinnerTask extends AsyncTask<Void, Void, Boolean> {
@@ -306,7 +343,6 @@ public class HomeFragment extends Fragment implements
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            user = mUserModel.getUser(mLocalPreferences.getUsername());
 
             Position lastPosition = findLastPosition(user);
 
@@ -481,6 +517,51 @@ public class HomeFragment extends Fragment implements
         return lastPosition;
     }
 
+
+
+
+    public class EndSessionTask extends AsyncTask<Void, Void, Boolean> {
+
+
+        EndSessionTask(){}
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+
+            Date date = new Date();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+1"));
+            session.setTimeOut(dateFormat.format(date));
+            mSessionModel = new SessionModelImpl();
+            return mSessionModel.updateSession(session);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (success){
+
+                mLocalPreferences.deleteLogin();
+                mLocalPreferences.deleteSession();
+
+                //carica il fragment di login
+                Fragment newFragment = new LoginFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                transaction.replace(R.id.fragment_container, newFragment);
+                transaction.addToBackStack(null);
+
+                transaction.commit();
+            }
+
+            else Log.w("ErroreLogout", "non esce");
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+
+    }
 
 
 }

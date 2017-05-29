@@ -1,9 +1,13 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.user;
 
 import com.univpm.cpp.emergencynotificationsmvc.models.Jsonable;
+import com.univpm.cpp.emergencynotificationsmvc.models.position.Position;
+import com.univpm.cpp.emergencynotificationsmvc.models.session.Session;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Collection;
 
 public class User extends UserGuest implements Jsonable {
 
@@ -57,14 +61,15 @@ public class User extends UserGuest implements Jsonable {
     public JSONObject toJson() {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("name", this.getName());
-            jsonObject.put("surname", this.getSurname());
-            jsonObject.put("username", this.getUsername());
-            jsonObject.put("age", this.getAge());
-            jsonObject.put("mobilephone", this.getMobilephone());
-            jsonObject.put("email", this.getEmail());
-            jsonObject.put("password", this.getPassword());
-            jsonObject.put("isguest", this.isGuest());
+            if (this.getId() != -1) jsonObject.put("iduser", this.getId());
+            jsonObject.accumulate("name", this.getName());
+            jsonObject.accumulate("surname", this.getSurname());
+            jsonObject.accumulate("username", this.getUsername());
+            jsonObject.accumulate("age", this.getAge());
+            jsonObject.accumulate("mobilephone", this.getMobilephone());
+            jsonObject.accumulate("email", this.getEmail());
+            jsonObject.accumulate("password", this.getPassword());
+            jsonObject.accumulate("isguest", this.isGuest());
         } catch (JSONException e) {
             e.printStackTrace();
         }

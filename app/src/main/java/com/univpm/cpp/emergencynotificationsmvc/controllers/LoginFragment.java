@@ -26,6 +26,7 @@ import com.univpm.cpp.emergencynotificationsmvc.views.login.LoginViewImpl;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class LoginFragment extends Fragment implements
         LoginView.LogAsGuestBtnViewListner,
@@ -162,10 +163,9 @@ public class LoginFragment extends Fragment implements
                     localPreferences.rememberLogin(username, password);
                 }
 
-                //comunica al server il login
+                //inizia la sessione
                 SessionTask mSessionTask = new SessionTask(username);
                 mSessionTask.execute((Void) null);
-
 
                 //carica il fragment della home
                 Fragment newFragment = new HomeFragment();
@@ -190,42 +190,7 @@ public class LoginFragment extends Fragment implements
     }
 
 
-    public class SessionTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String username;
-        private Session session;
-
-        SessionTask(String username){
-            this.username = username;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-
-            Log.w("Log", "start");
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date time = new Date();
-            session = new Session();
-            session.setUsername(username);
-            session.setTimeIn(dateFormat.format(time));
-            SessionModel mSessionModel = new SessionModelImpl();
-            return mSessionModel.newSession(session);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean success) {
-            if (success){
-                LocalPreferences localPreferences = new LocalPreferencesImpl(getContext());
-                localPreferences.storeSession(session);
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-        }
-
-    }
 
     public class LastUserGuestTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -247,11 +212,8 @@ public class LoginFragment extends Fragment implements
             mLastUserGuestTask = null;
 
             if (success) {
-                int index = 1;
-                if (lastGuestUser != null){
-                    //Log.w("lastGuest", lastGuestUser.getUsername());
-                    index = Integer.parseInt(lastGuestUser.getUsername().substring(6));
-                }
+                int index = 0;
+                if (lastGuestUser != null) index = Integer.parseInt(lastGuestUser.getUsername().substring(6));
                 RegisterNewGuestTask task = new RegisterNewGuestTask(index + 1);
                 task.execute((Void) null);
             }
@@ -286,6 +248,10 @@ public class LoginFragment extends Fragment implements
                 LocalPreferencesImpl localPreferences = new LocalPreferencesImpl(getContext());
                 localPreferences.rememberLogin("Guest-" + String.valueOf(index),null);
 
+                //inizia la sessione
+                SessionTask mSessionTask = new SessionTask(localPreferences.getUsername());
+                mSessionTask.execute((Void) null);
+
                 //carica il fragment della home
                 Fragment newFragment = new HomeFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -304,6 +270,47 @@ public class LoginFragment extends Fragment implements
         protected void onCancelled() {
             mLoginView.showProgress(false);
         }
+    }
+
+
+    public class SessionTask extends AsyncTask<Void, Void, Boolean> {
+
+        private String username;
+        private Session session;
+
+        SessionTask(String username){
+
+            this.username = username;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+
+            Log.w("Log", "SessionStart");
+            User user = mUserModel.getUser(username);
+            Date date = new Date();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+1"));
+            session = new Session();
+            session.setUser(user);
+            session.setTimeIn(dateFormat.format(date));
+            SessionModel mSessionModel = new SessionModelImpl();
+            return mSessionModel.newSession(session);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (success){
+                LocalPreferences localPreferences = new LocalPreferencesImpl(getContext());
+                localPreferences.storeSession(session);
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+
     }
 
 }

@@ -65,7 +65,7 @@ public class LocalPreferencesImpl implements  LocalPreferences {
     public void storeSession(Session session) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(LOGIN_PERFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(getContext().getString(R.string.pref_session_time_in), session.getTimeIn());
+        editor.putString(getContext().getString(R.string.pref_session_time_in), String.valueOf(session.getTimeIn()));
         editor.commit();
     }
 

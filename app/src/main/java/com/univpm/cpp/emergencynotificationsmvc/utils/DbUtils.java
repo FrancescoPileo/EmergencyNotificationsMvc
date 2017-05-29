@@ -418,7 +418,7 @@ public class DbUtils {
         int rows = 0;
         try {
             rows = executeManipulationQuery("INSERT INTO `Session`(`username`, `timeIn`) " +
-                    "VALUES ('" + session.getUsername() + "','" + session.getTimeIn() + "')");
+                    "VALUES ('" + session.getUser() + "','" + session.getTimeIn() + "')");
             connection.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -430,7 +430,7 @@ public class DbUtils {
         int rows = 0;
         try {
             rows = executeManipulationQuery("UPDATE `Session` SET timeOut='" + session.getTimeOut() +
-                    "' WHERE  username=' " + session.getUsername() + "' AND timeIn='" + session.getTimeIn() + "'");
+                    "' WHERE  username=' " + session.getUser() + "' AND timeIn='" + session.getTimeIn() + "'");
             connection.close();
         } catch (Exception e) {
             e.printStackTrace();
