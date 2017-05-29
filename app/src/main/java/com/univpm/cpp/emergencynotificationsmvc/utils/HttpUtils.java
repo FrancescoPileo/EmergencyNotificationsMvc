@@ -14,16 +14,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class HttpUtils {
 
     private static final String SERVER_HOST = "172.23.170.169:8080";
     private static final String SERVER_NAME = "EmergencyNotificationsServer";
-
-    public static final String MAPS_LOCATION = Environment.getExternalStorageDirectory() + File.separator
-            + "EmergencyNotifications" + File.separator + "maps" + File.separator;
-
 
     // HTTP GET request
    public static String sendGet(String url) throws Exception {
@@ -151,20 +149,28 @@ public class HttpUtils {
         HttpURLConnection connection  = (HttpURLConnection) urlObj.openConnection();
 
         //add request header
-        String fileUrl = MAPS_LOCATION + mapname + ".png";
+        String fileUrl = Directories.MAPS + File.separator + mapname + ".png";
         Log.w("FileUrl", fileUrl);
         File imageFile = new File(fileUrl);
         if (imageFile.exists()) {
             Long lastModified = imageFile.lastModified();
             Date lastModifiedDate = new Date(lastModified);
             Log.w("DataModifica: ", lastModifiedDate.toString());
-            connection.setRequestProperty("If-Modified-Since", lastModifiedDate.toString());
+
+            SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy", Locale.ENGLISH);
+            String parsedDate = formatter.format(lastModifiedDate);
+
+            Log.w("DataModificaPars", parsedDate);
+
+            connection.setRequestProperty("If-Modified-Since", parsedDate);
         }
 
         InputStream is = connection.getInputStream();
         Bitmap img = null;
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
             img = BitmapFactory.decodeStream(is);
+        } else if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_MODIFIED) {
+            Log.w("Image:", "not-modified");
         }
         return img;
     }

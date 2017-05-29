@@ -50,6 +50,7 @@ import com.univpm.cpp.emergencynotificationsmvc.models.session.SessionModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelImpl;
+import com.univpm.cpp.emergencynotificationsmvc.utils.Directories;
 import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
 import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeView;
 import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeViewImpl;
@@ -57,9 +58,6 @@ import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeViewImpl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
-
-import static android.content.ContentValues.TAG;
-import static com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils.MAPS_LOCATION;
 
 public class HomeFragment extends Fragment implements
         HomeView.MapSpnItemSelectedViewListener,
@@ -300,22 +298,27 @@ public class HomeFragment extends Fragment implements
         }
 
         private void saveBitmap(Bitmap bitmap, String name){
-            File dir = new File(MAPS_LOCATION);
-            if(!dir.exists())
-                dir.mkdirs();
-            File file = new File(dir, name + ".png");
-            FileOutputStream fOut = null;
-            try {
-                fOut = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.PNG, 85, fOut);
-                fOut.flush();
-                fOut.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+
+            if (getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                File dir = new File(Directories.MAPS);
+                if (!dir.exists())
+                    dir.mkdirs();
+                File file = new File(dir, name + ".png");
+                FileOutputStream fOut = null;
+                try {
+                    fOut = new FileOutputStream(file);
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+                    fOut.flush();
+                    fOut.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
+
 
         @Override
         protected void onPostExecute(final Boolean success) {

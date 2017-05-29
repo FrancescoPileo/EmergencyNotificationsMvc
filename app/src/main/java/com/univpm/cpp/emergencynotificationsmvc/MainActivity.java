@@ -5,7 +5,9 @@ import android.app.IntentService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -22,14 +24,20 @@ import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferencesImp
 import com.univpm.cpp.emergencynotificationsmvc.models.session.Session;
 import com.univpm.cpp.emergencynotificationsmvc.models.session.SessionModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.session.SessionModelImpl;
+import com.univpm.cpp.emergencynotificationsmvc.utils.Directories;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_BT_PERMISSIONS = 0;
+    public static final int REQUEST_LOCATION_PERMISSIONS = 1;
+    public static final int REQUEST_STORAGE_PERMISSIONS = 2;
 
 
     @Override
@@ -38,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         checkPermissions();
+        checkFolders();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, new LoginFragment());
@@ -71,18 +80,69 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    public void checkPermissions() {
+    private void checkPermissions() {
         this.requestPermissions(
                 new String[]{
-                        Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN,
-                        Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN
                 },
                 REQUEST_BT_PERMISSIONS);
+
+        this.requestPermissions(
+                new String[]{
+                        Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
+                },
+                REQUEST_LOCATION_PERMISSIONS);
+
+        this.requestPermissions(
+                new String[]{
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                },
+                REQUEST_STORAGE_PERMISSIONS);
+
+
     }
 
+    private void checkFolders() {
+        if (this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                PackageManager.PERMISSION_GRANTED){
+            ArrayList<String> dirArray = new ArrayList<>();
+            dirArray.add(Directories.MAIN);
+            dirArray.add(Directories.MAPS);
+            for (String dir: dirArray) {
+                File directory = new File(dir);
+                if (!directory.exists()){
+                    directory.mkdir();
+                }
+            }
 
+            File noMedia = new File (Directories.NOMEDIA);
+            if (!noMedia.exists()){
+                try {
+                    noMedia.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            this.requestPermissions(
+                    new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                    REQUEST_STORAGE_PERMISSIONS);
+        }
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case REQUEST_STORAGE_PERMISSIONS:
+                checkFolders();
+                break;
+            case REQUEST_BT_PERMISSIONS:
+                break;
+            case REQUEST_LOCATION_PERMISSIONS:
+                break;
+        }
+    }
 
     public class CloseSessionService extends IntentService {
 
