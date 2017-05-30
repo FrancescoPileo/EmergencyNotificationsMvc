@@ -1,5 +1,7 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.position;
 
+import com.univpm.cpp.emergencynotificationsmvc.models.session.Session;
+import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 import com.univpm.cpp.emergencynotificationsmvc.utils.DbUtils;
 import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
 
@@ -20,11 +22,22 @@ public class PositionModelImpl implements PositionModel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return success;    }
+        return success;
+    }
 
     @Override
-    public ArrayList<Position> getPositionByIdUser(int idUser) {
-        ArrayList<Position> list = DbUtils.getPositionByIdUser(idUser);
-        return list;
+    public Position getLastPositionByUser(User user) {
+        Position position = null;
+        String response = null;
+
+        try {
+            response = HttpUtils.sendGet("userposition/username/" + user.getUsername() + "/last");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (response != null){
+            position = new Position(response);
+        }
+        return position;
     }
 }

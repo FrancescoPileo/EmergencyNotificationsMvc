@@ -81,20 +81,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkPermissions() {
-        this.requestPermissions(
+        /*this.requestPermissions(
                 new String[]{
                         Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN
                 },
-                REQUEST_BT_PERMISSIONS);
+                REQUEST_BT_PERMISSIONS);*/
 
-        this.requestPermissions(
+        /*this.requestPermissions(
                 new String[]{
                         Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
                 },
-                REQUEST_LOCATION_PERMISSIONS);
+                REQUEST_LOCATION_PERMISSIONS);*/
 
         this.requestPermissions(
                 new String[]{
+                        Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN,
+                        Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
                 },
                 REQUEST_STORAGE_PERMISSIONS);
@@ -123,11 +125,11 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        } else {
+        }/* else {
             this.requestPermissions(
                     new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE },
                     REQUEST_STORAGE_PERMISSIONS);
-        }
+        }*/
     }
 
     @Override

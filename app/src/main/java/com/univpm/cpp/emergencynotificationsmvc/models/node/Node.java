@@ -1,6 +1,7 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.node;
 
 import com.univpm.cpp.emergencynotificationsmvc.models.Jsonable;
+import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,7 +40,8 @@ public class Node implements Jsonable {
     public Node(String jsonString){
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
-            this.idMap = jsonObject.getInt("idmap");
+            Map map = new Map(jsonObject.getJSONObject("idmap").toString());
+            this.idMap = map.getIdMap();
             this.idNode = jsonObject.getInt("idnode");
             this.x = jsonObject.getInt("x");
             this.y = jsonObject.getInt("y");

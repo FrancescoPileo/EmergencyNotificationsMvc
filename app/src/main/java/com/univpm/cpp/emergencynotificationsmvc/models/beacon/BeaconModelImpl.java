@@ -1,6 +1,8 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.beacon;
 
+import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 import com.univpm.cpp.emergencynotificationsmvc.utils.DbUtils;
+import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
 
 import java.util.ArrayList;
 
@@ -14,7 +16,16 @@ public class BeaconModelImpl implements BeaconModel {
     public Beacon getBeaconById (String idBeacon) {
 
         Beacon beacon = null;
-        beacon = DbUtils.getBeaconById(idBeacon);
+        String response = null;
+        try {
+            response = HttpUtils.sendGet("beacon/" + idBeacon);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (response != null){
+            beacon = new Beacon(response);
+        }
         return beacon;
     }
 

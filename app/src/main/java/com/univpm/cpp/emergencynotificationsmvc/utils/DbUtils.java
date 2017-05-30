@@ -315,7 +315,7 @@ public class DbUtils {
                 beacon = new Beacon();
 
                 beacon.setIdBeacon(rs.getString("idBeacon"));
-                beacon.setIdNode(rs.getInt("idNode"));
+                //beacon.setNode(rs.getInt("idNode"));
 
             }
             connection.close();
@@ -380,7 +380,7 @@ public class DbUtils {
         int rows = 0;
         try {
             rows = executeManipulationQuery("INSERT INTO `Position`(`idPosition`, `idNode`, `idUser`, `time` )" +
-                    "VALUES (NULL,'" + position.getIdPosition() + "','" + position.getIdNode() + "' , '" + position.getIdUser() + "', " + position.getTime()  + "')");
+                    "VALUES (NULL,'" + position.getIdPosition() + "','" + position.getNode() + "' , '" + position.getUser() + "', " + position.getTime()  + "')");
             connection.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -399,8 +399,8 @@ public class DbUtils {
                 Position position = new Position();
 
                 position.setIdPosition(rs.getInt("idPosition"));
-                position.setIdNode(rs.getInt("idNode"));
-                position.setIdUser(rs.getInt("idUser"));
+                //position.setNode(rs.getInt("idNode"));
+                //position.setUser(rs.getInt("idUser"));
                 position.setTime(rs.getString("time"));
 
                 positions.add(position);

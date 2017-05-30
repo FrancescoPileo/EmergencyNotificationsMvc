@@ -1,23 +1,52 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.beacon;
 
+import com.univpm.cpp.emergencynotificationsmvc.models.Jsonable;
+import com.univpm.cpp.emergencynotificationsmvc.models.node.Node;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by matteo on 24/04/17.
  */
 
-public class Beacon {
+public class Beacon implements Jsonable{
 
     private String idBeacon;
-    private int idNode;
+    private Node node;
 
     public Beacon() {
 
         super();
-        this.idNode = -1;
+        this.node = null;
     }
 
-    public Beacon(String idBeacon, int idNode) {
+    public Beacon(String idBeacon, Node node) {
         this.idBeacon = idBeacon;
-        this.idNode = idNode;
+        this.node = node;
+    }
+
+    public Beacon(String JsonString){
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(JsonString);
+            this.idBeacon = jsonObject.getString("idbeacon");
+            this.node = new Node(jsonObject.getJSONObject("idnode").toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("idbeacon", getIdBeacon());
+            jsonObject.put("idnode", getNode().toJson());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
     public String getIdBeacon() {
@@ -28,11 +57,11 @@ public class Beacon {
         this.idBeacon = idBeacon;
     }
 
-    public int getIdNode() {
-        return idNode;
+    public Node getNode() {
+        return node;
     }
 
-    public void setIdNode(int idNode) {
-        this.idNode = idNode;
+    public void setNode(Node node) {
+        this.node = node;
     }
 }

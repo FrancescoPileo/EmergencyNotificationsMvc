@@ -1,6 +1,8 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.position;
 
 import com.univpm.cpp.emergencynotificationsmvc.models.Jsonable;
+import com.univpm.cpp.emergencynotificationsmvc.models.node.Node;
+import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,23 +14,23 @@ import org.json.JSONObject;
 public class Position implements Jsonable{
 
     private int idPosition;
-    private int idNode;
-    private int idUser;
+    private Node node;
+    private User user;
     private String time;
 
     public Position() {
 
         super();
-        this.idNode = -1;
+        this.node = null;
         this.idPosition = -1;
-        this.idUser = -1;
+        this.user = null;
         this.time = null;
     }
 
-    public Position(int idPosition, int idNode, int idUser, String time) {
+    public Position(int idPosition, Node node, User user, String time) {
         this.idPosition = idPosition;
-        this.idNode = idNode;
-        this.idUser = idUser;
+        this.node = node;
+        this.user = user;
         this.time = time;
     }
 
@@ -37,8 +39,8 @@ public class Position implements Jsonable{
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
             this.idPosition = jsonObject.getInt("idposition");
-            this.idNode = jsonObject.getInt("idnode");
-            this.idUser = jsonObject.getInt("iduser");
+            this.node = new Node(jsonObject.getJSONObject("idnode").toString());
+            this.user = new User(jsonObject.getJSONObject("iduser").toString());
             this.time = jsonObject.getString("detectiontime");
         } catch (JSONException e) {
             e.printStackTrace();
@@ -53,20 +55,20 @@ public class Position implements Jsonable{
         this.idPosition = idPosition;
     }
 
-    public int getIdNode() {
-        return idNode;
+    public Node getNode() {
+        return node;
     }
 
-    public void setIdNode(int idNode) {
-        this.idNode = idNode;
+    public void setNode(Node node) {
+        this.node = node;
     }
 
-    public int getIdUser() {
-        return idUser;
+    public User getUser() {
+        return user;
     }
 
-    public void setIdUser(int idUser) {
-        this.idUser = idUser;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getTime() {
@@ -83,8 +85,8 @@ public class Position implements Jsonable{
         try {
 
             jsonObject.put("idposition", this.idPosition);
-            jsonObject.put("iduser", this.idUser);
-            jsonObject.put("idnode", this.idNode);
+            jsonObject.put("iduser", this.user.toJson());
+            jsonObject.put("idnode", this.node.toJson());
             jsonObject.put("detectiontime", this.time);
 
         } catch (JSONException e) {

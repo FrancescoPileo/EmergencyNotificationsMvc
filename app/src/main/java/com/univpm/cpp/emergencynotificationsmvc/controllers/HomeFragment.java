@@ -1,15 +1,12 @@
 package com.univpm.cpp.emergencynotificationsmvc.controllers;
 
-import android.content.pm.PackageInstaller;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -347,14 +344,15 @@ public class HomeFragment extends Fragment implements
         protected Boolean doInBackground(Void... params) {
 
 
-            Position lastPosition = findLastPosition(user);
+            Position lastPosition = mPositionModel.getLastPositionByUser(user);
 
-            if (lastPosition.getIdPosition() == -1) {
+            if (lastPosition == null) {
                 map = mMapModel.getMapByName(nameMap);
             }
 
             else {
-                positionNode = mNodeModel.getNodeById(lastPosition.getIdNode());
+                positionNode = mNodeModel.getNodeById(lastPosition.getNode().getIdNode());
+
                 map = mMapModel.getMapById(positionNode.getIdMap());
             }
 
@@ -476,46 +474,7 @@ public class HomeFragment extends Fragment implements
     }
 
 
-    /* @param user di cui si vuole trovare l'ultima posizione
-     * controlla tutte le posizioni dell'utente
-     * @return la posizione più recente */
-    private Position findLastPosition(User user) {
 
-        int cont;
-        int size;
-        Date time1 = new Date();
-        Date time2 = new Date();
-        Position lastPosition = new Position();
-        lastPosition.setTime("0000-00-00 00:00:00");
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        ArrayList<Position> positions = mPositionModel.getPositionByIdUser(user.getId());
-
-        if (positions == null) size = 0;
-        else {
-            size = positions.size();
-
-            for (cont=0; cont < size; cont++) {
-
-                try {
-                    time1 = formatter.parse(lastPosition.getTime());
-                    time2 = formatter.parse(positions.get(cont).getTime());
-                }
-                catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                if (time2.after(time1)) lastPosition = positions.get(cont); //timeaftertime is a famous song by Cyndi Lauper
-
-            }
-        }
-
-        Log.w("Size", String.valueOf(size));
-        Log.w("Lastpositionid", String.valueOf(lastPosition.getIdPosition()));
-
-
-
-        return lastPosition;
-    }
 
 
 
