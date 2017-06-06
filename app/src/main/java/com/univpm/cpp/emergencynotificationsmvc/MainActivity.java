@@ -3,9 +3,12 @@ package com.univpm.cpp.emergencynotificationsmvc;
 import android.Manifest;
 import android.app.IntentService;
 import android.app.Service;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +24,8 @@ import com.univpm.cpp.emergencynotificationsmvc.controllers.HomeFragment;
 import com.univpm.cpp.emergencynotificationsmvc.controllers.LoginFragment;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferences;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferencesImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract;
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteDbHelper;
 import com.univpm.cpp.emergencynotificationsmvc.models.session.Session;
 import com.univpm.cpp.emergencynotificationsmvc.models.session.SessionModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.session.SessionModelImpl;
@@ -32,6 +37,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
 
         checkPermissions();
         checkFolders();
+        LocalSQLiteInitTask task = new LocalSQLiteInitTask();
+        task.execute((Void) null);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, new LoginFragment());
@@ -167,6 +175,23 @@ public class MainActivity extends AppCompatActivity {
 
             SessionModel mSessionModel = new SessionModelImpl();
             mSessionModel.updateSession(session);*/
+        }
+    }
+
+    public class LocalSQLiteInitTask extends AsyncTask<Void, Void, Boolean> {
+
+        SQLiteDatabase db = null;
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            LocalSQLiteDbHelper helper = new LocalSQLiteDbHelper(getApplicationContext());
+            db = helper.getWritableDatabase();
+            return (db != null);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+
         }
     }
 }
