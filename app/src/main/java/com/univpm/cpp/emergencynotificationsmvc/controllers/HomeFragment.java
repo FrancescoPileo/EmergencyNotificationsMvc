@@ -76,9 +76,16 @@ public class HomeFragment extends Fragment implements
     private Map map;
     private User user;
     private Session session;
-    private Node positionNode;              //è il nodo relativo alla posizione dell'utente
-    private boolean firstTime;
+    private Node positionNode;  //è il nodo relativo alla posizione dell'utente
+    private Position mLastposition;
 
+
+    //todo dbinterno
+    //todo appoffline
+    //todo commentare
+    //todo visualizzare errori
+    //todo notifiche --> firebase
+    //todo gestione utente
 
 
     @Nullable
@@ -97,18 +104,21 @@ public class HomeFragment extends Fragment implements
         mInitTask = new InitTask();
         user = new User();
         map = new Map();
+        mLastposition = new Position();
         positionNode = new Node();
         session = new Session();
-        firstTime = true;
+
 
         mInitTask.execute((Void) null);
         mSpinnerTask.execute((Void) null);
+
+        //todo cambiare on click
         mHomeView.setMapSelectedListener(this);
         mHomeView.setLogoutListener(this);
         mHomeView.setToolbar(this);
 
         mMyBluetoothManager = new MyBluetoothManager(getContext(), getActivity());
-        mMyBluetoothManager.scanning();
+        //mMyBluetoothManager.scanning();
         start();
 
         return mHomeView.getRootView();
@@ -142,9 +152,10 @@ public class HomeFragment extends Fragment implements
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            mMyBluetoothManager.scanning();
+
             if(started) {
                 start();
+
             }
         }
     };
@@ -155,6 +166,9 @@ public class HomeFragment extends Fragment implements
     }
 
     public void start() {
+        mMyBluetoothManager.scanning();
+        mFirstMapTask = new FirstMapTask();
+        mFirstMapTask.execute((Void) null);
         started = true;
         handler.postDelayed(runnable, 60000);
     }
@@ -164,18 +178,8 @@ public class HomeFragment extends Fragment implements
      * Se si seleziona una mappa dallo spinner parte MapTask */
     @Override
     public void onMapSpnItemSelected(String nameMap) {
-
-        if (firstTime == true) {
-
-            mFirstMapTask = new FirstMapTask(nameMap);
-            mFirstMapTask.execute((Void) null);
-        }
-
-        else {
-
-            mMapTask = new MapTask(nameMap);
-            mMapTask.execute((Void) null);
-        }
+        mMapTask = new MapTask(nameMap);
+        mMapTask.execute((Void) null);
     }
 
     @Override
@@ -328,15 +332,6 @@ public class HomeFragment extends Fragment implements
 
     public class FirstMapTask extends AsyncTask<Void, Void, Boolean> {
 
-        private String nameMap;
-        private String path;
-
-        FirstMapTask(String nameMap) {
-
-            this.nameMap = nameMap;
-            this.path = null;
-        }
-
 
         /* Se l'utente ha una o più posizioni, prende la più recente e la relativa mappa (in map)
          * Altrimenti in map si trova la prima mappa dello spinner */
@@ -346,17 +341,19 @@ public class HomeFragment extends Fragment implements
 
             Position lastPosition = mPositionModel.getLastPositionByUser(user);
 
-            if (lastPosition == null) {
-                map = mMapModel.getMapByName(nameMap);
-            }
+            Boolean flag = false;
 
-            else {
+            if (lastPosition == null){
+                map = mMapModel.getMapByName(mHomeView.getMap());
+                flag = true;
+            } else if (lastPosition != mLastposition) {                 //todo controllare
                 positionNode = mNodeModel.getNodeById(lastPosition.getNode().getIdNode());
-
                 map = mMapModel.getMapById(positionNode.getIdMap());
+                mLastposition = lastPosition;
+                flag = true;
             }
 
-            return true;
+            return flag;
 
         }
 
@@ -365,6 +362,8 @@ public class HomeFragment extends Fragment implements
         @Override
         protected void onPostExecute(final Boolean success) {
             mSpinnerTask = null;
+
+            Log.w("Marco", String.valueOf(success));
 
             if (success) {
 
@@ -377,14 +376,10 @@ public class HomeFragment extends Fragment implements
                 }
 
                 else mHomeView.setMapName("La mappa visualizzata è " + map.getName() + ".");
-
-                firstTime = false;
-
             }
 
             else {
-                Log.w("Map", "error");
-                firstTime = false;
+                Log.w("Map", "nothing to do");
             }
 
         }
@@ -489,7 +484,7 @@ public class HomeFragment extends Fragment implements
 
             Date date = new Date();
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+1"));
+            //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+1"));
             session.setTimeOut(dateFormat.format(date));
             mSessionModel = new SessionModelImpl();
             return mSessionModel.updateSession(session);

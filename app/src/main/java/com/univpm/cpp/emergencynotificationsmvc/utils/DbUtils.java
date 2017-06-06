@@ -137,7 +137,7 @@ public class DbUtils {
         try {
             rows = executeManipulationQuery("INSERT INTO `EnviromentalValues`(`idEnv`, `idBeacon`, `time`, `temperature`, `humidity`, " +
                     "`accX`, `accY`, `accZ`, `gyrX`, `gyrY`, `gyrZ`, `magX`, `magY`, `magZ`) " +
-                    "VALUES (NULL,'" + values.getIdBeacon() + "','" + values.getTime() + "' , '" + values.getTemperature() + "', " + values.getHumidity() +
+                    "VALUES (NULL,'" + values.getBeacon() + "','" + values.getTime() + "' , '" + values.getTemperature() + "', " + values.getHumidity() +
                     ", '" + values.getAccX() + "', '" + values.getAccY() + "','" + values.getAccZ() + "','"
                     + values.getGyrX() + "','" + values.getGyrY() + "','" + values.getGyrZ() + "','"
                     + values.getMagX() + "','" + values.getMagY() + "','" + values.getMagZ() + "')");

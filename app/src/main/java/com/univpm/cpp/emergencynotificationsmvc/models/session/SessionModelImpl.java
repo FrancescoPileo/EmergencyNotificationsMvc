@@ -37,7 +37,7 @@ public class SessionModelImpl implements SessionModel {
         String response = null;
 
         try {
-            response = HttpUtils.sendGet("appsession/username/" + user.getUsername());
+            response = HttpUtils.sendGet("appsession/username/" + user.getUsername() + "/last");
         } catch (Exception e) {
             e.printStackTrace();
         }

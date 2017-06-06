@@ -29,6 +29,8 @@ public class NodeModelImpl implements NodeModel {
 
     @Override
     public ArrayList<Node> getNodeByMap(int idMap) {
-        return DbUtils.getNodeByMap(idMap);
+
+
+        return null;//DbUtils.getNodeByMap(idMap);
     }
 }

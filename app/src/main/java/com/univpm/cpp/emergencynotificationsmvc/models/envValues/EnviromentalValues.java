@@ -1,11 +1,15 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.envValues;
 
-import java.util.Date;
+import com.univpm.cpp.emergencynotificationsmvc.models.Jsonable;
+import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 
-public class EnviromentalValues {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class EnviromentalValues implements Jsonable{
 
     int idEnv;
-    String idBeacon;
+    Beacon beacon;
     String time;
     double temperature;
     double humidity;
@@ -23,7 +27,7 @@ public class EnviromentalValues {
 
         super();
         this.idEnv = -1;
-        this.idBeacon = null;
+        this.beacon = null;
         this.time = null;
         this.temperature = 0;
         this.humidity = 0;
@@ -39,12 +43,12 @@ public class EnviromentalValues {
 
     }
 
-    public EnviromentalValues(int idEnv, String idBeacon, String time, double temperature, double humidity,
+    public EnviromentalValues(int idEnv, Beacon beacon, String time, double temperature, double humidity,
                               double accX, double accY, double accZ,
                               double gyrX, double gyrY, double gyrZ,
                               double magX, double magY, double magZ) {
         this.idEnv = idEnv;
-        this.idBeacon = idBeacon;
+        this.beacon = beacon;
         this.time = time;
         this.temperature = temperature;
         this.humidity = humidity;
@@ -59,6 +63,28 @@ public class EnviromentalValues {
         this.magZ = magZ;
     }
 
+    public EnviromentalValues(String jsonString){
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            this.idEnv = jsonObject.getInt("idenv");
+            this.beacon =  new Beacon(jsonObject.getJSONObject("beacon").toString());
+            this.time = jsonObject.getString("detectiontime");
+            this.temperature = jsonObject.getDouble("temperature");
+            this.humidity = jsonObject.getDouble("humidity");
+            this.accX = jsonObject.getDouble("accx");
+            this.accY = jsonObject.getDouble("accy");
+            this.accZ = jsonObject.getDouble("accz");
+            this.gyrX = jsonObject.getDouble("gyrx");
+            this.gyrY = jsonObject.getDouble("gyry");
+            this.gyrZ = jsonObject.getDouble("gyrz");
+            this.magX = jsonObject.getDouble("magx");
+            this.magY = jsonObject.getDouble("magy");
+            this.magZ = jsonObject.getDouble("magz");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     public int getIdEnv() {
         return idEnv;
     }
@@ -67,12 +93,12 @@ public class EnviromentalValues {
         this.idEnv = idEnv;
     }
 
-    public String getIdBeacon() {
-        return idBeacon;
+    public Beacon getBeacon() {
+        return beacon;
     }
 
-    public void setIdBeacon(String idBeacon) {
-        this.idBeacon = idBeacon;
+    public void setBeacon(Beacon beacon) {
+        this.beacon = beacon;
     }
 
     public String getTime() {
@@ -169,5 +195,29 @@ public class EnviromentalValues {
 
     public void setMagZ(double magZ) {
         this.magZ = magZ;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject jsonObject= new JSONObject();
+        try {
+            jsonObject.put("idenv", this.getIdEnv());
+            jsonObject.put("idbeacon", this.getBeacon().toJson());
+            jsonObject.put("detectiontime", this.getTime());
+            jsonObject.put("temperature", this.getTemperature());
+            jsonObject.put("humidity", this.getHumidity());
+            jsonObject.put("accx", this.getAccX());
+            jsonObject.put("accy", this.getAccY());
+            jsonObject.put("accz", this.getAccZ());
+            jsonObject.put("gyrx", this.getGyrX());
+            jsonObject.put("gyry", this.getGyrY());
+            jsonObject.put("gyrz", this.getGyrZ());
+            jsonObject.put("magx", this.getMagX());
+            jsonObject.put("magy", this.getMagY());
+            jsonObject.put("magz", this.getMagZ());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 }

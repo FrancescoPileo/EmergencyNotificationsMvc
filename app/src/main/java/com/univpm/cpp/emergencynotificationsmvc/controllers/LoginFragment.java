@@ -290,7 +290,7 @@ public class LoginFragment extends Fragment implements
             User user = mUserModel.getUser(username);
             Date date = new Date();
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+1"));
+            //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+1"));
             session = new Session();
             session.setUser(user);
             session.setTimeIn(dateFormat.format(date));

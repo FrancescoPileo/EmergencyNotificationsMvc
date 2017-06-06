@@ -65,17 +65,24 @@ public class HomeViewImpl implements HomeView{
 
     private Context context;
 
+    private Boolean spinnerInit = false;
+
     public HomeViewImpl(LayoutInflater inflater, @Nullable ViewGroup container, Context context) {
         mRootView = inflater.inflate(R.layout.fragment_home, container, false);
         this.context = context;
 
         init();
 
+
         mapsSpn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (mapSelectedListener != null){
-                    mapSelectedListener.onMapSpnItemSelected((String) adapterView.getItemAtPosition(i));
+                    if (!spinnerInit) {
+                        spinnerInit = true;
+                    } else {
+                        mapSelectedListener.onMapSpnItemSelected((String) adapterView.getItemAtPosition(i));
+                    }
                 }
             }
 
@@ -102,6 +109,7 @@ public class HomeViewImpl implements HomeView{
     @Override
     public void populateSpinner (ArrayList<String> list) {
 
+        spinnerInit = false;
         ArrayList<String> stringArrayList = new ArrayList<String>();
         stringArrayList = list;
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, stringArrayList);
@@ -121,7 +129,7 @@ public class HomeViewImpl implements HomeView{
 
     @Override
     public String getMap() {
-        return null; //todo
+        return (String) this.mapsSpn.getSelectedItem();
     }
 
     @Override

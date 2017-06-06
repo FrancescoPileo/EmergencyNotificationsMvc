@@ -20,7 +20,7 @@ import java.util.Locale;
 public class HttpUtils {
 
     //172.23.170.169
-    private static final String SERVER_HOST = "172.23.170.169:8080";
+    private static final String SERVER_HOST = "192.168.43.85:8080";
     private static final String SERVER_NAME = "EmergencyNotificationsServer";
 
     // HTTP GET request
@@ -66,7 +66,7 @@ public class HttpUtils {
     // HTTP POST request
     public static boolean sendPost(String url, Jsonable obj) throws Exception {
 
-        Log.w("Url", "http://" + SERVER_HOST + "/" + SERVER_NAME + "/webresources/" + url);
+        Log.w("Url_POST", "http://" + SERVER_HOST + "/" + SERVER_NAME + "/webresources/" + url);
         URL urlObj = new URL("http://" + SERVER_HOST + "/" + SERVER_NAME + "/webresources/" + url);
         HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
 
@@ -106,7 +106,7 @@ public class HttpUtils {
     // HTTP PUT request
     public static boolean sendPut(String url, Jsonable obj) throws Exception {
 
-        Log.w("Url", "http://" + SERVER_HOST + "/" + SERVER_NAME + "/webresources/" + url);
+        Log.w("Url_PUT", "http://" + SERVER_HOST + "/" + SERVER_NAME + "/webresources/" + url);
         URL urlObj = new URL("http://" + SERVER_HOST + "/" + SERVER_NAME + "/webresources/" + url);
         HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
 

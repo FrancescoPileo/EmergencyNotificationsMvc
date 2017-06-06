@@ -72,6 +72,7 @@ public class MyBluetoothManager {
 
     private List<Sensor> mSensorList;
     private Sensor mSensor;
+    private Beacon mBeacon;
 
 
     // Housekeeping
@@ -312,9 +313,10 @@ public class MyBluetoothManager {
         mSensor.calcAverageTemp();
         mSensor.calcAverageMov();
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
         Date date = new Date();
-        EnviromentalValues values = new EnviromentalValues(0, mSensor.getBluetoothDevice().getAddress(), dateFormat.format(date) , mSensor.getAverageTemp(),
+
+        EnviromentalValues values = new EnviromentalValues(0, mBeacon, dateFormat.format(date) , mSensor.getAverageTemp(),
                 mSensor.getAverageHum(), mSensor.getAverageMov().getAcc_x(), mSensor.getAverageMov().getAcc_y(), mSensor.getAverageMov().getAcc_z(),
                 mSensor.getAverageMov().getGyr_x(), mSensor.getAverageMov().getGyr_y(), mSensor.getAverageMov().getGyr_z(),
                 mSensor.getAverageMov().getMag_x(), mSensor.getAverageMov().getMag_y(), mSensor.getAverageMov().getMag_z());
@@ -398,7 +400,8 @@ public class MyBluetoothManager {
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                     //se avviene la connessione richiedo i servizi
                     mSensor.discoverServices();
-
+                    BeaconTask task = new BeaconTask();
+                    task.execute((Void) null);
                 } else
                     setError("Connect failed. Status: " + status);
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
@@ -587,9 +590,10 @@ public class MyBluetoothManager {
         @Override
         protected Boolean doInBackground(Void... params) {
 
+
             mEnvValuesModel.newValues(values);
             User user = mUserModel.getUser(mLocalPreferences.getUsername());
-            Beacon beacon = mBeaconModel.getBeaconById(values.getIdBeacon());
+            Beacon beacon = mBeaconModel.getBeaconById(values.getBeacon().getIdBeacon());
             position = new Position(-1, beacon.getNode(), user, values.getTime());
             mPositionModel.newPosition(position);
             return true;
@@ -608,4 +612,26 @@ public class MyBluetoothManager {
 
 
     }
+
+    public class BeaconTask extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            mBeacon = mBeaconModel.getBeaconById(mSensor.getBluetoothDevice().getAddress());
+            return (mBeacon != null);
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            if (success) {
+                Log.w("Beacon", "ok");
+            }
+            else {
+                Log.w("Beacon", "error");
+            }
+        }
+
+
+    }
+
 }

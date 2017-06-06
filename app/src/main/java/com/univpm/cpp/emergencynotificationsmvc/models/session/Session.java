@@ -39,18 +39,8 @@ public class Session implements Jsonable {
             User user1 = new User(jsonObject.getJSONObject("username").toString());
             this.id = jsonObject.getInt("idsession");
             this.user = user1;
-
-            Long unixseconds = jsonObject.getLong("sessiontimestart");
-            Date dateStart = new Date(unixseconds);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-            sdf.setTimeZone(TimeZone.getTimeZone("UTC+1"));
-            this.timeIn = sdf.format(dateStart);
-
-            unixseconds = jsonObject.optLong("sessiontimestop", -1);
-            if (unixseconds != -1) {
-                Date dateStop = new Date(unixseconds);
-                this.timeOut = sdf.format(dateStop);}
-            else this.timeOut = null;
+            this.timeIn = jsonObject.getString("sessiontimestart");
+            this.timeOut = jsonObject.optString("sessiontimestop", null);
         }
         catch (JSONException e) {
             e.printStackTrace();

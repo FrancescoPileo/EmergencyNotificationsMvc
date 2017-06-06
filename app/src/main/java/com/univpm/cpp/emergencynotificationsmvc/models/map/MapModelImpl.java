@@ -37,7 +37,7 @@ public class MapModelImpl implements MapModel {
     public Map getMapByFloor(String building, String floor) {
 
         Map map = null;
-        map = DbUtils.getMapByFloor(building, floor);
+        //map = DbUtils.getMapByFloor(building, floor);
         return map;
     }
 
