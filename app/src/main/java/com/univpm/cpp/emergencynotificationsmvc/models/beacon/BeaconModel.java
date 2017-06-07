@@ -10,4 +10,6 @@ public interface BeaconModel {
 
     public Beacon getBeaconById(String idBeacon);
 
+    public ArrayList<Beacon> getAllBeacons();
+
 }

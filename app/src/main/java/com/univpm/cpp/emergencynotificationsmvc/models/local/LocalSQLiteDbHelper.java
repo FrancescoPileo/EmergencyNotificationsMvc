@@ -4,7 +4,19 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
+import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModel;
+import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValues;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract.*;
+import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
+import com.univpm.cpp.emergencynotificationsmvc.models.node.Node;
+import com.univpm.cpp.emergencynotificationsmvc.models.position.Position;
+import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
+import com.univpm.cpp.emergencynotificationsmvc.utils.Directories;
+
+import java.io.File;
+import java.util.ArrayList;
 
 public class LocalSQLiteDbHelper extends SQLiteOpenHelper {
 
@@ -106,7 +118,7 @@ public class LocalSQLiteDbHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "Local.db";
 
     public LocalSQLiteDbHelper(Context context){
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, Directories.DB + File.separator + DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
@@ -125,4 +137,106 @@ public class LocalSQLiteDbHelper extends SQLiteOpenHelper {
         }
         onCreate(db);
     }
+
+    public boolean importAppuser(User user){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(AppuserTable.TABLE_NAME, null, null);
+        ContentValues values = new ContentValues();
+        values.put(AppuserTable._ID, user.getId());
+        values.put(AppuserTable.COLUMN_NAME_NAME, user.getName());
+        values.put(AppuserTable.COLUMN_NAME_SURNAME, user.getSurname());
+        values.put(AppuserTable.COLUMN_NAME_AGE, user.getAge());
+        values.put(AppuserTable.COLUMN_NAME_MOBILEPHONE, user.getMobilephone());
+        values.put(AppuserTable.COLUMN_NAME_EMAIL, user.getEmail());
+        values.put(AppuserTable.COLUMN_NAME_USERNAME, user.getUsername());
+        values.put(AppuserTable.COLUMN_NAME_PASSWORD, user.getPassword());
+        values.put(AppuserTable.COLUMN_NAME_ISGUEST, user.isGuest());
+        long newRowId = db.insert(AppuserTable.TABLE_NAME, null, values);
+        return newRowId != -1 ;
+    }
+
+    public boolean importUserposition(Position position){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(UserpositionTable.TABLE_NAME, null, null);
+        ContentValues values = new ContentValues();
+        values.put(UserpositionTable._ID, position.getIdPosition());
+        values.put(UserpositionTable.COLUMN_NAME_IDNODE, position.getNode().getIdNode());
+        values.put(UserpositionTable.COLUMN_NAME_IDUSER, position.getUser().getId());
+        values.put(UserpositionTable.COLUMN_NAME_DETECTIONTIME, position.getTime());
+        long newRowId = db.insert(UserpositionTable.TABLE_NAME, null, values);
+        return newRowId != -1 ;
+    }
+
+    public boolean importBeacons(ArrayList<Beacon> beacons){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(BeaconTable.TABLE_NAME, null, null);
+        for (Beacon beacon: beacons) {
+            ContentValues values = new ContentValues();
+            values.put(BeaconTable._ID, beacon.getIdBeacon());
+            values.put(BeaconTable.COLUMN_NAME_IDNODE, beacon.getNode().getIdNode());
+            db.insert(BeaconTable.TABLE_NAME, null, values);
+        }
+        return true;
+
+    }
+
+    public boolean importMaps(ArrayList<Map> maps){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(MapTable.TABLE_NAME, null, null);
+        for (Map map: maps) {
+            ContentValues values = new ContentValues();
+            values.put(MapTable._ID, map.getIdMap());
+            values.put(MapTable.COLUMN_NAME_MAPNAME, map.getName());
+            values.put(MapTable.COLUMN_NAME_BUILDING, map.getBuilding());
+            values.put(MapTable.COLUMN_NAME_FLOOR, map.getFloor());
+            values.put(MapTable.COLUMN_NAME_MAPSCALE, map.getScale());
+            values.put(MapTable.COLUMN_NAME_XREF, map.getxRef());
+            values.put(MapTable.COLUMN_NAME_XREFPX, map.getxRefpx());
+            values.put(MapTable.COLUMN_NAME_YREF, map.getyRef());
+            values.put(MapTable.COLUMN_NAME_YREFPX, map.getyRefpx());
+            db.insert(MapTable.TABLE_NAME, null, values);
+        }
+        return true;
+    }
+
+    public boolean importNodes(ArrayList<Node> nodes){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(NodeTable.TABLE_NAME, null, null);
+        for (Node node: nodes) {
+            ContentValues values = new ContentValues();
+            values.put(NodeTable._ID, node.getIdNode());
+            values.put(NodeTable.COLUMN_NAME_IDMAP, node.getMap().getIdMap());
+            values.put(NodeTable.COLUMN_NAME_NODENAME, node.getNodename());
+            values.put(NodeTable.COLUMN_NAME_X, node.getX());
+            values.put(NodeTable.COLUMN_NAME_Y, node.getY());
+            db.insert(NodeTable.TABLE_NAME, null, values);
+        }
+        return true;
+    }
+
+    public boolean importEnviromentalValues(ArrayList<EnviromentalValues> envValues){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(EnviromentalvaluesTable.TABLE_NAME, null, null);
+        for (EnviromentalValues envValue: envValues) {
+            ContentValues values = new ContentValues();
+            values.put(EnviromentalvaluesTable._ID, envValue.getIdEnv());
+            values.put(EnviromentalvaluesTable.COLUMN_NAME_IDBEACON, envValue.getBeacon().getIdBeacon());
+            values.put(EnviromentalvaluesTable.COLUMN_NAME_DETECTIONTIME, envValue.getTime());
+            values.put(EnviromentalvaluesTable.COLUMN_NAME_TEMPERATURE, envValue.getTemperature());
+            values.put(EnviromentalvaluesTable.COLUMN_NAME_HUMIDITY, envValue.getHumidity());
+            values.put(EnviromentalvaluesTable.COLUMN_NAME_ACCX, envValue.getAccX());
+            values.put(EnviromentalvaluesTable.COLUMN_NAME_ACCY, envValue.getAccY());
+            values.put(EnviromentalvaluesTable.COLUMN_NAME_ACCZ, envValue.getAccZ());
+            values.put(EnviromentalvaluesTable.COLUMN_NAME_GYRX, envValue.getGyrX());
+            values.put(EnviromentalvaluesTable.COLUMN_NAME_GYRY, envValue.getGyrY());
+            values.put(EnviromentalvaluesTable.COLUMN_NAME_GYRZ, envValue.getGyrZ());
+            values.put(EnviromentalvaluesTable.COLUMN_NAME_MAGX, envValue.getMagX());
+            values.put(EnviromentalvaluesTable.COLUMN_NAME_MAGY, envValue.getMagY());
+            values.put(EnviromentalvaluesTable.COLUMN_NAME_MAGZ, envValue.getMagZ());
+            db.insert(EnviromentalvaluesTable.TABLE_NAME, null, values);
+        }
+        return true;
+    }
+
+
 }

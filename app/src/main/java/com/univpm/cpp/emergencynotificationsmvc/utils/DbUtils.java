@@ -336,7 +336,7 @@ public class DbUtils {
                 node = new Node();
 
                 node.setIdNode(rs.getInt("idNode"));
-                node.setIdMap(rs.getInt("idMap"));
+                //node.setMap(rs.getInt("idMap"));
                 node.setX(rs.getInt("x"));
                 node.setY(rs.getInt("y"));
 
@@ -360,7 +360,7 @@ public class DbUtils {
                 Node node = new Node();
 
                 node.setIdNode(rs.getInt("idNode"));
-                node.setIdMap(rs.getInt("idMap"));
+                //node.setMap(rs.getInt("idMap"));
                 node.setX(rs.getInt("x"));
                 node.setY(rs.getInt("y"));
 

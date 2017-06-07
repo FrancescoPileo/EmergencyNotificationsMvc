@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
@@ -36,7 +38,9 @@ public class EmergencyNotificationsMvc extends Application {
     private IntentFilter mFilter;
     public BluetoothAdapter mBtAdapter = null;
     public static BluetoothManager mBluetoothManager;
-    // Register the BroadcastReceiver
+
+    public static ConnectivityManager mConnectivityManager;
+    public boolean mConnectionEnabled = false;
 
     @Override
     public void onCreate() {
@@ -63,6 +67,7 @@ public class EmergencyNotificationsMvc extends Application {
         }
 
         mFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        mFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mReceiver, mFilter);
 
         if (!mBtAdapter.isEnabled()) {
@@ -73,10 +78,16 @@ public class EmergencyNotificationsMvc extends Application {
 
         startBluetoothLeService();
 
+
+        //Check internet connection
+        mConnectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = mConnectivityManager.getActiveNetworkInfo();
+        mConnectionEnabled = (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
+
         super.onCreate();
 
     }
-
 
 
     // Code to manage Service life cycle.
@@ -145,8 +156,16 @@ public class EmergencyNotificationsMvc extends Application {
                         // Log.w(TAG, "Action STATE CHANGED not processed ");
                         break;
                 }
+            } else if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
+                NetworkInfo activeNetwork = mConnectivityManager.getActiveNetworkInfo();
+                if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
+                    mConnectionEnabled = true;
+                } else {
+                    mConnectionEnabled = false;
+                }
             }
+
+
         }
     };
-
 }

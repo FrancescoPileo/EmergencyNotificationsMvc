@@ -12,4 +12,6 @@ public interface NodeModel {
 
     public ArrayList<Node> getNodeByMap (int idMap);
 
+    public ArrayList<Node> getAllNodes();
+
 }

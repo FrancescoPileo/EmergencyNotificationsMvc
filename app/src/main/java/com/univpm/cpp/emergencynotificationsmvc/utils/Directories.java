@@ -10,6 +10,14 @@ public class Directories {
 
     public final static String MAPS = MAIN + File.separator + "maps";
 
+    public final static String DB = MAIN + File.separator + "db";
+
+    public final static String[] DIRS = {
+            MAIN,
+            MAPS,
+            DB
+    };
+
     public final static String NOMEDIA  = MAIN + File.separator + ".nomedia";
 
 }

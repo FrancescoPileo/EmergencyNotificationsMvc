@@ -13,7 +13,7 @@ import org.json.JSONObject;
 public class Node implements Jsonable {
 
     private int idNode;
-    private int idMap;
+    private Map map;
     private int x;
     private int y;
     private String nodename;
@@ -21,16 +21,16 @@ public class Node implements Jsonable {
     public Node() {
 
         this.idNode = -1;
-        this.idMap = -1;
+        this.map = null;
         this.x = -1;
         this.y = -1;
         this.nodename = null;
     }
 
-    public Node(int idNode, int idMap, int x, int y, String nodename) {
+    public Node(int idNode, Map map, int x, int y, String nodename) {
 
         this.idNode = idNode;
-        this.idMap = idMap;
+        this.map = map;
         this.x = x;
         this.y = y;
         this.nodename = nodename;
@@ -40,8 +40,7 @@ public class Node implements Jsonable {
     public Node(String jsonString){
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
-            Map map = new Map(jsonObject.getJSONObject("idmap").toString());
-            this.idMap = map.getIdMap();
+            this.map = new Map(jsonObject.getJSONObject("idmap").toString());
             this.idNode = jsonObject.getInt("idnode");
             this.x = jsonObject.getInt("x");
             this.y = jsonObject.getInt("y");
@@ -59,12 +58,12 @@ public class Node implements Jsonable {
         this.idNode = idNode;
     }
 
-    public int getIdMap() {
-        return idMap;
+    public Map getMap() {
+        return map;
     }
 
-    public void setIdMap(int idMap) {
-        this.idMap = idMap;
+    public void setMap(Map map) {
+        this.map = map;
     }
 
     public int getX() {
@@ -97,7 +96,7 @@ public class Node implements Jsonable {
         try {
 
             jsonObject.put("idnode", this.idNode);
-            jsonObject.put("idmap", this.idMap);
+            jsonObject.put("idmap", this.map.toJson());
             jsonObject.put("nodename", this.nodename);
             jsonObject.put("x", this.x);
             jsonObject.put("y", this.y);

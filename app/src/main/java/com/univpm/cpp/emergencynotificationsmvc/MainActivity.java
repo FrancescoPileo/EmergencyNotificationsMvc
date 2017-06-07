@@ -115,10 +115,7 @@ public class MainActivity extends AppCompatActivity {
     private void checkFolders() {
         if (this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
                 PackageManager.PERMISSION_GRANTED){
-            ArrayList<String> dirArray = new ArrayList<>();
-            dirArray.add(Directories.MAIN);
-            dirArray.add(Directories.MAPS);
-            for (String dir: dirArray) {
+            for (String dir: Directories.DIRS) {
                 File directory = new File(dir);
                 if (!directory.exists()){
                     directory.mkdir();
@@ -191,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
-
+            
         }
     }
 }

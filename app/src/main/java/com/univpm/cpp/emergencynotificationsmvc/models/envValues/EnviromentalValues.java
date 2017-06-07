@@ -67,7 +67,7 @@ public class EnviromentalValues implements Jsonable{
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
             this.idEnv = jsonObject.getInt("idenv");
-            this.beacon =  new Beacon(jsonObject.getJSONObject("beacon").toString());
+            this.beacon =  new Beacon(jsonObject.getJSONObject("idbeacon").toString());
             this.time = jsonObject.getString("detectiontime");
             this.temperature = jsonObject.getDouble("temperature");
             this.humidity = jsonObject.getDouble("humidity");

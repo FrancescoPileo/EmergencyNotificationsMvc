@@ -23,15 +23,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.text.ParseException;
 
 
 import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.MyBluetoothManager;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModelImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValues;
+import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValuesModel;
+import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValuesModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferences;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferencesImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteDbHelper;
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteUpdateTask;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.MapModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.MapModelImpl;
@@ -54,7 +58,6 @@ import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeViewImpl;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.TimeZone;
 
 public class HomeFragment extends Fragment implements
         HomeView.MapSpnItemSelectedViewListener,
@@ -67,6 +70,7 @@ public class HomeFragment extends Fragment implements
     private NodeModel mNodeModel;
     private PositionModel mPositionModel;
     private SessionModel mSessionModel;
+    private EnviromentalValuesModel mEnviromentalValuesModel;
     private SpinnerTask mSpinnerTask;
     private FirstMapTask mFirstMapTask;
     private InitTask mInitTask;
@@ -100,6 +104,7 @@ public class HomeFragment extends Fragment implements
         mBeaconModel = new BeaconModelImpl();
         mPositionModel = new PositionModelImpl();
         mSessionModel = new SessionModelImpl();
+        mEnviromentalValuesModel = new EnviromentalValuesModelImpl();
         mSpinnerTask = new SpinnerTask();
         mInitTask = new InitTask();
         user = new User();
@@ -111,6 +116,9 @@ public class HomeFragment extends Fragment implements
 
         mInitTask.execute((Void) null);
         mSpinnerTask.execute((Void) null);
+        LocalSQLiteUpdateTask task = new LocalSQLiteUpdateTask(getContext());
+        task.execute((Void) null);
+
 
         //todo cambiare on click
         mHomeView.setMapSelectedListener(this);
@@ -348,7 +356,7 @@ public class HomeFragment extends Fragment implements
                 flag = true;
             } else if (lastPosition != mLastposition) {                 //todo controllare
                 positionNode = mNodeModel.getNodeById(lastPosition.getNode().getIdNode());
-                map = mMapModel.getMapById(positionNode.getIdMap());
+                map = mMapModel.getMapById(positionNode.getMap().getIdMap());
                 mLastposition = lastPosition;
                 flag = true;
             }
@@ -405,7 +413,7 @@ public class HomeFragment extends Fragment implements
 
             map = mMapModel.getMapByName(nameMap);
 
-            if (positionNode.getIdNode() != -1) positionMap = mMapModel.getMapById(positionNode.getIdMap());
+            if (positionNode.getIdNode() != -1) positionMap = mMapModel.getMapById(positionNode.getMap().getIdMap());
 
             return true;
 
@@ -467,11 +475,6 @@ public class HomeFragment extends Fragment implements
 
         return (int) (yRefpx-((yRef - y)*scale));
     }
-
-
-
-
-
 
 
     public class EndSessionTask extends AsyncTask<Void, Void, Boolean> {
