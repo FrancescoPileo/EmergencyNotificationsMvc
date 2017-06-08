@@ -8,4 +8,6 @@ public interface EnviromentalValuesModel {
 
     public ArrayList<EnviromentalValues> getAllValues();
 
+    public ArrayList<EnviromentalValues> getLastValuesForEachBeacon();
+
 }

@@ -60,7 +60,7 @@ public class LocalSQLiteUpdateTask extends AsyncTask<Void, Void, Boolean> {
         ArrayList<Map> maps = mMapModel.getAllMaps();
         ArrayList<Node> nodes = mNodeModel.getAllNodes();
         ArrayList<Beacon> beacons = mBeaconModel.getAllBeacons();
-        ArrayList<EnviromentalValues> enviromentalValues = mEnviromentalValuesModel.getAllValues();
+        ArrayList<EnviromentalValues> enviromentalValues = mEnviromentalValuesModel.getLastValuesForEachBeacon();
         helper.importAppuser(user);
         helper.importMaps(maps);
         helper.importNodes(nodes);

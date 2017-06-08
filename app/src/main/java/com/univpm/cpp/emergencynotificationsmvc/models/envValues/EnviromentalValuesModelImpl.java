@@ -46,4 +46,28 @@ public class EnviromentalValuesModelImpl implements EnviromentalValuesModel {
         }
         return values;
     }
+
+    @Override
+    public ArrayList<EnviromentalValues> getLastValuesForEachBeacon() {
+        ArrayList<EnviromentalValues> values = null;
+        String response = null;
+        try {
+            response = HttpUtils.sendGet("enviromentalvalues/lasts");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (response != null){
+            try {
+                values = new ArrayList<>();
+                JSONArray jsonArray = new JSONArray(response);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    values.add(new EnviromentalValues(jsonArray.getJSONObject(i).toString()));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return values;
+    }
 }

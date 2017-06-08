@@ -178,17 +178,18 @@ public class MainActivity extends AppCompatActivity {
     public class LocalSQLiteInitTask extends AsyncTask<Void, Void, Boolean> {
 
         SQLiteDatabase db = null;
+        LocalSQLiteDbHelper helper = null;
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            LocalSQLiteDbHelper helper = new LocalSQLiteDbHelper(getApplicationContext());
-            db = helper.getWritableDatabase();
+            helper = new LocalSQLiteDbHelper(getApplicationContext());
+            db = helper.getReadableDatabase();
             return (db != null);
         }
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
-            
+            helper.close();
         }
     }
 }
