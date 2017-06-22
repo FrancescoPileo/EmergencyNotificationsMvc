@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 
 import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.MyBluetoothManager;
+import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValues;
@@ -340,12 +341,14 @@ public class HomeFragment extends Fragment implements
 
     public class FirstMapTask extends AsyncTask<Void, Void, Boolean> {
 
+        private ArrayList<Beacon> beacons;
 
         /* Se l'utente ha una o più posizioni, prende la più recente e la relativa mappa (in map)
          * Altrimenti in map si trova la prima mappa dello spinner */
         @Override
         protected Boolean doInBackground(Void... params) {
 
+            beacons = mBeaconModel.getAllBeacons();
 
             Position lastPosition = mPositionModel.getLastPositionByUser(user);
 
@@ -376,6 +379,7 @@ public class HomeFragment extends Fragment implements
             if (success) {
 
                 mHomeView.setMapOnView(map);
+                mHomeView.setBeaconsOnMap(beacons, map);
 
                 if (positionNode.getIdNode() != -1) {
                     mHomeView.setPosition(getPixelsXFromMetres(positionNode.getX(), map), getPixelsYFromMetres(positionNode.getY(), map)); //qua gli si deve passare la x e la y del nodo posizione
@@ -399,6 +403,7 @@ public class HomeFragment extends Fragment implements
         private String nameMap;
         private String path;
         private Map positionMap;
+        private ArrayList<Beacon> beacons;
 
         MapTask(String nameMap) {
 
@@ -412,6 +417,7 @@ public class HomeFragment extends Fragment implements
         protected Boolean doInBackground(Void... params) {
 
             map = mMapModel.getMapByName(nameMap);
+            beacons = mBeaconModel.getAllBeacons();
 
             if (positionNode.getIdNode() != -1) positionMap = mMapModel.getMapById(positionNode.getMap().getIdMap());
 
@@ -429,6 +435,7 @@ public class HomeFragment extends Fragment implements
             if (success) {
 
                 mHomeView.setMapOnView(map);
+                mHomeView.setBeaconsOnMap(beacons, map);
 
                 if (positionNode.getIdNode() != -1) {
 

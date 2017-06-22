@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuInflater;
 
+import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
 import com.univpm.cpp.emergencynotificationsmvc.views.ViewMvc;
 
@@ -35,6 +36,8 @@ public interface HomeView extends ViewMvc{
 
     // Prende in input l'oggetto che identifica la mappa (importato dal db), cerca la mappa nella cartella maps e la mette in TouchImageView
     void setMapOnView(Map map);
+
+    void setBeaconsOnMap(ArrayList<Beacon> beacons, Map map);
 
     // Mette il marker posizione sulla mappa
     void setPosition(int x, int y);

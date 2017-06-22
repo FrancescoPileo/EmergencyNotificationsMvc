@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -36,6 +37,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.univpm.cpp.emergencynotificationsmvc.R;
+import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
 import com.univpm.cpp.emergencynotificationsmvc.utils.Directories;
 import com.univpm.cpp.emergencynotificationsmvc.utils.TouchImageView;
@@ -221,6 +223,32 @@ public class HomeViewImpl implements HomeView{
         display.getSize(size);
         int widthScreen = size.x;
         int heightScreen = size.y;*/
+
+    }
+
+    @Override
+    public void setBeaconsOnMap(ArrayList<Beacon> beacons, Map map) {
+
+        Beacon beacon;
+        int i;
+        Bitmap image = mapTiv.getBitmap();
+        Bitmap overlay = Bitmap.createBitmap(image.getWidth(), image.getHeight(), image.getConfig());
+        Canvas canvas = new Canvas (overlay);
+        Paint paint = new Paint(Color.YELLOW);
+        float radius = 2;
+
+        canvas.drawBitmap(image, 0, 0, null);
+
+        for (i=0; i< beacons.size(); i++);
+
+        {
+            beacon = beacons.get(i);
+            if (beacon.getNode().getMap().getIdMap() == map.getIdMap()) {
+                canvas.drawCircle(beacon.getNode().getX(), beacon.getNode().getY(), radius , paint );
+            }
+        }
+
+        mapTiv.setImageBitmap(overlay);
 
     }
 
