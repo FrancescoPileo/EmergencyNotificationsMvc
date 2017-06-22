@@ -40,6 +40,7 @@ import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
 import com.univpm.cpp.emergencynotificationsmvc.utils.Directories;
+import com.univpm.cpp.emergencynotificationsmvc.utils.ImageCoordinates;
 import com.univpm.cpp.emergencynotificationsmvc.utils.TouchImageView;
 import com.univpm.cpp.emergencynotificationsmvc.views.login.LoginView;
 
@@ -230,22 +231,27 @@ public class HomeViewImpl implements HomeView{
     public void setBeaconsOnMap(ArrayList<Beacon> beacons, Map map) {
 
         Beacon beacon;
-        int i;
+        int i=0;
         Bitmap image = mapTiv.getBitmap();
         Bitmap overlay = Bitmap.createBitmap(image.getWidth(), image.getHeight(), image.getConfig());
         Canvas canvas = new Canvas (overlay);
-        Paint paint = new Paint(Color.YELLOW);
-        float radius = 2;
+        Paint paint = new Paint(Color.RED);
+        float radius = 15;
 
         canvas.drawBitmap(image, 0, 0, null);
 
-        for (i=0; i< beacons.size(); i++);
-
+        while (i < beacons.size())
         {
             beacon = beacons.get(i);
+
             if (beacon.getNode().getMap().getIdMap() == map.getIdMap()) {
-                canvas.drawCircle(beacon.getNode().getX(), beacon.getNode().getY(), radius , paint );
+
+                int x = ImageCoordinates.getPixelsXFromMetres(beacon.getNode().getX(), beacon.getNode().getMap());
+                int y = ImageCoordinates.getPixelsYFromMetres(beacon.getNode().getY(), beacon.getNode().getMap());
+                canvas.drawCircle(x, y, radius , paint);
             }
+
+            i++;
         }
 
         mapTiv.setImageBitmap(overlay);

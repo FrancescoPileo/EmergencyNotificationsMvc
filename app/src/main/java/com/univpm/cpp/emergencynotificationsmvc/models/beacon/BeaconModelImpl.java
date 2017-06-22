@@ -8,6 +8,8 @@ import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -38,7 +40,7 @@ public class BeaconModelImpl implements BeaconModel {
         ArrayList<Beacon> values = null;
         String response = null;
         try {
-            response = HttpUtils.sendGet("beacon");
+            response = HttpUtils.sendGet("beacon/getAll");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -54,6 +56,8 @@ public class BeaconModelImpl implements BeaconModel {
                 e.printStackTrace();
             }
         }
+        for (int j = 0; j<values.size(); j++){
+        Log.w("getAllBeacons", values.get(j).toString());}
         return values;
     }
 

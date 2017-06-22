@@ -64,4 +64,12 @@ public class Beacon implements Jsonable{
     public void setNode(Node node) {
         this.node = node;
     }
+
+    @Override
+    public String toString() {
+        return "Beacon{" +
+                "idBeacon='" + idBeacon + '\'' +
+                ", node=" + node.toString() +
+                '}';
+    }
 }

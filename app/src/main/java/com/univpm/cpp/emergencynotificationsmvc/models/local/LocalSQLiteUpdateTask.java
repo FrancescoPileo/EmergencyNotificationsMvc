@@ -65,8 +65,8 @@ public class LocalSQLiteUpdateTask extends AsyncTask<Void, Void, Boolean> {
         helper.importMaps(maps);
         helper.importNodes(nodes);
         helper.importBeacons(beacons);
-        helper.importUserposition(lastPosition);
-        helper.importEnviromentalValues(enviromentalValues);
+        if (lastPosition != null) helper.importUserposition(lastPosition);
+        if (enviromentalValues != null) helper.importEnviromentalValues(enviromentalValues);
         return null;
     }
 

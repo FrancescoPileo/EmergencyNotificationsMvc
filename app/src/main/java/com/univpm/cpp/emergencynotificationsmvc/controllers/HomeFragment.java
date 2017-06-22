@@ -54,11 +54,13 @@ import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.utils.Directories;
 import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
+import com.univpm.cpp.emergencynotificationsmvc.utils.ImageCoordinates;
 import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeView;
 import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeViewImpl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class HomeFragment extends Fragment implements
         HomeView.MapSpnItemSelectedViewListener,
@@ -91,6 +93,8 @@ public class HomeFragment extends Fragment implements
     //todo visualizzare errori
     //todo notifiche --> firebase
     //todo gestione utente
+    //todo spesso crasha quando non ho il bluetooth acceso e mi chiede di accenderlo oppure quando entro la 1 volta come ospite
+    //todo controllare criterio x accettare password in registrazione
 
 
     @Nullable
@@ -382,7 +386,7 @@ public class HomeFragment extends Fragment implements
                 mHomeView.setBeaconsOnMap(beacons, map);
 
                 if (positionNode.getIdNode() != -1) {
-                    mHomeView.setPosition(getPixelsXFromMetres(positionNode.getX(), map), getPixelsYFromMetres(positionNode.getY(), map)); //qua gli si deve passare la x e la y del nodo posizione
+                    mHomeView.setPosition(ImageCoordinates.getPixelsXFromMetres(positionNode.getX(), map), ImageCoordinates.getPixelsYFromMetres(positionNode.getY(), map)); //qua gli si deve passare la x e la y del nodo posizione
                     mHomeView.setPositionText("La tua posizione è in "+ map.getName() + ".");
                     mHomeView.setMapName("La mappa visualizzata è " + map.getName() + ".");
                 }
@@ -442,7 +446,7 @@ public class HomeFragment extends Fragment implements
                     if (nameMap.equals(positionMap.getName())) {
                         mHomeView.setPositionText("La tua posizione è in "+ positionMap.getName() + ".");
                         mHomeView.setMapName("La mappa visualizzata è " + map.getName() + ".");
-                        mHomeView.setPosition(getPixelsXFromMetres(positionNode.getX(), positionMap), getPixelsYFromMetres(positionNode.getY(), positionMap)); //qua gli si deve passare la x e la y del nodo posizione
+                        mHomeView.setPosition(ImageCoordinates.getPixelsXFromMetres(positionNode.getX(), positionMap), ImageCoordinates.getPixelsYFromMetres(positionNode.getY(), positionMap)); //qua gli si deve passare la x e la y del nodo posizione
                     }
 
                     else {
@@ -465,24 +469,6 @@ public class HomeFragment extends Fragment implements
     }
 
 
-    private int getPixelsXFromMetres(int x, Map map) {
-
-        double scale = map.getScale();
-        int xRef = map.getxRef();
-        int xRefpx = map.getxRefpx();
-
-        return (int) (xRefpx-((xRef - x)*scale));
-    }
-
-    private int getPixelsYFromMetres(int y, Map map) {
-
-        double scale = map.getScale();
-        int yRef = map.getyRef();
-        int yRefpx = map.getyRefpx();
-
-        return (int) (yRefpx-((yRef - y)*scale));
-    }
-
 
     public class EndSessionTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -494,7 +480,7 @@ public class HomeFragment extends Fragment implements
 
             Date date = new Date();
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-            //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+1"));
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+1"));
             session.setTimeOut(dateFormat.format(date));
             mSessionModel = new SessionModelImpl();
             return mSessionModel.updateSession(session);
