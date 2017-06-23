@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ScrollView android:id="@+id/ScrollView01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/NodeName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"/>
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutRow01"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ScrollView01"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/Temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Temperatura"/>
+
+            <TextView
+                android:id="@+id/TempValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutRow02"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ScrollView01"
+            android:weightSum="100">
+
+            <TextView
+                android:id="@+id/Hum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Umidita'"/>
+
+            <TextView
+                android:id="@+id/HumValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/ok_button"
+        style="?android:textAppearanceSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:text="Ok"
+        android:textStyle="bold" />
+
+</RelativeLayout>

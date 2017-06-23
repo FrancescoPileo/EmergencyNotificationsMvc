@@ -37,6 +37,8 @@ import android.widget.ImageView;
 import android.widget.OverScroller;
 import android.widget.Scroller;
 
+import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeView;
+
 public class TouchImageView extends android.support.v7.widget.AppCompatImageView {
 
     private static final String DEBUG = "DEBUG";
@@ -1067,7 +1069,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
      * 			to the bounds of the bitmap size.
      * @return Coordinates of the point touched, in the coordinate system of the original drawable.
      */
-    private PointF transformCoordTouchToBitmap(float x, float y, boolean clipToBitmap) {
+    public PointF transformCoordTouchToBitmap(float x, float y, boolean clipToBitmap) {
         matrix.getValues(m);
         float origW = getDrawable().getIntrinsicWidth();
         float origH = getDrawable().getIntrinsicHeight();
@@ -1278,5 +1280,21 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         float[] n = new float[9];
         matrix.getValues(n);
         Log.d(DEBUG, "Scale: " + n[Matrix.MSCALE_X] + " TransX: " + n[Matrix.MTRANS_X] + " TransY: " + n[Matrix.MTRANS_Y]);
+    }
+
+    public float getMatchViewWidth() {
+        return matchViewWidth;
+    }
+
+    public void setMatchViewWidth(float matchViewWidth) {
+        this.matchViewWidth = matchViewWidth;
+    }
+
+    public float getMatchViewHeight() {
+        return matchViewHeight;
+    }
+
+    public void setMatchViewHeight(float matchViewHeight) {
+        this.matchViewHeight = matchViewHeight;
     }
 }

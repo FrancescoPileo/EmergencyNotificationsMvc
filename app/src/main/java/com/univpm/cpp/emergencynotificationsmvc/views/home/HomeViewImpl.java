@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -28,6 +29,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -39,6 +41,7 @@ import android.widget.TextView;
 import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
+import com.univpm.cpp.emergencynotificationsmvc.utils.CirclesDrawingView;
 import com.univpm.cpp.emergencynotificationsmvc.utils.Directories;
 import com.univpm.cpp.emergencynotificationsmvc.utils.ImageCoordinates;
 import com.univpm.cpp.emergencynotificationsmvc.utils.TouchImageView;
@@ -55,10 +58,12 @@ public class HomeViewImpl implements HomeView{
     private View homeFormView;
     private LogoutBtnViewListener logoutListener;
     private MapSpnItemSelectedViewListener mapSelectedListener;
+    private BeaconTouchListener beaconTouchListener;
 
     private TextView positionText;
     private TextView textMapName;
     private TouchImageView mapTiv;
+    private ArrayList<CirclesDrawingView> mCirclesDrawingViews;
 
     private TextView textSpinnerLabel;
     private Spinner mapsSpn;
@@ -75,6 +80,45 @@ public class HomeViewImpl implements HomeView{
         this.context = context;
 
         init();
+
+        mapTiv.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+
+                        int touchX = (int) motionEvent.getX();
+                        int touchY = (int) motionEvent.getY();
+                        PointF point;
+                        point = mapTiv.transformCoordTouchToBitmap(touchX, touchY, false);
+                        touchX = (int) point.x;
+                        touchY = (int) point.y;
+                        Log.w("TouchX", String.valueOf(touchX));
+                        Log.w("TouchY", String.valueOf(touchY));
+
+                        for (int i=0; i < mCirclesDrawingViews.size(); i++) {
+                            CirclesDrawingView.CircleArea circleArea = mCirclesDrawingViews.get(i).getmCircleArea();
+                            int x = circleArea.getCenterX();
+                            int y = circleArea.getCenterY();
+                            int radius = circleArea.getRadius();
+
+                            Log.w("X", String.valueOf(x));
+                            Log.w("Y", String.valueOf(y));
+
+                            if (((touchX >= x-radius) && (touchX <= x+radius)) && ((touchY >= y-radius) && (touchY <= y+radius)))  {
+                                Log.w("HO CLICCATOOOOO GIGANTE", "si");
+                                beaconTouchListener.onBeaconClick(mCirclesDrawingViews.get(i).getNode());
+                            }
+                        }
+                        break;
+
+                }
+
+            return false;
+
+            }
+        });
 
 
         mapsSpn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -128,6 +172,11 @@ public class HomeViewImpl implements HomeView{
     @Override
     public void setLogoutListener(LogoutBtnViewListener listener) {
         this.logoutListener = listener;
+    }
+
+    @Override
+    public void setBeaconTouchListener(BeaconTouchListener beaconTouchListener) {
+        this.beaconTouchListener = beaconTouchListener;
     }
 
     @Override
@@ -235,8 +284,25 @@ public class HomeViewImpl implements HomeView{
         Bitmap image = mapTiv.getBitmap();
         Bitmap overlay = Bitmap.createBitmap(image.getWidth(), image.getHeight(), image.getConfig());
         Canvas canvas = new Canvas (overlay);
-        Paint paint = new Paint(Color.RED);
-        float radius = 15;
+
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.rgb(255,153,0));
+        paint.setAntiAlias(true);
+        paint.setAlpha(180);
+
+        Paint border = new Paint();
+        border.setStyle(Paint.Style.STROKE);
+        border.setColor(Color.BLACK);
+        border.setStrokeWidth(2);
+
+        mCirclesDrawingViews = new ArrayList<>();
+
+        int radius = 15;
+
+        CirclesDrawingView circle = new CirclesDrawingView(context);
+        circle.setmCirclePaint(paint);
+        circle.setmCircleBorder(border);
 
         canvas.drawBitmap(image, 0, 0, null);
 
@@ -248,7 +314,13 @@ public class HomeViewImpl implements HomeView{
 
                 int x = ImageCoordinates.getPixelsXFromMetres(beacon.getNode().getX(), beacon.getNode().getMap());
                 int y = ImageCoordinates.getPixelsYFromMetres(beacon.getNode().getY(), beacon.getNode().getMap());
-                canvas.drawCircle(x, y, radius , paint);
+
+                CirclesDrawingView.CircleArea circleArea = new CirclesDrawingView.CircleArea(x, image.getHeight() - y, radius);
+                circle.setmCircleArea(circleArea);
+                circle.setNode(beacon.getNode());
+                circle.onDraw(canvas);
+                mCirclesDrawingViews.add(circle);
+
             }
 
             i++;

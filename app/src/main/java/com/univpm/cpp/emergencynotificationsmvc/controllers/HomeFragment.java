@@ -1,6 +1,7 @@
 package com.univpm.cpp.emergencynotificationsmvc.controllers;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -55,6 +56,7 @@ import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.utils.Directories;
 import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
 import com.univpm.cpp.emergencynotificationsmvc.utils.ImageCoordinates;
+import com.univpm.cpp.emergencynotificationsmvc.utils.TouchImageView;
 import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeView;
 import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeViewImpl;
 
@@ -64,7 +66,8 @@ import java.util.TimeZone;
 
 public class HomeFragment extends Fragment implements
         HomeView.MapSpnItemSelectedViewListener,
-        HomeView.LogoutBtnViewListener{
+        HomeView.LogoutBtnViewListener,
+        HomeView.BeaconTouchListener{
 
     private HomeView mHomeView;
     private MapModel mMapModel;
@@ -128,6 +131,7 @@ public class HomeFragment extends Fragment implements
         //todo cambiare on click
         mHomeView.setMapSelectedListener(this);
         mHomeView.setLogoutListener(this);
+        mHomeView.setBeaconTouchListener(this);
         mHomeView.setToolbar(this);
 
         mMyBluetoothManager = new MyBluetoothManager(getContext(), getActivity());
@@ -193,6 +197,15 @@ public class HomeFragment extends Fragment implements
     public void onMapSpnItemSelected(String nameMap) {
         mMapTask = new MapTask(nameMap);
         mMapTask.execute((Void) null);
+    }
+
+    @Override
+    public void onBeaconClick(Node node) {
+        Dialog dialog = new Dialog(getContext());
+        dialog.getWindow();
+        dialog.setContentView(R.layout.dialog);
+        dialog.setTitle("Valori ambientali");
+        dialog.show();
     }
 
     @Override
@@ -386,7 +399,7 @@ public class HomeFragment extends Fragment implements
                 mHomeView.setBeaconsOnMap(beacons, map);
 
                 if (positionNode.getIdNode() != -1) {
-                    mHomeView.setPosition(ImageCoordinates.getPixelsXFromMetres(positionNode.getX(), map), ImageCoordinates.getPixelsYFromMetres(positionNode.getY(), map)); //qua gli si deve passare la x e la y del nodo posizione
+                    mHomeView.setPosition(ImageCoordinates.getPixelsXFromMetres(positionNode.getX(), map), ImageCoordinates.getPixelsYFromMetres(positionNode.getY(), map));
                     mHomeView.setPositionText("La tua posizione è in "+ map.getName() + ".");
                     mHomeView.setMapName("La mappa visualizzata è " + map.getName() + ".");
                 }

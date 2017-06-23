@@ -6,6 +6,7 @@ import android.view.MenuInflater;
 
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
+import com.univpm.cpp.emergencynotificationsmvc.models.node.Node;
 import com.univpm.cpp.emergencynotificationsmvc.views.ViewMvc;
 
 import java.util.ArrayList;
@@ -25,8 +26,14 @@ public interface HomeView extends ViewMvc{
         void onLogoutClick();
     }
 
+    interface BeaconTouchListener{
+
+        void onBeaconClick(Node node);
+    }
+
     void setMapSelectedListener(HomeView.MapSpnItemSelectedViewListener listener);
     void setLogoutListener(LogoutBtnViewListener listener);
+    void setBeaconTouchListener (BeaconTouchListener listener);
     void populateSpinner(ArrayList<String> list);
     String getMap();
     void showProgress(boolean show);
