@@ -122,5 +122,43 @@ public class DialogViewImpl implements DialogView {
         this.gyrValue.setText(string);
     }
 
+    @Override
+    public void setTempVisible() {
+        temp.setVisibility(View.VISIBLE);
+    }
 
+    @Override
+    public void setHumVisible() {
+        hum.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setAccVisible() {
+        acc.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setGyrVisible() {
+        gyr.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setTempInvisible() {
+        temp.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void setHumInvisible() {
+        hum.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void setAccInvisible() {
+        acc.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void setGyrInvisible() {
+        gyr.setVisibility(View.INVISIBLE);
+    }
 }

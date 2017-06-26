@@ -545,6 +545,7 @@ public class HomeFragment extends Fragment implements
 
         private Beacon beacon;
         private EnviromentalValues envValues;
+        boolean flag = false;
 
         EnvValuesTask(Beacon beacon) {
             this.beacon = beacon;
@@ -559,21 +560,34 @@ public class HomeFragment extends Fragment implements
 
                 if (enviromentalValuesArrayList.get(i).getBeacon().getIdBeacon().equals(beacon.getIdBeacon())) {
                     envValues = enviromentalValuesArrayList.get(i);
+                    flag = true;
                 }
             }
 
-            return true;
+            return flag;
         }
 
         @Override
         protected void onPostExecute(Boolean success) {
             if (success) {
-
                 mDialogView.setNodeNameText("Nodo: " + beacon.getNode().getNodename());
+                mDialogView.setTempVisible();
+                mDialogView.setHumVisible();
+                mDialogView.setAccVisible();
+                mDialogView.setGyrVisible();
                 mDialogView.setTempValueText(String.valueOf(envValues.getTemperature()));
                 mDialogView.setHumValueText(String.valueOf(envValues.getHumidity()));
                 mDialogView.setAccValueText(String.valueOf(envValues.getAccX()) + ", " + String.valueOf(envValues.getAccY()) + ", " + String.valueOf(envValues.getAccZ()));
                 mDialogView.setGyrValueText(String.valueOf(envValues.getGyrX()) + ", " + String.valueOf(envValues.getGyrY()) + ", " + String.valueOf(envValues.getGyrZ()));
+
+            }
+
+            else {
+                mDialogView.setNodeNameText("Dati ambientali non disponibili.");
+                mDialogView.setTempInvisible();
+                mDialogView.setHumInvisible();
+                mDialogView.setAccInvisible();
+                mDialogView.setGyrInvisible();
 
             }
 
