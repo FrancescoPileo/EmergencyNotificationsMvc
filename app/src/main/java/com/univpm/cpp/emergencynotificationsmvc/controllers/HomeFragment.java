@@ -57,6 +57,8 @@ import com.univpm.cpp.emergencynotificationsmvc.utils.Directories;
 import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
 import com.univpm.cpp.emergencynotificationsmvc.utils.ImageCoordinates;
 import com.univpm.cpp.emergencynotificationsmvc.utils.TouchImageView;
+import com.univpm.cpp.emergencynotificationsmvc.views.dialog.DialogView;
+import com.univpm.cpp.emergencynotificationsmvc.views.dialog.DialogViewImpl;
 import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeView;
 import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeViewImpl;
 
@@ -67,9 +69,12 @@ import java.util.TimeZone;
 public class HomeFragment extends Fragment implements
         HomeView.MapSpnItemSelectedViewListener,
         HomeView.LogoutBtnViewListener,
-        HomeView.BeaconTouchListener{
+        HomeView.BeaconTouchListener,
+        DialogView.OkButtonListener{
 
     private HomeView mHomeView;
+    private DialogView mDialogView;
+    private Dialog dialog;
     private MapModel mMapModel;
     private BeaconModel mBeaconModel;
     private UserModel mUserModel;
@@ -81,6 +86,7 @@ public class HomeFragment extends Fragment implements
     private FirstMapTask mFirstMapTask;
     private InitTask mInitTask;
     private MapTask mMapTask;
+    private EnvValuesTask mEnvValuesTask;
     private MyBluetoothManager mMyBluetoothManager;
     private LocalPreferences mLocalPreferences;
     private Map map;
@@ -105,6 +111,7 @@ public class HomeFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         mHomeView = new HomeViewImpl(inflater, container, getContext());
+        mDialogView = new DialogViewImpl(inflater, container, getContext());
         mMapModel = new MapModelImpl();
         mUserModel = new UserModelImpl();
         mNodeModel = new NodeModelImpl();
@@ -120,6 +127,7 @@ public class HomeFragment extends Fragment implements
         mLastposition = new Position();
         positionNode = new Node();
         session = new Session();
+        dialog = new Dialog(getContext());
 
 
         mInitTask.execute((Void) null);
@@ -133,6 +141,8 @@ public class HomeFragment extends Fragment implements
         mHomeView.setLogoutListener(this);
         mHomeView.setBeaconTouchListener(this);
         mHomeView.setToolbar(this);
+
+        mDialogView.setOkButtonListener(this);
 
         mMyBluetoothManager = new MyBluetoothManager(getContext(), getActivity());
         //mMyBluetoothManager.scanning();
@@ -200,12 +210,17 @@ public class HomeFragment extends Fragment implements
     }
 
     @Override
-    public void onBeaconClick(Node node) {
-        Dialog dialog = new Dialog(getContext());
+    public void onBeaconClick(Beacon beacon) {
         dialog.getWindow();
-        dialog.setContentView(R.layout.dialog);
-        dialog.setTitle("Valori ambientali");
+        mEnvValuesTask = new EnvValuesTask(beacon);
+        mEnvValuesTask.execute((Void) null);
+        dialog.setContentView(mDialogView.getRootView());
         dialog.show();
+    }
+
+    @Override
+    public void onOkButtonClick() {
+        dialog.cancel();
     }
 
     @Override
@@ -522,6 +537,46 @@ public class HomeFragment extends Fragment implements
         @Override
         protected void onCancelled() {
             super.onCancelled();
+        }
+
+    }
+
+    public class EnvValuesTask extends AsyncTask<Void, Void, Boolean> {
+
+        private Beacon beacon;
+        private EnviromentalValues envValues;
+
+        EnvValuesTask(Beacon beacon) {
+            this.beacon = beacon;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+
+            ArrayList<EnviromentalValues> enviromentalValuesArrayList = mEnviromentalValuesModel.getLastValuesForEachBeacon();
+
+            for (int i = 0; i < enviromentalValuesArrayList.size(); i++) {
+
+                if (enviromentalValuesArrayList.get(i).getBeacon().getIdBeacon().equals(beacon.getIdBeacon())) {
+                    envValues = enviromentalValuesArrayList.get(i);
+                }
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (success) {
+
+                mDialogView.setNodeNameText("Nodo: " + beacon.getNode().getNodename());
+                mDialogView.setTempValueText(String.valueOf(envValues.getTemperature()));
+                mDialogView.setHumValueText(String.valueOf(envValues.getHumidity()));
+                mDialogView.setAccValueText(String.valueOf(envValues.getAccX()) + ", " + String.valueOf(envValues.getAccY()) + ", " + String.valueOf(envValues.getAccZ()));
+                mDialogView.setGyrValueText(String.valueOf(envValues.getGyrX()) + ", " + String.valueOf(envValues.getGyrY()) + ", " + String.valueOf(envValues.getGyrZ()));
+
+            }
+
         }
 
     }

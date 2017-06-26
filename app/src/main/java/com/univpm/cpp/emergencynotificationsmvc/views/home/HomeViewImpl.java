@@ -97,7 +97,9 @@ public class HomeViewImpl implements HomeView{
                         Log.w("TouchX", String.valueOf(touchX));
                         Log.w("TouchY", String.valueOf(touchY));
 
-                        for (int i=0; i < mCirclesDrawingViews.size(); i++) {
+                        int i=0;
+                        while (i < mCirclesDrawingViews.size()) {
+
                             CirclesDrawingView.CircleArea circleArea = mCirclesDrawingViews.get(i).getmCircleArea();
                             int x = circleArea.getCenterX();
                             int y = circleArea.getCenterY();
@@ -108,8 +110,9 @@ public class HomeViewImpl implements HomeView{
 
                             if (((touchX >= x-radius) && (touchX <= x+radius)) && ((touchY >= y-radius) && (touchY <= y+radius)))  {
                                 Log.w("HO CLICCATOOOOO GIGANTE", "si");
-                                beaconTouchListener.onBeaconClick(mCirclesDrawingViews.get(i).getNode());
+                                beaconTouchListener.onBeaconClick(mCirclesDrawingViews.get(i).getBeacon());
                             }
+                            i++;
                         }
                         break;
 
@@ -296,13 +299,9 @@ public class HomeViewImpl implements HomeView{
         border.setColor(Color.BLACK);
         border.setStrokeWidth(2);
 
-        mCirclesDrawingViews = new ArrayList<>();
+        mCirclesDrawingViews = new ArrayList<CirclesDrawingView>();
 
         int radius = 15;
-
-        CirclesDrawingView circle = new CirclesDrawingView(context);
-        circle.setmCirclePaint(paint);
-        circle.setmCircleBorder(border);
 
         canvas.drawBitmap(image, 0, 0, null);
 
@@ -315,12 +314,15 @@ public class HomeViewImpl implements HomeView{
                 int x = ImageCoordinates.getPixelsXFromMetres(beacon.getNode().getX(), beacon.getNode().getMap());
                 int y = ImageCoordinates.getPixelsYFromMetres(beacon.getNode().getY(), beacon.getNode().getMap());
 
+                CirclesDrawingView circle = new CirclesDrawingView(context);
+                circle.setmCirclePaint(paint);
+                circle.setmCircleBorder(border);
                 CirclesDrawingView.CircleArea circleArea = new CirclesDrawingView.CircleArea(x, image.getHeight() - y, radius);
                 circle.setmCircleArea(circleArea);
                 circle.setNode(beacon.getNode());
-                circle.onDraw(canvas);
+                circle.setBeacon(beacon);
                 mCirclesDrawingViews.add(circle);
-
+                circle.onDraw(canvas);
             }
 
             i++;

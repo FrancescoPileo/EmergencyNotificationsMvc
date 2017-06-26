@@ -12,6 +12,7 @@ import android.util.SparseArray;
 import android.view.View;
 import android.util.Log;
 
+import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.node.Node;
 
 import java.util.HashSet;
@@ -29,6 +30,8 @@ public class CirclesDrawingView extends View{
     private CircleArea mCircleArea;
 
     private Node node;
+
+    private Beacon beacon;
 
     /** Stores data about single circle */
     public static class CircleArea {
@@ -178,5 +181,13 @@ public class CirclesDrawingView extends View{
 
     public void setNode(Node node) {
         this.node = node;
+    }
+
+    public Beacon getBeacon() {
+        return beacon;
+    }
+
+    public void setBeacon(Beacon beacon) {
+        this.beacon = beacon;
     }
 }

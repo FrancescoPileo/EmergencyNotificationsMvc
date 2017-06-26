@@ -20,7 +20,7 @@ import java.util.Locale;
 public class HttpUtils {
 
     //172.23.170.169
-    private static final String SERVER_HOST = "192.168.1.5:8080";
+    private static final String SERVER_HOST = "192.168.1.6:8080";
     private static final String SERVER_NAME = "EmergencyNotificationsServer";
 
     // HTTP GET request

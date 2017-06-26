@@ -28,7 +28,7 @@ public interface HomeView extends ViewMvc{
 
     interface BeaconTouchListener{
 
-        void onBeaconClick(Node node);
+        void onBeaconClick(Beacon beacon);
     }
 
     void setMapSelectedListener(HomeView.MapSpnItemSelectedViewListener listener);
