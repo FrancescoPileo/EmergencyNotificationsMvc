@@ -20,12 +20,6 @@ public interface DialogView extends ViewMvc {
     void setAccValueText (String string);
     void setGyrValueText (String string);
 
-    void setTempVisible();
-    void setHumVisible();
-    void setAccVisible();
-    void setGyrVisible();
-    void setTempInvisible ();
-    void setHumInvisible ();
-    void setAccInvisible ();
-    void setGyrInvisible ();
+    void setAllVisible();
+    void setAllInvisible ();
 }

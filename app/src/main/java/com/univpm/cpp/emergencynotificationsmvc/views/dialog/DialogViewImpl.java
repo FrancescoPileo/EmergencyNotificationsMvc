@@ -123,42 +123,28 @@ public class DialogViewImpl implements DialogView {
     }
 
     @Override
-    public void setTempVisible() {
+    public void setAllVisible() {
         temp.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void setHumVisible() {
         hum.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void setAccVisible() {
         acc.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void setGyrVisible() {
         gyr.setVisibility(View.VISIBLE);
+        tempValue.setVisibility(View.VISIBLE);
+        humValue.setVisibility(View.VISIBLE);
+        accValue.setVisibility(View.VISIBLE);
+        gyrValue.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void setTempInvisible() {
+    public void setAllInvisible() {
         temp.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public void setHumInvisible() {
         hum.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public void setAccInvisible() {
         acc.setVisibility(View.INVISIBLE);
+        gyr.setVisibility(View.INVISIBLE);
+        tempValue.setVisibility(View.INVISIBLE);
+        humValue.setVisibility(View.INVISIBLE);
+        accValue.setVisibility(View.INVISIBLE);
+        gyrValue.setVisibility(View.INVISIBLE);
     }
 
-    @Override
-    public void setGyrInvisible() {
-        gyr.setVisibility(View.INVISIBLE);
-    }
+
 }

@@ -11,12 +11,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -215,6 +217,14 @@ public class HomeFragment extends Fragment implements
         mEnvValuesTask = new EnvValuesTask(beacon);
         mEnvValuesTask.execute((Void) null);
         dialog.setContentView(mDialogView.getRootView());
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = 1100;
+        lp.gravity = Gravity.CENTER;
+        dialog.getWindow().setAttributes(lp);
+
         dialog.show();
     }
 
@@ -571,10 +581,7 @@ public class HomeFragment extends Fragment implements
         protected void onPostExecute(Boolean success) {
             if (success) {
                 mDialogView.setNodeNameText("Nodo: " + beacon.getNode().getNodename());
-                mDialogView.setTempVisible();
-                mDialogView.setHumVisible();
-                mDialogView.setAccVisible();
-                mDialogView.setGyrVisible();
+                mDialogView.setAllVisible();
                 mDialogView.setTempValueText(String.valueOf(envValues.getTemperature()));
                 mDialogView.setHumValueText(String.valueOf(envValues.getHumidity()));
                 mDialogView.setAccValueText(String.valueOf(envValues.getAccX()) + ", " + String.valueOf(envValues.getAccY()) + ", " + String.valueOf(envValues.getAccZ()));
@@ -583,12 +590,8 @@ public class HomeFragment extends Fragment implements
             }
 
             else {
-                mDialogView.setNodeNameText("Dati ambientali non disponibili.");
-                mDialogView.setTempInvisible();
-                mDialogView.setHumInvisible();
-                mDialogView.setAccInvisible();
-                mDialogView.setGyrInvisible();
-
+                mDialogView.setNodeNameText("Nodo: " + beacon.getNode().getNodename() + "\nDati ambientali non disponibili.");
+                mDialogView.setAllInvisible();
             }
 
         }

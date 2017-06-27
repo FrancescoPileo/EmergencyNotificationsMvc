@@ -24,8 +24,11 @@
                     android:id="@+id/NodeName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="10dp"
                     android:layout_weight="1.00"
                     android:gravity="center"
+                    android:textColor="@android:color/holo_red_dark"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -39,7 +42,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.00"
-                        android:text="Temperatura: " />
+                        android:text="Temperatura: "
+                        android:textStyle="bold"/>
 
                     <TextView
                         android:id="@+id/TempValue"
@@ -61,7 +65,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Umidità: " />
+                        android:text="Umidità: "
+                        android:textStyle="bold"/>
 
                     <TextView
                         android:id="@+id/HumValue"
@@ -83,7 +88,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Accelerazione (x,y,z): " />
+                        android:text="Accelerazione (x,y,z): "
+                        android:textStyle="bold"/>
 
                     <TextView
                         android:id="@+id/AccValue"
@@ -105,7 +111,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Giroscopio (x,y,z): " />
+                        android:text="Giroscopio (x,y,z): "
+                        android:textStyle="bold"/>
 
                     <TextView
                         android:id="@+id/GyrValue"
