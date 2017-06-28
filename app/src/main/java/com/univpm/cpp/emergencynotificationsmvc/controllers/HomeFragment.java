@@ -28,37 +28,21 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 
+import com.univpm.cpp.emergencynotificationsmvc.EmergencyNotificationsMvc;
 import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.MyBluetoothManager;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
-import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModel;
-import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValues;
-import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValuesModel;
-import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValuesModelImpl;
-import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferences;
-import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferencesImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteDbHelper;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteUpdateTask;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
-import com.univpm.cpp.emergencynotificationsmvc.models.map.MapModel;
-import com.univpm.cpp.emergencynotificationsmvc.models.map.MapModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.node.Node;
-import com.univpm.cpp.emergencynotificationsmvc.models.node.NodeModel;
-import com.univpm.cpp.emergencynotificationsmvc.models.node.NodeModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.position.Position;
-import com.univpm.cpp.emergencynotificationsmvc.models.position.PositionModel;
-import com.univpm.cpp.emergencynotificationsmvc.models.position.PositionModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.session.Session;
-import com.univpm.cpp.emergencynotificationsmvc.models.session.SessionModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.session.SessionModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
-import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModel;
-import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.utils.Directories;
 import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
-import com.univpm.cpp.emergencynotificationsmvc.utils.ImageCoordinates;
-import com.univpm.cpp.emergencynotificationsmvc.utils.TouchImageView;
 import com.univpm.cpp.emergencynotificationsmvc.views.dialog.DialogView;
 import com.univpm.cpp.emergencynotificationsmvc.views.dialog.DialogViewImpl;
 import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeView;
@@ -66,7 +50,8 @@ import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeViewImpl;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.TimeZone;
+
+import static com.univpm.cpp.emergencynotificationsmvc.utils.ImageCoordinates.*;
 
 public class HomeFragment extends Fragment implements
         HomeView.MapSpnItemSelectedViewListener,
@@ -74,38 +59,26 @@ public class HomeFragment extends Fragment implements
         HomeView.BeaconTouchListener,
         DialogView.OkButtonListener{
 
+    private EmergencyNotificationsMvc application;
     private HomeView mHomeView;
     private DialogView mDialogView;
     private Dialog dialog;
-    private MapModel mMapModel;
-    private BeaconModel mBeaconModel;
-    private UserModel mUserModel;
-    private NodeModel mNodeModel;
-    private PositionModel mPositionModel;
-    private SessionModel mSessionModel;
-    private EnviromentalValuesModel mEnviromentalValuesModel;
+    private InitTask mInitTask;
     private SpinnerTask mSpinnerTask;
     private FirstMapTask mFirstMapTask;
-    private InitTask mInitTask;
     private MapTask mMapTask;
     private EnvValuesTask mEnvValuesTask;
     private MyBluetoothManager mMyBluetoothManager;
-    private LocalPreferences mLocalPreferences;
     private Map map;
     private User user;
     private Session session;
     private Node positionNode;  //è il nodo relativo alla posizione dell'utente
     private Position mLastposition;
 
-
-    //todo dbinterno
-    //todo appoffline
     //todo commentare
     //todo visualizzare errori
     //todo notifiche --> firebase
     //todo gestione utente
-    //todo spesso crasha quando non ho il bluetooth acceso e mi chiede di accenderlo oppure quando entro la 1 volta come ospite
-    //todo controllare criterio x accettare password in registrazione
 
 
     @Nullable
@@ -114,16 +87,7 @@ public class HomeFragment extends Fragment implements
 
         mHomeView = new HomeViewImpl(inflater, container, getContext());
         mDialogView = new DialogViewImpl(inflater, container, getContext());
-        mMapModel = new MapModelImpl();
-        mUserModel = new UserModelImpl();
-        mNodeModel = new NodeModelImpl();
-        mLocalPreferences = new LocalPreferencesImpl(getContext());
-        mBeaconModel = new BeaconModelImpl();
-        mPositionModel = new PositionModelImpl();
-        mSessionModel = new SessionModelImpl();
-        mEnviromentalValuesModel = new EnviromentalValuesModelImpl();
-        mSpinnerTask = new SpinnerTask();
-        mInitTask = new InitTask();
+        application = ((EmergencyNotificationsMvc) getActivity().getApplication());
         user = new User();
         map = new Map();
         mLastposition = new Position();
@@ -131,26 +95,37 @@ public class HomeFragment extends Fragment implements
         session = new Session();
         dialog = new Dialog(getContext());
 
-
-        mInitTask.execute((Void) null);
-        mSpinnerTask.execute((Void) null);
-        LocalSQLiteUpdateTask task = new LocalSQLiteUpdateTask(getContext());
-        task.execute((Void) null);
-
-
         //todo cambiare on click
         mHomeView.setMapSelectedListener(this);
         mHomeView.setLogoutListener(this);
         mHomeView.setBeaconTouchListener(this);
         mHomeView.setToolbar(this);
-
         mDialogView.setOkButtonListener(this);
 
         mMyBluetoothManager = new MyBluetoothManager(getContext(), getActivity());
-        //mMyBluetoothManager.scanning();
-        start();
+
+        mHomeView.showProgress(true);
+
+        mInitTask = new InitTask();
+        mInitTask.execute((Void) null);
+
+        LocalSQLiteUpdateTask task = new LocalSQLiteUpdateTask(application);
+        task.execute((Void) null);
+
+        mSpinnerTask = new SpinnerTask();
+        mSpinnerTask.execute((Void) null);
+
+
+
 
         return mHomeView.getRootView();
+    }
+
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        start();
     }
 
     @Override
@@ -175,42 +150,6 @@ public class HomeFragment extends Fragment implements
         mEndSessionTask.execute((Void) null);
     }
 
-    private boolean started = false;
-    private Handler handler = new Handler();
-
-    private Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-
-            if(started) {
-                start();
-
-            }
-        }
-    };
-
-    public void stop() {
-        started = false;
-        handler.removeCallbacks(runnable);
-    }
-
-    public void start() {
-        mMyBluetoothManager.scanning();
-        mFirstMapTask = new FirstMapTask();
-        mFirstMapTask.execute((Void) null);
-        started = true;
-        handler.postDelayed(runnable, 60000);
-    }
-
-
-    /* Al caricamento della home non è stato selezionato niente dallo spinner, parte FirstMapTask
-     * Se si seleziona una mappa dallo spinner parte MapTask */
-    @Override
-    public void onMapSpnItemSelected(String nameMap) {
-        mMapTask = new MapTask(nameMap);
-        mMapTask.execute((Void) null);
-    }
-
     @Override
     public void onBeaconClick(Beacon beacon) {
         dialog.getWindow();
@@ -231,6 +170,44 @@ public class HomeFragment extends Fragment implements
     @Override
     public void onOkButtonClick() {
         dialog.cancel();
+    }
+
+    private boolean started = false;
+    private Handler handler = new Handler();
+
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+
+            if(started) {
+                start();
+
+            }
+        }
+    };
+
+    public void stop() {
+        started = false;
+        handler.removeCallbacks(runnable);
+    }
+
+    public void start() {
+        if (application.isConnectionEnabled()) {
+            mMyBluetoothManager.scanning();
+        }
+        mFirstMapTask = new FirstMapTask();
+        mFirstMapTask.execute((Void) null);
+        started = true;
+        handler.postDelayed(runnable, 60000);
+    }
+
+
+    /* Al caricamento della home non è stato selezionato niente dallo spinner, parte FirstMapTask
+     * Se si seleziona una mappa dallo spinner parte MapTask */
+    @Override
+    public void onMapSpnItemSelected(String nameMap) {
+        mMapTask = new MapTask(nameMap);
+        mMapTask.execute((Void) null);
     }
 
     @Override
@@ -256,35 +233,27 @@ public class HomeFragment extends Fragment implements
         super.onResume();
     }
 
-
     public class InitTask extends AsyncTask<Void, Void, Boolean> {
 
+        InitTask() {
+        }
 
-        InitTask(){}
 
         @Override
-        protected Boolean doInBackground(Void... voids) {
-
-            user = mUserModel.getUser(mLocalPreferences.getUsername());
-            session = mSessionModel.getLastSession(user);
-
+        protected Boolean doInBackground(Void... params) {
+            user = application.getUserModel().getUser(application.getLocalPreferences().getUser().getUsername());
+            if (application.isConnectionEnabled()) {
+                session = application.getSessionModel().getLastSession(user);
+            }
             return true;
         }
 
         @Override
-        protected void onPostExecute(Boolean success) {
-            if (success){
-            }
+        protected void onPostExecute(final Boolean success) {
 
-            else Log.w("Errore", "ErroreInitTask");
         }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-        }
-
     }
+
 
     public class SpinnerTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -300,14 +269,14 @@ public class HomeFragment extends Fragment implements
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            this.stringArrayList = mMapModel.getAllNames();
+            this.stringArrayList = application.getMapModel().getAllNames();
             return true;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mSpinnerTask = null;
-
+            mHomeView.showProgress(false);
             if (success) {
                 mHomeView.populateSpinner(stringArrayList);
                 CheckMapsTask task = new CheckMapsTask(stringArrayList);
@@ -374,14 +343,13 @@ public class HomeFragment extends Fragment implements
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            mSpinnerTask = null;
-
-
+            //mSpinnerTask = null;
         }
     }
 
 
     public class FirstMapTask extends AsyncTask<Void, Void, Boolean> {
+
 
         private ArrayList<Beacon> beacons;
 
@@ -390,18 +358,19 @@ public class HomeFragment extends Fragment implements
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            beacons = mBeaconModel.getAllBeacons();
+            beacons = application.getBeaconModel().getAllBeacons();
 
-            Position lastPosition = mPositionModel.getLastPositionByUser(user);
+            Position lastPosition = application.getPositionModel().getLastPositionByUser(user);
+            //Log.w("Position", lastPosition.toString());
 
             Boolean flag = false;
 
             if (lastPosition == null){
-                map = mMapModel.getMapByName(mHomeView.getMap());
+                map = application.getMapModel().getMapByName(application.getMapModel().getAllNames().get(0));
                 flag = true;
             } else if (lastPosition != mLastposition) {                 //todo controllare
-                positionNode = mNodeModel.getNodeById(lastPosition.getNode().getIdNode());
-                map = mMapModel.getMapById(positionNode.getMap().getIdMap());
+                positionNode = application.getNodeModel().getNodeById(lastPosition.getNode().getIdNode());
+                map = application.getMapModel().getMapById(positionNode.getMap().getIdMap());
                 mLastposition = lastPosition;
                 flag = true;
             }
@@ -424,7 +393,7 @@ public class HomeFragment extends Fragment implements
                 mHomeView.setBeaconsOnMap(beacons, map);
 
                 if (positionNode.getIdNode() != -1) {
-                    mHomeView.setPosition(ImageCoordinates.getPixelsXFromMetres(positionNode.getX(), map), ImageCoordinates.getPixelsYFromMetres(positionNode.getY(), map));
+                    mHomeView.setPosition(getPixelsXFromMetres(positionNode.getX(), map), getPixelsYFromMetres(positionNode.getY(), map)); //qua gli si deve passare la x e la y del nodo posizione
                     mHomeView.setPositionText("La tua posizione è in "+ map.getName() + ".");
                     mHomeView.setMapName("La mappa visualizzata è " + map.getName() + ".");
                 }
@@ -447,6 +416,7 @@ public class HomeFragment extends Fragment implements
         private Map positionMap;
         private ArrayList<Beacon> beacons;
 
+
         MapTask(String nameMap) {
 
             this.nameMap = nameMap;
@@ -458,10 +428,11 @@ public class HomeFragment extends Fragment implements
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            map = mMapModel.getMapByName(nameMap);
-            beacons = mBeaconModel.getAllBeacons();
+            Log.w("MapModel", application.getMapModel().toString());
+            beacons = application.getBeaconModel().getAllBeacons();
+            map = application.getMapModel().getMapByName(nameMap);
 
-            if (positionNode.getIdNode() != -1) positionMap = mMapModel.getMapById(positionNode.getMap().getIdMap());
+            if (positionNode.getIdNode() != -1) positionMap = application.getMapModel().getMapById(positionNode.getMap().getIdMap());
 
             return true;
 
@@ -476,25 +447,24 @@ public class HomeFragment extends Fragment implements
 
             if (success) {
 
-                mHomeView.setMapOnView(map);
-                mHomeView.setBeaconsOnMap(beacons, map);
+                if (map != null) {
+                    mHomeView.setMapOnView(map);
+                    mHomeView.setBeaconsOnMap(beacons, map);
 
-                if (positionNode.getIdNode() != -1) {
 
-                    if (nameMap.equals(positionMap.getName())) {
-                        mHomeView.setPositionText("La tua posizione è in "+ positionMap.getName() + ".");
-                        mHomeView.setMapName("La mappa visualizzata è " + map.getName() + ".");
-                        mHomeView.setPosition(ImageCoordinates.getPixelsXFromMetres(positionNode.getX(), positionMap), ImageCoordinates.getPixelsYFromMetres(positionNode.getY(), positionMap)); //qua gli si deve passare la x e la y del nodo posizione
-                    }
+                    if (positionNode.getIdNode() != -1) {
 
-                    else {
-                        mHomeView.setPositionText("La tua posizione è in "+ positionMap.getName() + ".");
-                        mHomeView.setMapName("La mappa visualizzata è " + map.getName() + ".");
-                    }
+                        if (nameMap.equals(positionMap.getName())) {
+                            mHomeView.setPositionText("La tua posizione è in " + positionMap.getName() + ".");
+                            mHomeView.setMapName("La mappa visualizzata è " + map.getName() + ".");
+                            mHomeView.setPosition(getPixelsXFromMetres(positionNode.getX(), positionMap), getPixelsYFromMetres(positionNode.getY(), positionMap)); //qua gli si deve passare la x e la y del nodo posizione
+                        } else {
+                            mHomeView.setPositionText("La tua posizione è in " + positionMap.getName() + ".");
+                            mHomeView.setMapName("La mappa visualizzata è " + map.getName() + ".");
+                        }
 
+                    } else mHomeView.setMapName("La mappa visualizzata è " + map.getName() + ".");
                 }
-
-                else mHomeView.setMapName("La mappa visualizzata è " + map.getName() + ".");
 
             }
 
@@ -506,8 +476,6 @@ public class HomeFragment extends Fragment implements
 
     }
 
-
-
     public class EndSessionTask extends AsyncTask<Void, Void, Boolean> {
 
 
@@ -516,20 +484,23 @@ public class HomeFragment extends Fragment implements
         @Override
         protected Boolean doInBackground(Void... voids) {
 
-            Date date = new Date();
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+1"));
-            session.setTimeOut(dateFormat.format(date));
-            mSessionModel = new SessionModelImpl();
-            return mSessionModel.updateSession(session);
+            if (application.isConnectionEnabled()) {
+                Date date = new Date();
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+                //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+1"));
+
+                session.setTimeOut(dateFormat.format(date));
+                return new SessionModelImpl().updateSession(session);
+            }
+            return true;
         }
 
         @Override
         protected void onPostExecute(Boolean success) {
             if (success){
 
-                mLocalPreferences.deleteLogin();
-                mLocalPreferences.deleteSession();
+                application.getLocalPreferences().deleteLogin();
+                application.getLocalPreferences().deleteSession();
 
                 //carica il fragment di login
                 Fragment newFragment = new LoginFragment();
@@ -548,7 +519,6 @@ public class HomeFragment extends Fragment implements
         protected void onCancelled() {
             super.onCancelled();
         }
-
     }
 
     public class EnvValuesTask extends AsyncTask<Void, Void, Boolean> {
@@ -564,13 +534,16 @@ public class HomeFragment extends Fragment implements
         @Override
         protected Boolean doInBackground(Void... voids) {
 
-            ArrayList<EnviromentalValues> enviromentalValuesArrayList = mEnviromentalValuesModel.getLastValuesForEachBeacon();
+            ArrayList<EnviromentalValues> enviromentalValuesArrayList =
+                    application.getEnviromentalValuesModel().getLastValuesForEachBeacon();
 
-            for (int i = 0; i < enviromentalValuesArrayList.size(); i++) {
+            if (enviromentalValuesArrayList != null) {
+                for (int i = 0; i < enviromentalValuesArrayList.size(); i++) {
 
-                if (enviromentalValuesArrayList.get(i).getBeacon().getIdBeacon().equals(beacon.getIdBeacon())) {
-                    envValues = enviromentalValuesArrayList.get(i);
-                    flag = true;
+                    if (enviromentalValuesArrayList.get(i).getBeacon().getIdBeacon().equals(beacon.getIdBeacon())) {
+                        envValues = enviromentalValuesArrayList.get(i);
+                        flag = true;
+                    }
                 }
             }
 
@@ -595,8 +568,5 @@ public class HomeFragment extends Fragment implements
             }
 
         }
-
     }
-
-
 }

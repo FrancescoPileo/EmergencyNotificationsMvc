@@ -18,11 +18,29 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.BluetoothLeService;
+import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModel;
+import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModelImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModelLocalImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValuesModel;
+import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValuesModelImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValuesModelLocalImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferences;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferencesImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.map.MapModel;
+import com.univpm.cpp.emergencynotificationsmvc.models.map.MapModelImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.map.MapModelLocalImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.node.NodeModel;
+import com.univpm.cpp.emergencynotificationsmvc.models.node.NodeModelImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.node.NodeModelLocalImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.position.PositionModel;
+import com.univpm.cpp.emergencynotificationsmvc.models.position.PositionModelImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.position.PositionModelLocalImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.session.Session;
 import com.univpm.cpp.emergencynotificationsmvc.models.session.SessionModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.session.SessionModelImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModel;
+import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelImpl;
+import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelLocalImpl;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -41,6 +59,16 @@ public class EmergencyNotificationsMvc extends Application {
 
     public static ConnectivityManager mConnectivityManager;
     public boolean mConnectionEnabled = false;
+
+    //Models
+    MapModel mMapModel = null;
+    BeaconModel mBeaconModel = null;
+    EnviromentalValuesModel mEnviromentalValuesModel = null;
+    LocalPreferences mLocalPreferences = null;
+    NodeModel mNodeModel = null;
+    PositionModel mPositionModel = null;
+    SessionModel mSessionModel = null;
+    UserModel mUserModel = null;
 
     @Override
     public void onCreate() {
@@ -85,9 +113,34 @@ public class EmergencyNotificationsMvc extends Application {
         NetworkInfo activeNetwork = mConnectivityManager.getActiveNetworkInfo();
         mConnectionEnabled = (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
 
+        //models initializations
+        //modelsInit(mConnectionEnabled);
+
+
         super.onCreate();
 
     }
+
+    private void modelsInit(boolean connectionEnabled){
+        mLocalPreferences = new LocalPreferencesImpl(getApplicationContext());
+        if (connectionEnabled){
+            mMapModel = new MapModelImpl();
+            mUserModel = new UserModelImpl();
+            mNodeModel = new NodeModelImpl();
+            mBeaconModel = new BeaconModelImpl();
+            mPositionModel = new PositionModelImpl();
+            mSessionModel = new SessionModelImpl();
+            mEnviromentalValuesModel = new EnviromentalValuesModelImpl();
+        } else {
+            mMapModel = new MapModelLocalImpl(getApplicationContext());
+            mUserModel = new UserModelLocalImpl(getApplicationContext());
+            mNodeModel = new NodeModelLocalImpl(getApplicationContext());
+            mBeaconModel = new BeaconModelLocalImpl(getApplicationContext());
+            mPositionModel = new PositionModelLocalImpl(getApplicationContext());
+            mEnviromentalValuesModel = new EnviromentalValuesModelLocalImpl(getApplicationContext());
+        }
+    }
+
 
 
     // Code to manage Service life cycle.
@@ -159,13 +212,50 @@ public class EmergencyNotificationsMvc extends Application {
             } else if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
                 NetworkInfo activeNetwork = mConnectivityManager.getActiveNetworkInfo();
                 if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
+                    Toast.makeText(context, "Modalità online", Toast.LENGTH_LONG).show();
                     mConnectionEnabled = true;
                 } else {
+                    Toast.makeText(context, "Modalità offline", Toast.LENGTH_LONG).show();
                     mConnectionEnabled = false;
                 }
+                modelsInit(mConnectionEnabled);
             }
-
-
         }
     };
+
+    public boolean isConnectionEnabled() {
+        return mConnectionEnabled;
+    }
+
+    public MapModel getMapModel() {
+        return mMapModel;
+    }
+
+    public BeaconModel getBeaconModel() {
+        return mBeaconModel;
+    }
+
+    public EnviromentalValuesModel getEnviromentalValuesModel() {
+        return mEnviromentalValuesModel;
+    }
+
+    public LocalPreferences getLocalPreferences() {
+        return mLocalPreferences;
+    }
+
+    public NodeModel getNodeModel() {
+        return mNodeModel;
+    }
+
+    public PositionModel getPositionModel() {
+        return mPositionModel;
+    }
+
+    public SessionModel getSessionModel() {
+        return mSessionModel;
+    }
+
+    public UserModel getUserModel() {
+        return mUserModel;
+    }
 }

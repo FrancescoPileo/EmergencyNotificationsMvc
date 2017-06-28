@@ -592,7 +592,7 @@ public class MyBluetoothManager {
 
 
             mEnvValuesModel.newValues(values);
-            User user = mUserModel.getUser(mLocalPreferences.getUsername());
+            User user = mUserModel.getUser(mLocalPreferences.getUser().getUsername());
             Beacon beacon = mBeaconModel.getBeaconById(values.getBeacon().getIdBeacon());
             position = new Position(-1, beacon.getNode(), user, values.getTime());
             mPositionModel.newPosition(position);

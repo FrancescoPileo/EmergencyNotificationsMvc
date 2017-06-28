@@ -4,24 +4,18 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.univpm.cpp.emergencynotificationsmvc.EmergencyNotificationsMvc;
+import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
-import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModel;
-import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValues;
-import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValuesModel;
-import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValuesModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
-import com.univpm.cpp.emergencynotificationsmvc.models.map.MapModel;
-import com.univpm.cpp.emergencynotificationsmvc.models.map.MapModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.node.Node;
-import com.univpm.cpp.emergencynotificationsmvc.models.node.NodeModel;
-import com.univpm.cpp.emergencynotificationsmvc.models.node.NodeModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.position.Position;
-import com.univpm.cpp.emergencynotificationsmvc.models.position.PositionModel;
-import com.univpm.cpp.emergencynotificationsmvc.models.position.PositionModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
-import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModel;
-import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelImpl;
+
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -29,38 +23,59 @@ public class LocalSQLiteUpdateTask extends AsyncTask<Void, Void, Boolean> {
 
     private Context context;
 
-    private UserModel mUserModel = null;
-    private LocalPreferences mLocalPreferences = null;
-    private PositionModel mPositionModel = null;
-    private MapModel mMapModel = null;
-    private NodeModel mNodeModel = null;
-    private BeaconModel mBeaconModel = null;
-    private EnviromentalValuesModel mEnviromentalValuesModel = null;
-
     LocalSQLiteDbHelper helper = null;
+    EmergencyNotificationsMvc application = null;
 
-    public LocalSQLiteUpdateTask(Context context){
-        this.context = context;
-
-        mUserModel = new UserModelImpl();
-        mLocalPreferences = new LocalPreferencesImpl(getContext());
-        mPositionModel = new PositionModelImpl();
-        mMapModel = new MapModelImpl();
-        mNodeModel = new NodeModelImpl();
-        mBeaconModel = new BeaconModelImpl();
-        mEnviromentalValuesModel = new EnviromentalValuesModelImpl();
-
-        helper = new LocalSQLiteDbHelper(getContext());
+    public LocalSQLiteUpdateTask(EmergencyNotificationsMvc application){
+        this.application = application;
+        this.context = application.getApplicationContext();
+        helper = LocalSQLiteDbHelper.getInstance(context);
     }
 
     @Override
     protected Boolean doInBackground(Void... voids) {
-        User user = mUserModel.getUser(mLocalPreferences.getUsername());
-        Position lastPosition = mPositionModel.getLastPositionByUser(user);
-        ArrayList<Map> maps = mMapModel.getAllMaps();
-        ArrayList<Node> nodes = mNodeModel.getAllNodes();
-        ArrayList<Beacon> beacons = mBeaconModel.getAllBeacons();
-        ArrayList<EnviromentalValues> enviromentalValues = mEnviromentalValuesModel.getLastValuesForEachBeacon();
+        User user = null;
+        Position lastPosition = null;
+        ArrayList<Map> maps = null;
+        ArrayList<Node> nodes = null;
+        ArrayList<Beacon> beacons = null;
+        ArrayList<EnviromentalValues> enviromentalValues = null;
+        user = application.getLocalPreferences().getUser();
+
+        if (application.isConnectionEnabled()) {
+            lastPosition = application.getPositionModel().getLastPositionByUser(user);
+            maps = application.getMapModel().getAllMaps();
+            nodes = application.getNodeModel().getAllNodes();
+            beacons = application.getBeaconModel().getAllBeacons();
+            enviromentalValues = application.getEnviromentalValuesModel().getLastValuesForEachBeacon();
+        } else if (user.isGuest() && helper.isDbEmpty()){
+            Log.w("ImportDaResources", "ok");
+            //se l'utente è guest e il db è vuoto
+            lastPosition = null;
+            enviromentalValues = null;
+            maps = new ArrayList<>();
+            nodes = new ArrayList<>();
+            beacons = new ArrayList<>();
+            JSONArray jsonArray = null;
+            try {
+                jsonArray = new JSONArray(application.getResources().getString(R.string.DB_maps));
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    maps.add(new Map(jsonArray.getJSONObject(i).toString()));
+                }
+
+                jsonArray = new JSONArray(application.getResources().getString(R.string.DB_nodes));
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    nodes.add(new Node(jsonArray.getJSONObject(i).toString()));
+                }
+
+                jsonArray = new JSONArray(application.getResources().getString(R.string.DB_beacons));
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    beacons.add(new Beacon(jsonArray.getJSONObject(i).toString()));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         helper.importAppuser(user);
         helper.importMaps(maps);
         helper.importNodes(nodes);

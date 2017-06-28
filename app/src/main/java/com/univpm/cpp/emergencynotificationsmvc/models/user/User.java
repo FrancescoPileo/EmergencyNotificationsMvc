@@ -43,7 +43,7 @@ public class User extends UserGuest implements Jsonable {
     public User(String jsonString){
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
-            this.id = jsonObject.getInt("iduser");
+            this.id = jsonObject.optInt("iduser", -1);
             this.username = jsonObject.getString("username");
             this.name = jsonObject.optString("name", null);
             this.surname = jsonObject.optString("surname", null);

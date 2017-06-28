@@ -50,6 +50,9 @@ import com.univpm.cpp.emergencynotificationsmvc.views.login.LoginView;
 import java.io.File;
 import java.util.ArrayList;
 
+import static com.univpm.cpp.emergencynotificationsmvc.utils.ImageCoordinates.getPixelsXFromMetres;
+import static com.univpm.cpp.emergencynotificationsmvc.utils.ImageCoordinates.getPixelsYFromMetres;
+
 
 public class HomeViewImpl implements HomeView{
 
@@ -65,7 +68,6 @@ public class HomeViewImpl implements HomeView{
     private TouchImageView mapTiv;
     private ArrayList<CirclesDrawingView> mCirclesDrawingViews;
 
-    private TextView textSpinnerLabel;
     private Spinner mapsSpn;
 
     private View progressView;
@@ -80,6 +82,7 @@ public class HomeViewImpl implements HomeView{
         this.context = context;
 
         init();
+
 
         mapTiv.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -118,7 +121,7 @@ public class HomeViewImpl implements HomeView{
 
                 }
 
-            return false;
+                return false;
 
             }
         });
@@ -149,7 +152,7 @@ public class HomeViewImpl implements HomeView{
 
         positionText = (TextView) mRootView.findViewById(R.id.positionText);
         textMapName = (TextView) mRootView.findViewById(R.id.mapName);
-        textSpinnerLabel = (TextView) mRootView.findViewById(R.id.spinnerLabel);
+        homeFormView = mRootView.findViewById(R.id.home);
         mapsSpn = (Spinner) mRootView.findViewById(R.id.maps_spinner);
         mapTiv = (TouchImageView) mRootView.findViewById(R.id.map);
         toolbar = (Toolbar) mRootView.findViewById(R.id.tool_bar);
@@ -311,8 +314,8 @@ public class HomeViewImpl implements HomeView{
 
             if (beacon.getNode().getMap().getIdMap() == map.getIdMap()) {
 
-                int x = ImageCoordinates.getPixelsXFromMetres(beacon.getNode().getX(), beacon.getNode().getMap());
-                int y = ImageCoordinates.getPixelsYFromMetres(beacon.getNode().getY(), beacon.getNode().getMap());
+                int x = getPixelsXFromMetres(beacon.getNode().getX(), beacon.getNode().getMap());
+                int y = getPixelsYFromMetres(beacon.getNode().getY(), beacon.getNode().getMap());
 
                 CirclesDrawingView circle = new CirclesDrawingView(context);
                 circle.setmCirclePaint(paint);

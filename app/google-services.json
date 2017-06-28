@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "34563218936",
+    "firebase_url": "https://emergencynotifications-a00d7.firebaseio.com",
+    "project_id": "emergencynotifications-a00d7",
+    "storage_bucket": "emergencynotifications-a00d7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:34563218936:android:8174a6461c9cc7af",
+        "android_client_info": {
+          "package_name": "com.univpm.cpp.emergencynotificationsmvc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "34563218936-rjaidgl5sia732c57cplr2f5is9a40od.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2luaVZgrD9HoyXTkWIv-YugrYNXe0RPI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

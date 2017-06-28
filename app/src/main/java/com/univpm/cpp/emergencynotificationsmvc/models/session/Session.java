@@ -11,7 +11,6 @@ import java.util.Date;
 import java.sql.Timestamp;
 import java.util.TimeZone;
 
-//todo vedere come funzionano le date
 public class Session implements Jsonable {
 
     protected int id;

@@ -12,14 +12,14 @@ public interface DialogView extends ViewMvc {
         void onOkButtonClick();
     }
 
-    void setOkButtonListener(DialogView.OkButtonListener listener);
+    void setOkButtonListener(OkButtonListener listener);
 
-    void setNodeNameText (String string);
-    void setTempValueText (String string);
-    void setHumValueText (String string);
-    void setAccValueText (String string);
-    void setGyrValueText (String string);
+    void setNodeNameText(String string);
+    void setTempValueText(String string);
+    void setHumValueText(String string);
+    void setAccValueText(String string);
+    void setGyrValueText(String string);
 
     void setAllVisible();
-    void setAllInvisible ();
+    void setAllInvisible();
 }

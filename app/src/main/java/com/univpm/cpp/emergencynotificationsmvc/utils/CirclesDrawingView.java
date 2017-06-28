@@ -93,7 +93,7 @@ public class CirclesDrawingView extends View{
     /**
      * Default constructor
      *
-     * @param ct {@link android.content.Context}
+     * @param ct {@link Context}
      */
     public CirclesDrawingView(final Context ct) {
         super(ct);

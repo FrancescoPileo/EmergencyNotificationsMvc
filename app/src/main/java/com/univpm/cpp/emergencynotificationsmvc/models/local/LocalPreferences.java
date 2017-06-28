@@ -3,10 +3,11 @@ package com.univpm.cpp.emergencynotificationsmvc.models.local;
 import android.content.Context;
 
 import com.univpm.cpp.emergencynotificationsmvc.models.session.Session;
+import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 
 public interface LocalPreferences {
 
-    public void rememberLogin(String username, String password);
+    public void rememberUser(User user);
 
     public void deleteLogin();
 
@@ -14,12 +15,15 @@ public interface LocalPreferences {
 
     public void deleteSession();
 
+    public Session getSession();
+
     public boolean alreadyLoged();
 
-    public String getUsername();
+    //public String getUsername();
 
-    public String getPassword();
+    //public String getPassword();
 
-    public String getTimeIn();
+    public User getUser();
+
 
 }

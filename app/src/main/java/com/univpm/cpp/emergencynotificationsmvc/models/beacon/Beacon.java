@@ -72,4 +72,5 @@ public class Beacon implements Jsonable{
                 ", node=" + node.toString() +
                 '}';
     }
+
 }

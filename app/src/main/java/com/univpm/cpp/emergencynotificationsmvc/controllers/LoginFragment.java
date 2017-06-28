@@ -1,16 +1,19 @@
 package com.univpm.cpp.emergencynotificationsmvc.controllers;
 
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.univpm.cpp.emergencynotificationsmvc.EmergencyNotificationsMvc;
 import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferences;
 import com.univpm.cpp.emergencynotificationsmvc.models.session.Session;
@@ -18,15 +21,12 @@ import com.univpm.cpp.emergencynotificationsmvc.models.session.SessionModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.session.SessionModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferencesImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
-import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModel;
-import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.views.login.LoginView;
 import com.univpm.cpp.emergencynotificationsmvc.views.login.LoginViewImpl;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 
 public class LoginFragment extends Fragment implements
         LoginView.LogAsGuestBtnViewListner,
@@ -34,13 +34,15 @@ public class LoginFragment extends Fragment implements
         LoginView.RegistrationBtnViewListener
 {
 
+    private EmergencyNotificationsMvc application;
     private LoginView mLoginView;
-    private UserModel mUserModel;
     private UserLoginTask mAuthTask;
-    private LastUserGuestTask mLastUserGuestTask;
+    private RegisterNewGuestTask mRegisterNewGuestTask;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        application = ((EmergencyNotificationsMvc) getActivity().getApplication());
 
         // Instanzio le ViewMvc MVC relazionate con questo fragment
         mLoginView = new LoginViewImpl(inflater, container);
@@ -49,20 +51,33 @@ public class LoginFragment extends Fragment implements
         mLoginView.setRegistrationListener(this);
         mLoginView.setToolbar(this);
 
-        // Instanzio i Models MVC relazionati con questo fragment
-        mUserModel = new UserModelImpl();
-
-        //Controllo se è aperta un sessione di login
-        LocalPreferencesImpl localPreferences = new LocalPreferencesImpl(getContext());
-        if (localPreferences.alreadyLoged()){
-            mLoginView.showProgress(true);
-            mAuthTask = new UserLoginTask(localPreferences.getUsername(), localPreferences.getPassword());
-            mAuthTask.execute((Void) null);
-        }
-
         return mLoginView.getRootView();
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+
+        //Controllo connessione
+        if (!application.isConnectionEnabled()){
+            AlertDialog.Builder builder;
+            builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_DeviceDefault_Dialog_Alert);
+
+            builder.setTitle("Modalità Offline")
+                    .setMessage(R.string.alert_offine_mode)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        } else if (application.getLocalPreferences().alreadyLoged()){    //Controllo se è aperta un sessione di login
+            mLoginView.showProgress(true);
+            User user = application.getLocalPreferences().getUser();
+            mAuthTask = new UserLoginTask(user.getUsername(), user.getPassword());
+            mAuthTask.execute((Void) null);
+        }
+    }
 
     @Override
     public void onStart() {
@@ -89,6 +104,7 @@ public class LoginFragment extends Fragment implements
         }
     }
 
+
     /**
      * Controlla che i campi inseriti nella view siano validi
      * @param username username inserito nella view
@@ -113,19 +129,34 @@ public class LoginFragment extends Fragment implements
     @Override
     public void onLogAsGuestClick() {
         mLoginView.showProgress(true);
-        mLastUserGuestTask = new LastUserGuestTask();
-        mLastUserGuestTask.execute((Void) null);
+        mRegisterNewGuestTask = new RegisterNewGuestTask();
+        mRegisterNewGuestTask.execute((Void) null);
     }
 
     @Override
     public void onRegistrationClick() {
-        Fragment newFragment = new RegistrationFragment();
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        if (application.isConnectionEnabled()) {
+            Fragment newFragment = new RegistrationFragment();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-        transaction.replace(R.id.fragment_container, newFragment);
-        transaction.addToBackStack(null);
+            transaction.replace(R.id.fragment_container, newFragment);
+            transaction.addToBackStack(null);
 
-        transaction.commit();
+            transaction.commit();
+        } else {
+            AlertDialog.Builder builder;
+                builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert);
+
+            builder.setTitle("Errore")
+                    .setMessage("Operazione non consentita in modalità offline, attiva una connessione e riprova")
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
     }
 
     /**
@@ -136,15 +167,17 @@ public class LoginFragment extends Fragment implements
 
         private final String username;
         private final String password;
+        private User user;
 
         UserLoginTask(String username, String password) {
             this.username = username;
             this.password = password;
+            this.user = null;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            User user = mUserModel.getUser(username);
+            user = application.getUserModel().getUser(username);
             if (user != null){
                 return user.getPassword().equals(password);
             }
@@ -158,23 +191,24 @@ public class LoginFragment extends Fragment implements
 
             if (success) {
                 //salva le credenziali in locale
-                LocalPreferencesImpl localPreferences = new LocalPreferencesImpl(getContext());
-                if (!localPreferences.alreadyLoged()) {
-                    localPreferences.rememberLogin(username, password);
+                if (!application.getLocalPreferences().alreadyLoged()) {
+                    application.getLocalPreferences().rememberUser(user);
                 }
 
-                //inizia la sessione
-                SessionTask mSessionTask = new SessionTask(username);
-                mSessionTask.execute((Void) null);
+                //inizia la sessione se c'è connessione
+                if (((EmergencyNotificationsMvc) getActivity().getApplication()).isConnectionEnabled()){
+                    SessionTask mSessionTask = new SessionTask(username);
+                    mSessionTask.execute((Void) null);
+                } else {
+                    //carica il fragment della home
+                    Fragment newFragment = new HomeFragment();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, newFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
 
-                //carica il fragment della home
-                Fragment newFragment = new HomeFragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-                transaction.replace(R.id.fragment_container, newFragment);
-                transaction.addToBackStack(null);
-
-                transaction.commit();
             }
 
             else {
@@ -189,80 +223,55 @@ public class LoginFragment extends Fragment implements
         }
     }
 
-
-
-
-    public class LastUserGuestTask extends AsyncTask<Void, Void, Boolean> {
-
-        private  User lastGuestUser;
-
-        LastUserGuestTask() {
-            this.lastGuestUser = null;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-
-            lastGuestUser = mUserModel.getLastGuestUser();
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mLastUserGuestTask = null;
-
-            if (success) {
-                int index = 0;
-                if (lastGuestUser != null) index = Integer.parseInt(lastGuestUser.getUsername().substring(6));
-                RegisterNewGuestTask task = new RegisterNewGuestTask(index + 1);
-                task.execute((Void) null);
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mLastUserGuestTask = null;
-            mLoginView.showProgress(false);
-        }
-
-    }
-
     public class RegisterNewGuestTask extends AsyncTask<Void, Void, Boolean> {
+        private int index;
 
-        private final int index;
-
-        RegisterNewGuestTask(int index) {
-            this.index = index;
+        RegisterNewGuestTask() {
+            index = 0;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            return mUserModel.newGuestUser(index);
+            User lastGuestUser = application.getUserModel().getLastGuestUser();
+            if (lastGuestUser != null) index = Integer.parseInt(lastGuestUser.getUsername().substring(6)) + 1;
+            return application.getUserModel().newGuestUser(index);
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mLoginView.showProgress(false);
             if (success) {
+
                 //salva le credenziali in locale
-                LocalPreferencesImpl localPreferences = new LocalPreferencesImpl(getContext());
-                localPreferences.rememberLogin("Guest-" + String.valueOf(index),null);
+
+                User guestUser = new User();
+                guestUser.setUsername("Guest-" + String.valueOf(index));
+                guestUser.setGuest(true);
+                application.getLocalPreferences().rememberUser(guestUser);
 
                 //inizia la sessione
-                SessionTask mSessionTask = new SessionTask(localPreferences.getUsername());
+                SessionTask mSessionTask = new SessionTask(guestUser.getUsername());
                 mSessionTask.execute((Void) null);
+
+            } else if (!application.isConnectionEnabled()){
+
+                //salva le credenziali in locale
+                LocalPreferencesImpl localPreferences = new LocalPreferencesImpl(getContext());
+                User offlineGuestUser = new User();
+                offlineGuestUser.setUsername("Guest-offline");
+                offlineGuestUser.setGuest(true);
+                localPreferences.rememberUser(offlineGuestUser);
 
                 //carica il fragment della home
                 Fragment newFragment = new HomeFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
                 transaction.replace(R.id.fragment_container, newFragment);
                 transaction.addToBackStack(null);
-
                 transaction.commit();
 
+
             } else {
-                Log.w("Errore: ", "utente guest");
+                Log.w("Errore", "Guest");
             }
         }
 
@@ -287,22 +296,33 @@ public class LoginFragment extends Fragment implements
         protected Boolean doInBackground(Void... voids) {
 
             Log.w("Log", "SessionStart");
-            User user = mUserModel.getUser(username);
+            User user = application.getUserModel().getUser(username);
             Date date = new Date();
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+1"));
             session = new Session();
             session.setUser(user);
             session.setTimeIn(dateFormat.format(date));
+
             SessionModel mSessionModel = new SessionModelImpl();
-            return mSessionModel.newSession(session);
+            boolean flag = mSessionModel.newSession(session);
+            return flag;
         }
 
         @Override
         protected void onPostExecute(Boolean success) {
             if (success){
-                LocalPreferences localPreferences = new LocalPreferencesImpl(getContext());
-                localPreferences.storeSession(session);
+                Log.w("ook", "OK");
+                application.getLocalPreferences().storeSession(session);
+
+                //carica il fragment della home
+                Fragment newFragment = new HomeFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, newFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            } else {
+                Log.w("Porco", "");
             }
         }
 

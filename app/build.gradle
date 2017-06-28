@@ -37,4 +37,9 @@ dependencies {
     compile 'com.android.support:design:24.2.1'
     testCompile 'junit:junit:4.12'
     compile files('libs/mysql-connector-java-5.1.41-bin.jar')
+
+    compile 'com.google.firebase:firebase-core:9.2.0'                        // this line must be included to integrate with Firebase
+    compile 'com.google.firebase:firebase-messaging:9.2.0'                   // this line must be included to use FCM
 }
+
+apply plugin: 'com.google.gms.google-services'

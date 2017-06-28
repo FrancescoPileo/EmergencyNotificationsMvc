@@ -20,7 +20,7 @@ import java.util.Locale;
 public class HttpUtils {
 
     //172.23.170.169
-    private static final String SERVER_HOST = "192.168.1.3:8080";
+    private static final String SERVER_HOST = "192.168.1.64:8080";
     private static final String SERVER_NAME = "EmergencyNotificationsServer";
 
     // HTTP GET request
@@ -40,7 +40,7 @@ public class HttpUtils {
         int responseCode = con.getResponseCode();
         String responseString = null;
 
-        Log.w("Responsecode" , String.valueOf(responseCode));
+       Log.w("Responsecode:" , String.valueOf(responseCode));
 
         if (responseCode == HttpURLConnection.HTTP_OK){
             BufferedReader in = new BufferedReader(
@@ -56,7 +56,7 @@ public class HttpUtils {
             responseString = response.toString();
 
             //print result
-            Log.w("ResponseToGetRequest" , response.toString());
+            Log.w("ResponseToGetRequest:" , response.toString());
 
         }
 
@@ -155,7 +155,7 @@ public class HttpUtils {
         if (imageFile.exists()) {
             Long lastModified = imageFile.lastModified();
             Date lastModifiedDate = new Date(lastModified);
-            Log.w("DataModifica", lastModifiedDate.toString());
+            Log.w("DataModifica: ", lastModifiedDate.toString());
 
             SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy", Locale.ENGLISH);
             String parsedDate = formatter.format(lastModifiedDate);
@@ -170,7 +170,7 @@ public class HttpUtils {
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
             img = BitmapFactory.decodeStream(is);
         } else if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_MODIFIED) {
-            Log.w("Image", "not-modified");
+            Log.w("Image:", "not-modified");
         }
         return img;
     }
