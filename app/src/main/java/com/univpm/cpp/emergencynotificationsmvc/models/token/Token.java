@@ -36,7 +36,7 @@ public class Token implements Jsonable{
             JSONObject jsonObject = new JSONObject();
             try {
                 if (this.idToken != -1) jsonObject.put("idtoken", getIdToken());
-                jsonObject.put("token", getToken());
+                jsonObject.put("tokenvalue", getToken());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
