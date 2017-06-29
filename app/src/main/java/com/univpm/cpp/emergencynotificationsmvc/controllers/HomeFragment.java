@@ -59,6 +59,8 @@ public class HomeFragment extends Fragment implements
         HomeView.BeaconTouchListener,
         DialogView.OkButtonListener{
 
+    public static final String TAG = "HOME_FRAGMENT";
+
     private EmergencyNotificationsMvc application;
     private HomeView mHomeView;
     private DialogView mDialogView;
@@ -506,7 +508,7 @@ public class HomeFragment extends Fragment implements
                 Fragment newFragment = new LoginFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-                transaction.replace(R.id.fragment_container, newFragment);
+                transaction.replace(R.id.fragment_container, newFragment, LoginFragment.TAG);
                 transaction.addToBackStack(null);
 
                 transaction.commit();
@@ -569,4 +571,6 @@ public class HomeFragment extends Fragment implements
 
         }
     }
+
+
 }

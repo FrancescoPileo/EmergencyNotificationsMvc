@@ -630,8 +630,6 @@ public class MyBluetoothManager {
                 Log.w("Beacon", "error");
             }
         }
-
-
     }
 
 }

@@ -114,7 +114,7 @@ public class EmergencyNotificationsMvc extends Application {
         mConnectionEnabled = (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
 
         //models initializations
-        //modelsInit(mConnectionEnabled);
+        modelsInit(mConnectionEnabled);
 
 
         super.onCreate();
@@ -258,4 +258,5 @@ public class EmergencyNotificationsMvc extends Application {
     public UserModel getUserModel() {
         return mUserModel;
     }
+
 }

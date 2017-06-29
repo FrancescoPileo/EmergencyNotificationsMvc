@@ -25,6 +25,8 @@ public class RegistrationFragment extends Fragment implements
         RegistrationView.UsernameChangeViewListener
 {
 
+    public static final String TAG = "REGISTRATION_FRAGMENT";
+
     private RegistrationView mRegistrationView;
     private UserModel mUserModel;
     private RegistrationFragment.UserRegTask mRegTask;
@@ -184,10 +186,8 @@ public class RegistrationFragment extends Fragment implements
                 toast.show();
 
                 //carica il fragment di login
-                Fragment newFragment = new LoginFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-                transaction.replace(R.id.fragment_container, newFragment);
+                transaction.replace(R.id.fragment_container, new LoginFragment(), LoginFragment.TAG);
                 transaction.addToBackStack(null);
 
                 transaction.commit();
@@ -234,6 +234,8 @@ public class RegistrationFragment extends Fragment implements
             //mRegistrationView.showProgress(false);
         }
     }
+
+
 
 
 

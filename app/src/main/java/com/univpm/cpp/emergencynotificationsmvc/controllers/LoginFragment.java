@@ -34,6 +34,8 @@ public class LoginFragment extends Fragment implements
         LoginView.RegistrationBtnViewListener
 {
 
+    public static final String TAG = "LOGIN_FRAGMENT";
+
     private EmergencyNotificationsMvc application;
     private LoginView mLoginView;
     private UserLoginTask mAuthTask;
@@ -139,7 +141,7 @@ public class LoginFragment extends Fragment implements
             Fragment newFragment = new RegistrationFragment();
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-            transaction.replace(R.id.fragment_container, newFragment);
+            transaction.replace(R.id.fragment_container, newFragment, RegistrationFragment.TAG);
             transaction.addToBackStack(null);
 
             transaction.commit();
@@ -203,7 +205,7 @@ public class LoginFragment extends Fragment implements
                     //carica il fragment della home
                     Fragment newFragment = new HomeFragment();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, newFragment);
+                    transaction.replace(R.id.fragment_container, newFragment, HomeFragment.TAG);
                     transaction.addToBackStack(null);
                     transaction.commit();
                 }
@@ -265,7 +267,7 @@ public class LoginFragment extends Fragment implements
                 //carica il fragment della home
                 Fragment newFragment = new HomeFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, newFragment);
+                transaction.replace(R.id.fragment_container, newFragment, HomeFragment.TAG);
                 transaction.addToBackStack(null);
                 transaction.commit();
 
@@ -299,7 +301,7 @@ public class LoginFragment extends Fragment implements
             User user = application.getUserModel().getUser(username);
             Date date = new Date();
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+1"));
+            //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+1"));
             session = new Session();
             session.setUser(user);
             session.setTimeIn(dateFormat.format(date));
@@ -318,7 +320,7 @@ public class LoginFragment extends Fragment implements
                 //carica il fragment della home
                 Fragment newFragment = new HomeFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, newFragment);
+                transaction.replace(R.id.fragment_container, newFragment, HomeFragment.TAG);
                 transaction.addToBackStack(null);
                 transaction.commit();
             } else {

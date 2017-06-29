@@ -22,6 +22,8 @@ import android.view.View;
 
 import com.univpm.cpp.emergencynotificationsmvc.controllers.HomeFragment;
 import com.univpm.cpp.emergencynotificationsmvc.controllers.LoginFragment;
+import com.univpm.cpp.emergencynotificationsmvc.controllers.RegistrationFragment;
+import com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.MyBluetoothManager;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferences;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalPreferencesImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract;
@@ -45,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_LOCATION_PERMISSIONS = 1;
     public static final int REQUEST_STORAGE_PERMISSIONS = 2;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         task.execute((Void) null);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new LoginFragment());
+        transaction.replace(R.id.fragment_container, new LoginFragment(), LoginFragment.TAG);
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -70,22 +71,41 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         //todo sistemare on back pressed
-        finish();
+        Fragment registrationFragment =  getSupportFragmentManager().findFragmentByTag(RegistrationFragment.TAG);
+        if (registrationFragment != null && registrationFragment.isVisible()){
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, new LoginFragment(), LoginFragment.TAG);
+            transaction.addToBackStack(null);
+            transaction.commit();
+
+        } else {
+            finish();
+        }
+
         //super.onBackPressed();
     }
 
+
+
     @Override
     protected void onDestroy() {
-
         super.onDestroy();
+        Log.w("DESTROOOOYYYYYYY", "");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.w("PAUSEEEEEEEEEE", "");
     }
 
     @Override
     protected void onStop() {
-        Log.w("On stop", "");
-        Intent intent = new Intent(this, CloseSessionService.class);
-        startService(intent);
+        /*Intent intent = new Intent(this, CloseSessionService.class);
+        startService(intent);*/
         super.onStop();
+        Log.w("STOOOOOOOOOOOOOOOOOOP", "");
     }
 
     private void checkPermissions() {
@@ -192,4 +212,6 @@ public class MainActivity extends AppCompatActivity {
             helper.close();
         }
     }
+
+
 }
