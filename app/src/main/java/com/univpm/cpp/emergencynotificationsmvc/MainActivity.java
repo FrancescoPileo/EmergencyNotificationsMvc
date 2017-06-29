@@ -20,6 +20,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.univpm.cpp.emergencynotificationsmvc.controllers.HomeFragment;
 import com.univpm.cpp.emergencynotificationsmvc.controllers.LoginFragment;
 import com.univpm.cpp.emergencynotificationsmvc.controllers.RegistrationFragment;
@@ -56,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
         checkFolders();
         LocalSQLiteInitTask task = new LocalSQLiteInitTask();
         task.execute((Void) null);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("EN");
+        FirebaseInstanceId.getInstance().getToken();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, new LoginFragment(), LoginFragment.TAG);
