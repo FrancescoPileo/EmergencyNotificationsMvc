@@ -60,7 +60,6 @@ public class MyBluetoothManager {
     private boolean mBleSupported = true;
     private boolean mScanning = false;
 
-    private IntentFilter mFilter;
     private BluetoothAdapter mBtAdapter = null;
     private static BluetoothManager mBluetoothManager;
     private BluetoothLeService mBluetoothLeService = null;
@@ -96,9 +95,15 @@ public class MyBluetoothManager {
         this.activity = activity;
 
         //BluetoothLeService ready broadcast
-        mFilter = new IntentFilter(ACTION_BLESRV_INIT);
-        mFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        activity.registerReceiver(mReceiver, mFilter);
+        IntentFilter initFilter = new IntentFilter(ACTION_BLESRV_INIT);
+        activity.registerReceiver(initReceiver, initFilter);
+
+        IntentFilter btFilter = new IntentFilter(ACTION_BLESRV_INIT);
+        btFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        activity.registerReceiver(btReceiver, btFilter);
+
+
+
 
         mEnvValuesModel = new EnviromentalValuesModelImpl();
         mLocalPreferences = new LocalPreferencesImpl(getContext());
@@ -352,7 +357,7 @@ public class MyBluetoothManager {
         }
     };
 
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver initReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
@@ -361,12 +366,23 @@ public class MyBluetoothManager {
             if (ACTION_BLESRV_INIT.equals(action)) {
                 //BluetoothLeService ok
                 init();
-                if (scanQueue){
+                activity.unregisterReceiver(this);
+                if (scanQueue) {
                     //Log.w("ScanQueue", "matteo si sbaglia");
                     scanning();
                     scanQueue = false;
                 }
-            } else if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
+            }
+        }
+    };
+
+    private final BroadcastReceiver btReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            final int status = intent.getIntExtra(BluetoothLeService.EXTRA_STATUS, BluetoothGatt.GATT_FAILURE);
+
+            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
                 // Bluetooth adapter state change
                 switch (mBtAdapter.getState()) {
                     case BluetoothAdapter.STATE_ON:
