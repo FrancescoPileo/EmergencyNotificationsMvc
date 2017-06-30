@@ -53,6 +53,7 @@ public class LocalSQLiteContract {
         public static final String TABLE_NAME = "beacon";
         public static final String _ID = "idbeacon";
         public static final String COLUMN_NAME_IDNODE = "idnode";
+        public static final String COLUMN_NAME_EMERGENCY = "emergency";
     }
 
     public static class EnviromentalvaluesTable implements BaseColumns {

@@ -26,8 +26,10 @@ public class HttpUtils {
     // HTTP GET request
    public static String sendGet(String url) throws Exception {
 
-        URL obj = new URL("http://" + SERVER_HOST + "/" + SERVER_NAME + "/webresources/" + url);
-        java.net.HttpURLConnection con = (java.net.HttpURLConnection) obj.openConnection();
+
+       URL obj = new URL("http://" + SERVER_HOST + "/" + SERVER_NAME + "/webresources/" + url);
+       Log.w("Url_GET", "http://" + SERVER_HOST + "/" + SERVER_NAME + "/webresources/" + url);
+       java.net.HttpURLConnection con = (java.net.HttpURLConnection) obj.openConnection();
 
         // optional default is GET
         con.setRequestMethod("GET");

@@ -29,7 +29,7 @@ public class BeaconModelLocalImpl implements BeaconModel{
         SQLiteDatabase db = mLocalSQLiteDbHelper.getReadableDatabase();
 
         Cursor cursor = db.query( BeaconTable.TABLE_NAME,
-                new String[] { BeaconTable._ID, BeaconTable.COLUMN_NAME_IDNODE }
+                new String[] { BeaconTable._ID, BeaconTable.COLUMN_NAME_IDNODE, BeaconTable.COLUMN_NAME_EMERGENCY }
                 , BeaconTable._ID + "=?",
                 new String[] { idBeacon }, null, null, null, null);
         if (cursor != null) {
@@ -38,6 +38,7 @@ public class BeaconModelLocalImpl implements BeaconModel{
             beacon.setIdBeacon(cursor.getString(0));
             NodeModel nodeModel = new NodeModelLocalImpl(context);
             beacon.setNode(nodeModel.getNodeById(cursor.getInt(1)));
+            beacon.setEmergency(cursor.getString(2));
         }
         //db.close();
         return beacon;
@@ -59,6 +60,7 @@ public class BeaconModelLocalImpl implements BeaconModel{
                     Beacon beacon = new Beacon();
                     beacon.setIdBeacon(cursor.getString(0));
                     beacon.setNode(nodeModel.getNodeById(cursor.getInt(1)));
+                    beacon.setEmergency(cursor.getString(2));
                     beacons.add(beacon);
                 } while (cursor.moveToNext());
             }

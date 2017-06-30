@@ -31,9 +31,14 @@ public interface HomeView extends ViewMvc{
         void onBeaconClick(Beacon beacon);
     }
 
+    interface InfoBtnListener {
+        void onInfoClick();
+    }
+
     void setMapSelectedListener(HomeView.MapSpnItemSelectedViewListener listener);
     void setLogoutListener(LogoutBtnViewListener listener);
     void setBeaconTouchListener (BeaconTouchListener listener);
+    void setInfoBtnListener(InfoBtnListener listener);
     void populateSpinner(ArrayList<String> list);
     String getMap();
     void showProgress(boolean show);

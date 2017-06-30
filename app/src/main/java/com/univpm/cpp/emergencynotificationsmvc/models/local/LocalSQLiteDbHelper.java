@@ -71,7 +71,8 @@ public class LocalSQLiteDbHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_TABLE_BEACON =
             "CREATE TABLE " + BeaconTable.TABLE_NAME + " (" +
                     BeaconTable._ID + " TEXT PRIMARY KEY," +
-                    BeaconTable.COLUMN_NAME_IDNODE + " INTEGER )";
+                    BeaconTable.COLUMN_NAME_IDNODE + " INTEGER, " +
+                    BeaconTable.COLUMN_NAME_EMERGENCY + "TEXT )";
 
     private static final String SQL_DELETE_TABLE_BEACON =  "DROP TABLE IF EXISTS " + BeaconTable.TABLE_NAME;
 
@@ -196,6 +197,7 @@ public class LocalSQLiteDbHelper extends SQLiteOpenHelper {
                 ContentValues values = new ContentValues();
                 values.put(BeaconTable._ID, beacon.getIdBeacon());
                 values.put(BeaconTable.COLUMN_NAME_IDNODE, beacon.getNode().getIdNode());
+                values.put(BeaconTable.COLUMN_NAME_EMERGENCY, beacon.getEmergency());
                 newRowId = db.insert(BeaconTable.TABLE_NAME, null, values);
             }
         }

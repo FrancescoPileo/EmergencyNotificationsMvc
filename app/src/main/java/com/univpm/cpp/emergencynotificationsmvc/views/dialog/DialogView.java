@@ -17,9 +17,11 @@ public interface DialogView extends ViewMvc {
     void setNodeNameText(String string);
     void setTempValueText(String string);
     void setHumValueText(String string);
-    void setAccValueText(String string);
-    void setGyrValueText(String string);
+    void setAccXValueText(String string);
+    void setAccYValueText(String string);
+    void setAccZValueText(String string);
+    //void setGyrValueText(String string);
 
-    void setAllVisible();
-    void setAllInvisible();
+    void setSuccess(boolean flag);
+
 }

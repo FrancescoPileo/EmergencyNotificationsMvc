@@ -56,6 +56,10 @@ public class MainActivity extends AppCompatActivity {
 
         checkPermissions();
         checkFolders();
+
+        String s = getIntent().getStringExtra("prova");
+        if (s!= null) Log.w("prova", s);
+
         LocalSQLiteInitTask task = new LocalSQLiteInitTask();
         task.execute((Void) null);
 
@@ -66,6 +70,16 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.fragment_container, new LoginFragment(), LoginFragment.TAG);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        //todo oasjdnakjosdnoaskndkoasn
+        String s = getIntent().getStringExtra("prova");
+        if (s!= null) Log.w("prova2", s);
+
     }
 
     @Override

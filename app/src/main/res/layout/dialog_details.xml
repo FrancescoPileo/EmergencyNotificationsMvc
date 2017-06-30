@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/NodeName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:textAllCaps="true"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:id="@+id/error_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerInParent="true"
+            android:layout_below="@+id/NodeName">
+
+            <ImageView
+                android:id="@+id/error_img"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@mipmap/alert"
+                android:layout_alignParentLeft="true"/>
+
+            <TextView
+                android:id="@+id/error_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/holo_red_dark"
+                android:layout_toRightOf="@id/error_img"
+                android:textStyle="bold"
+                android:layout_marginLeft="8dp"
+                android:text="Dati ambientali non disponibili!!"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/info_view"
+            android:layout_below="@+id/error_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:orientation="vertical">
+
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:id="@+id/Temp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="- Temperatura: (°C)"
+                    android:textStyle="bold"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"/>
+
+                <TextView
+                    android:id="@+id/TempValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:id="@+id/Hum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="- Umidità: (%)"
+                    android:textStyle="bold"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"/>
+
+                <TextView
+                    android:id="@+id/HumValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:id="@+id/Acc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="- Accelerazione (m/s): "
+                    android:textStyle="bold"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    />
+
+                <TextView
+                    android:id="@+id/AccXLable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="· x: "
+                    android:layout_marginLeft="20dp"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/Acc"
+                    android:layout_alignParentLeft="true"/>
+                <TextView
+                    android:id="@+id/AccXValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:layout_below="@+id/Acc"
+                    android:layout_alignParentRight="true"/>
+
+                <TextView
+                    android:id="@+id/AccYLable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="· y: "
+                    android:layout_marginLeft="20dp"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/AccXLable"
+                    android:layout_alignParentLeft="true"/>
+                <TextView
+                    android:id="@+id/AccYValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:layout_below="@+id/AccXValue"
+                    android:layout_alignParentRight="true"/>
+
+                <TextView
+                    android:id="@+id/AccZLable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="· z: "
+                    android:layout_marginLeft="20dp"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/AccYLable"
+                    android:layout_alignParentLeft="true"/>
+                <TextView
+                    android:id="@+id/AccZValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:layout_below="@+id/AccYValue"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <!-- <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:id="@+id/Gyr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="- Giroscopio (°): "
+                    android:textStyle="bold"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"/>
+
+                <TextView
+                    android:id="@+id/GyrValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:gravity="right"
+                    android:layout_below="@+id/Gyr"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout> -->
+
+        </LinearLayout>
+
+    <Button
+        android:id="@+id/Okbutton"
+        android:layout_below="@+id/info_view"
+        android:layout_width="75dp"
+        android:layout_marginBottom="16dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="Ok" />
+
+
+</RelativeLayout>

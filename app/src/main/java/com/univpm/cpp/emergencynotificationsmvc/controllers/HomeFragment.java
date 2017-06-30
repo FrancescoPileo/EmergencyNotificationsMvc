@@ -57,7 +57,8 @@ public class HomeFragment extends Fragment implements
         HomeView.MapSpnItemSelectedViewListener,
         HomeView.LogoutBtnViewListener,
         HomeView.BeaconTouchListener,
-        DialogView.OkButtonListener{
+        DialogView.OkButtonListener,
+        HomeView.InfoBtnListener{
 
     public static final String TAG = "HOME_FRAGMENT";
 
@@ -79,8 +80,10 @@ public class HomeFragment extends Fragment implements
 
     //todo commentare
     //todo visualizzare errori
-    //todo notifiche --> firebase
-    //todo gestione utente
+    //todo (opt) gestione utente
+    //todo (opt) dialogo dettagli caricamento
+    //todo cosa succede se premo le notifiche
+    //todo server non raggiungibile
 
 
     @Nullable
@@ -97,12 +100,12 @@ public class HomeFragment extends Fragment implements
         session = new Session();
         dialog = new Dialog(getContext());
 
-        //todo cambiare on click
         mHomeView.setMapSelectedListener(this);
         mHomeView.setLogoutListener(this);
         mHomeView.setBeaconTouchListener(this);
         mHomeView.setToolbar(this);
         mDialogView.setOkButtonListener(this);
+        mHomeView.setInfoBtnListener(this);
 
         mMyBluetoothManager = new MyBluetoothManager(getContext(), getActivity());
 
@@ -111,8 +114,8 @@ public class HomeFragment extends Fragment implements
         mInitTask = new InitTask();
         mInitTask.execute((Void) null);
 
-        LocalSQLiteUpdateTask task = new LocalSQLiteUpdateTask(application);
-        task.execute((Void) null);
+        /*LocalSQLiteUpdateTask task = new LocalSQLiteUpdateTask(application);
+        task.execute((Void) null);*/
 
         mSpinnerTask = new SpinnerTask();
         mSpinnerTask.execute((Void) null);
@@ -158,20 +161,21 @@ public class HomeFragment extends Fragment implements
         mEnvValuesTask = new EnvValuesTask(beacon);
         mEnvValuesTask.execute((Void) null);
         dialog.setContentView(mDialogView.getRootView());
-
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(dialog.getWindow().getAttributes());
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lp.height = 1100;
-        lp.gravity = Gravity.CENTER;
-        dialog.getWindow().setAttributes(lp);
-
         dialog.show();
     }
 
     @Override
     public void onOkButtonClick() {
         dialog.cancel();
+    }
+
+    @Override
+    public void onInfoClick() {
+        Log.w("info", "");
+        Dialog infoDialog = new Dialog(getContext());
+        infoDialog.getWindow();
+        infoDialog.setContentView(R.layout.dialog_info);
+        infoDialog.show();
     }
 
     private boolean started = false;
@@ -554,21 +558,17 @@ public class HomeFragment extends Fragment implements
 
         @Override
         protected void onPostExecute(Boolean success) {
+            mDialogView.setNodeNameText("Nodo: " + beacon.getNode().getNodename());
+            mDialogView.setSuccess(success);
             if (success) {
-                mDialogView.setNodeNameText("Nodo: " + beacon.getNode().getNodename());
-                mDialogView.setAllVisible();
                 mDialogView.setTempValueText(String.valueOf(envValues.getTemperature()));
                 mDialogView.setHumValueText(String.valueOf(envValues.getHumidity()));
-                mDialogView.setAccValueText(String.valueOf(envValues.getAccX()) + ", " + String.valueOf(envValues.getAccY()) + ", " + String.valueOf(envValues.getAccZ()));
-                mDialogView.setGyrValueText(String.valueOf(envValues.getGyrX()) + ", " + String.valueOf(envValues.getGyrY()) + ", " + String.valueOf(envValues.getGyrZ()));
+                mDialogView.setAccXValueText(String.valueOf(envValues.getAccX()));
+                mDialogView.setAccYValueText(String.valueOf(envValues.getAccY()));
+                mDialogView.setAccZValueText(String.valueOf(envValues.getAccZ()));
 
+                //mDialogView.setGyrValueText("X:" + String.valueOf(envValues.getGyrX()) + ", Y:" + String.valueOf(envValues.getGyrY()) + ", Z:" + String.valueOf(envValues.getGyrZ()));
             }
-
-            else {
-                mDialogView.setNodeNameText("Nodo: " + beacon.getNode().getNodename() + "\nDati ambientali non disponibili.");
-                mDialogView.setAllInvisible();
-            }
-
         }
     }
 

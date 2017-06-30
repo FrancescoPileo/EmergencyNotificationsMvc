@@ -314,7 +314,6 @@ public class LoginFragment extends Fragment implements
         @Override
         protected void onPostExecute(Boolean success) {
             if (success){
-                Log.w("ook", "OK");
                 application.getLocalPreferences().storeSession(session);
 
                 //carica il fragment della home
@@ -323,8 +322,6 @@ public class LoginFragment extends Fragment implements
                 transaction.replace(R.id.fragment_container, newFragment, HomeFragment.TAG);
                 transaction.addToBackStack(null);
                 transaction.commit();
-            } else {
-                Log.w("Porco", "");
             }
         }
 

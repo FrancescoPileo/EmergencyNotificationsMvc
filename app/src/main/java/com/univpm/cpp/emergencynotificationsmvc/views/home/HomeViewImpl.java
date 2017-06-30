@@ -35,6 +35,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -43,6 +44,7 @@ import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
 import com.univpm.cpp.emergencynotificationsmvc.utils.CirclesDrawingView;
 import com.univpm.cpp.emergencynotificationsmvc.utils.Directories;
+import com.univpm.cpp.emergencynotificationsmvc.utils.Firebase.FirebaseMessagingService;
 import com.univpm.cpp.emergencynotificationsmvc.utils.ImageCoordinates;
 import com.univpm.cpp.emergencynotificationsmvc.utils.TouchImageView;
 import com.univpm.cpp.emergencynotificationsmvc.views.login.LoginView;
@@ -62,6 +64,7 @@ public class HomeViewImpl implements HomeView{
     private LogoutBtnViewListener logoutListener;
     private MapSpnItemSelectedViewListener mapSelectedListener;
     private BeaconTouchListener beaconTouchListener;
+    private InfoBtnListener infoBtnListener;
 
     private TextView positionText;
     private TextView textMapName;
@@ -72,6 +75,7 @@ public class HomeViewImpl implements HomeView{
 
     private View progressView;
     private Toolbar toolbar;
+    private ImageButton infoBtn;
 
     private Context context;
 
@@ -126,6 +130,15 @@ public class HomeViewImpl implements HomeView{
             }
         });
 
+        infoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (infoBtnListener != null){
+                    infoBtnListener.onInfoClick();
+                }
+            }
+        });
+
 
         mapsSpn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -157,6 +170,8 @@ public class HomeViewImpl implements HomeView{
         mapTiv = (TouchImageView) mRootView.findViewById(R.id.map);
         toolbar = (Toolbar) mRootView.findViewById(R.id.tool_bar);
         progressView = mRootView.findViewById(R.id.loading_progress);
+        infoBtn = (ImageButton) mRootView.findViewById(R.id.info_button);
+
     }
 
     @Override
@@ -173,6 +188,11 @@ public class HomeViewImpl implements HomeView{
     @Override
     public void setMapSelectedListener(MapSpnItemSelectedViewListener listener) {
         this.mapSelectedListener = listener;
+    }
+
+    @Override
+    public void setInfoBtnListener(InfoBtnListener listener) {
+        this.infoBtnListener = listener;
     }
 
     @Override
@@ -317,6 +337,8 @@ public class HomeViewImpl implements HomeView{
                 int x = getPixelsXFromMetres(beacon.getNode().getX(), beacon.getNode().getMap());
                 int y = getPixelsYFromMetres(beacon.getNode().getY(), beacon.getNode().getMap());
 
+                Bitmap icon;
+
                 CirclesDrawingView circle = new CirclesDrawingView(context);
                 circle.setmCirclePaint(paint);
                 circle.setmCircleBorder(border);
@@ -325,7 +347,27 @@ public class HomeViewImpl implements HomeView{
                 circle.setNode(beacon.getNode());
                 circle.setBeacon(beacon);
                 mCirclesDrawingViews.add(circle);
-                circle.onDraw(canvas);
+
+                if (beacon.getEmergency() != null) {
+                    switch (beacon.getEmergency()) {
+                        case FirebaseMessagingService.Message.NOTIFICATION_TEMP:
+                            icon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.fire);
+                            canvas.drawBitmap(icon, x - icon.getWidth() / 2, image.getHeight() - y - icon.getHeight(), null);
+                            break;
+                        case FirebaseMessagingService.Message.NOTIFICATION_HUM:
+                            icon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.water);
+                            canvas.drawBitmap(icon, x - icon.getWidth() / 2, image.getHeight() - y - (icon.getHeight() / 2), null);
+
+                            break;
+                        case FirebaseMessagingService.Message.NOTIFICATION_ACC:
+                            icon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.earthquake);
+                            canvas.drawBitmap(icon, x - icon.getWidth() / 2, image.getHeight() - y - (icon.getHeight() / 2), null);
+                            break;
+                    }
+                } else {
+                    circle.onDraw(canvas);
+                }
+
             }
 
             i++;

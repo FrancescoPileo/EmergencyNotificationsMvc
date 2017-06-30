@@ -4,6 +4,7 @@ package com.univpm.cpp.emergencynotificationsmvc.views.dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,17 +25,24 @@ public class DialogViewImpl implements DialogView {
     private TextView hum;
     private TextView humValue;
     private TextView acc;
-    private TextView accValue;
-    private TextView gyr;
-    private TextView gyrValue;
+    private TextView accXValue;
+    private TextView accXLabel;
+    private TextView accYValue;
+    private TextView accYLabel;
+    private TextView accZValue;
+    private TextView accZLabel;
+    //private TextView gyr;
+    //private TextView gyrValue;
     private Button okButton;
+    private View infoView;
+    private View errorView;
 
     private Context context;
 
 
     public DialogViewImpl(LayoutInflater inflater, @Nullable ViewGroup container, Context context) {
 
-        mRootView = inflater.inflate(R.layout.dialog, container, false);
+        mRootView = inflater.inflate(R.layout.dialog_details, container, false);
         this.context = context;
 
         init();
@@ -59,10 +67,18 @@ public class DialogViewImpl implements DialogView {
         hum = (TextView) mRootView.findViewById(R.id.Hum);
         humValue = (TextView) mRootView.findViewById(R.id.HumValue);
         acc = (TextView) mRootView.findViewById(R.id.Acc);
-        accValue = (TextView) mRootView.findViewById(R.id.AccValue);
-        gyr = (TextView) mRootView.findViewById(R.id.Gyr);
-        gyrValue = (TextView) mRootView.findViewById(R.id.GyrValue);
+        accXValue = (TextView) mRootView.findViewById(R.id.AccXValue);
+        accYValue = (TextView) mRootView.findViewById(R.id.AccYValue);
+        accZValue = (TextView) mRootView.findViewById(R.id.AccZValue);
+        accXLabel = (TextView) mRootView.findViewById(R.id.AccXLable);
+        accYLabel = (TextView) mRootView.findViewById(R.id.AccYLable);
+        accZLabel = (TextView) mRootView.findViewById(R.id.AccZLable);
+        //gyr = (TextView) mRootView.findViewById(R.id.Gyr);
+        //gyrValue = (TextView) mRootView.findViewById(R.id.GyrValue);
         okButton = (Button) mRootView.findViewById(R.id.Okbutton);
+        infoView = mRootView.findViewById(R.id.info_view);
+        errorView = mRootView.findViewById(R.id.error_view);
+
     }
 
 
@@ -113,37 +129,61 @@ public class DialogViewImpl implements DialogView {
     }
 
     @Override
-    public void setAccValueText(String string) {
-        this.accValue.setText(string);
+    public void setAccXValueText(String string) {
+        this.accXValue.setText(string);
     }
 
     @Override
+    public void setAccYValueText(String string) {
+        this.accYValue.setText(string);
+    }
+
+
+    @Override
+    public void setAccZValueText(String string) {
+        this.accZValue.setText(string);
+    }
+
+
+    /*@Override
     public void setGyrValueText(String string) {
         this.gyrValue.setText(string);
-    }
+    }*/
 
     @Override
-    public void setAllVisible() {
-        temp.setVisibility(View.VISIBLE);
-        hum.setVisibility(View.VISIBLE);
-        acc.setVisibility(View.VISIBLE);
-        gyr.setVisibility(View.VISIBLE);
-        tempValue.setVisibility(View.VISIBLE);
-        humValue.setVisibility(View.VISIBLE);
-        accValue.setVisibility(View.VISIBLE);
-        gyrValue.setVisibility(View.VISIBLE);
-    }
+    public void setSuccess(boolean flag) {
+        if (flag) {
+            errorView.setVisibility(View.GONE);
+            temp.setVisibility(View.VISIBLE);
+            hum.setVisibility(View.VISIBLE);
+            acc.setVisibility(View.VISIBLE);
+            //gyr.setVisibility(View.VISIBLE);
+            tempValue.setVisibility(View.VISIBLE);
+            humValue.setVisibility(View.VISIBLE);
+            accXValue.setVisibility(View.VISIBLE);
+            accYValue.setVisibility(View.VISIBLE);
+            accZValue.setVisibility(View.VISIBLE);
+            accXLabel.setVisibility(View.VISIBLE);
+            accYLabel.setVisibility(View.VISIBLE);
+            accZLabel.setVisibility(View.VISIBLE);
+            //gyrValue.setVisibility(View.VISIBLE);
+        } else {
+            errorView.setVisibility(View.VISIBLE);
+            temp.setVisibility(View.GONE);
+            hum.setVisibility(View.GONE);
+            acc.setVisibility(View.GONE);
+            //gyr.setVisibility(View.GONE);
+            tempValue.setVisibility(View.GONE);
+            humValue.setVisibility(View.GONE);
+            accXValue.setVisibility(View.GONE);
+            accYValue.setVisibility(View.GONE);
+            accZValue.setVisibility(View.GONE);
+            accXLabel.setVisibility(View.GONE);
+            accYLabel.setVisibility(View.GONE);
+            accZLabel.setVisibility(View.GONE);
+            //gyrValue.setVisibility(View.GONE);
+        }
 
-    @Override
-    public void setAllInvisible() {
-        temp.setVisibility(View.INVISIBLE);
-        hum.setVisibility(View.INVISIBLE);
-        acc.setVisibility(View.INVISIBLE);
-        gyr.setVisibility(View.INVISIBLE);
-        tempValue.setVisibility(View.INVISIBLE);
-        humValue.setVisibility(View.INVISIBLE);
-        accValue.setVisibility(View.INVISIBLE);
-        gyrValue.setVisibility(View.INVISIBLE);
     }
 
 
