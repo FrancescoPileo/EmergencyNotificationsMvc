@@ -8,10 +8,12 @@ import com.univpm.cpp.emergencynotificationsmvc.models.Jsonable;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -175,5 +177,27 @@ public class HttpUtils {
             Log.w("Image:", "not-modified");
         }
         return img;
+    }
+
+    public static boolean serverOn()  {
+        URL urlObj = null;
+        try {
+            urlObj = new URL("http://" + SERVER_HOST + "/" + SERVER_NAME + "/webresources/map");
+            HttpURLConnection con  = (HttpURLConnection) urlObj.openConnection();
+            con.setRequestMethod("GET");
+
+            //add request header
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setRequestProperty("Accept", "application/json");
+
+            con.getResponseCode();
+
+            Log.w("Connessione", "ok");
+        } catch (IOException e) {
+            Log.w("Connessione", e.getMessage());
+            if (e.getMessage().equals("Connection refused"))
+                    return false;
+        }
+        return true;
     }
 }

@@ -45,9 +45,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final int REQUEST_BT_PERMISSIONS = 0;
-    public static final int REQUEST_LOCATION_PERMISSIONS = 1;
-    public static final int REQUEST_STORAGE_PERMISSIONS = 2;
+    public static final int REQUEST_PERMISSIONS = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        //todo sistemare on back pressed
         Fragment registrationFragment =  getSupportFragmentManager().findFragmentByTag(RegistrationFragment.TAG);
         if (registrationFragment != null && registrationFragment.isVisible()){
 
@@ -101,8 +99,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             finish();
         }
-
-        //super.onBackPressed();
     }
 
 
@@ -110,13 +106,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.w("DESTROOOOYYYYYYY", "");
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.w("PAUSEEEEEEEEEE", "");
+
     }
 
     @Override
@@ -124,21 +120,10 @@ public class MainActivity extends AppCompatActivity {
         /*Intent intent = new Intent(this, CloseSessionService.class);
         startService(intent);*/
         super.onStop();
-        Log.w("STOOOOOOOOOOOOOOOOOOP", "");
+
     }
 
     private void checkPermissions() {
-        /*this.requestPermissions(
-                new String[]{
-                        Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN
-                },
-                REQUEST_BT_PERMISSIONS);*/
-
-        /*this.requestPermissions(
-                new String[]{
-                        Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
-                },
-                REQUEST_LOCATION_PERMISSIONS);*/
 
         this.requestPermissions(
                 new String[]{
@@ -146,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                         Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
                 },
-                REQUEST_STORAGE_PERMISSIONS);
+                REQUEST_PERMISSIONS);
 
 
     }
@@ -169,30 +154,26 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        }/* else {
+        }else {
             this.requestPermissions(
                     new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE },
-                    REQUEST_STORAGE_PERMISSIONS);
-        }*/
+                    REQUEST_PERMISSIONS);
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode){
-            case REQUEST_STORAGE_PERMISSIONS:
+            case REQUEST_PERMISSIONS:
                 checkFolders();
-                break;
-            case REQUEST_BT_PERMISSIONS:
-                break;
-            case REQUEST_LOCATION_PERMISSIONS:
                 break;
         }
     }
 
+
+
     public class CloseSessionService extends IntentService {
-
-
         public CloseSessionService(){
             super("CloseSessionService");
         }
@@ -215,7 +196,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class LocalSQLiteInitTask extends AsyncTask<Void, Void, Boolean> {
-
         SQLiteDatabase db = null;
         LocalSQLiteDbHelper helper = null;
 

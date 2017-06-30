@@ -41,10 +41,8 @@ import com.univpm.cpp.emergencynotificationsmvc.models.session.SessionModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelLocalImpl;
+import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class EmergencyNotificationsMvc extends Application {
 
@@ -106,16 +104,10 @@ public class EmergencyNotificationsMvc extends Application {
 
         startBluetoothLeService();
 
-
         //Check internet connection
         mConnectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        NetworkInfo activeNetwork = mConnectivityManager.getActiveNetworkInfo();
-        mConnectionEnabled = (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
-
-        //models initializations
-        modelsInit(mConnectionEnabled);
-
+        testConnection();
 
         super.onCreate();
 
@@ -150,30 +142,15 @@ public class EmergencyNotificationsMvc extends Application {
             mBluetoothLeService = ((BluetoothLeService.LocalBinder) service)
                     .getService();
             if (!mBluetoothLeService.initialize()) {
-                //Toast.makeText(context, "Unable to initialize BluetoothLeService", Toast.LENGTH_SHORT).show();
-                //finish();
                 return;
-            }
-            final int n = mBluetoothLeService.numConnectedDevices();
-            if (n > 0) {
-                /*
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        mThis.setError("Multiple connections!");
-                    }
-                });
-                */
-            } else {
-                //startScan();
-                // Log.i(TAG, "BluetoothLeService connected");
             }
         }
 
         public void onServiceDisconnected(ComponentName componentName) {
             mBluetoothLeService = null;
-            // Log.i(TAG, "BluetoothLeService disconnected");
         }
     };
+
 
     private void startBluetoothLeService() {
         boolean f;
@@ -205,23 +182,46 @@ public class EmergencyNotificationsMvc extends Application {
                         //        .show();
                         //finish();
                         break;
-                    default:
-                        // Log.w(TAG, "Action STATE CHANGED not processed ");
-                        break;
                 }
             } else if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
-                NetworkInfo activeNetwork = mConnectivityManager.getActiveNetworkInfo();
-                if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
-                    Toast.makeText(context, "Modalità online", Toast.LENGTH_LONG).show();
-                    mConnectionEnabled = true;
-                } else {
-                    Toast.makeText(context, "Modalità offline", Toast.LENGTH_LONG).show();
-                    mConnectionEnabled = false;
-                }
-                modelsInit(mConnectionEnabled);
+                testConnection();
             }
         }
     };
+
+    private void testConnection(){
+        NetworkInfo activeNetwork = mConnectivityManager.getActiveNetworkInfo();
+        if (activeNetwork != null && activeNetwork.isConnectedOrConnecting() ) {
+            ServerTestTask task = new ServerTestTask();
+            task.execute((Void) null);
+        } else {
+            Toast.makeText(getApplicationContext(), "Modalità offline", Toast.LENGTH_LONG).show();
+            mConnectionEnabled = false;
+        }
+        modelsInit(mConnectionEnabled);
+    }
+
+    public class ServerTestTask extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+
+            return HttpUtils.serverOn();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (success) {
+                Toast.makeText(getApplicationContext(), "Modalità online", Toast.LENGTH_LONG).show();
+                mConnectionEnabled = true;
+            } else {
+                Toast.makeText(getApplicationContext(), "Modalità offline", Toast.LENGTH_LONG).show();
+                mConnectionEnabled = false;
+            }
+            //models initializations
+            modelsInit(mConnectionEnabled);
+        }
+    }
 
     public boolean isConnectionEnabled() {
         return mConnectionEnabled;

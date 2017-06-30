@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 
 
 import com.univpm.cpp.emergencynotificationsmvc.EmergencyNotificationsMvc;
+import com.univpm.cpp.emergencynotificationsmvc.MainActivity;
 import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.MyBluetoothManager;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
@@ -93,6 +94,7 @@ public class HomeFragment extends Fragment implements
         mHomeView = new HomeViewImpl(inflater, container, getContext());
         mDialogView = new DialogViewImpl(inflater, container, getContext());
         application = ((EmergencyNotificationsMvc) getActivity().getApplication());
+        MainActivity activity = (MainActivity) getActivity();
         user = new User();
         map = new Map();
         mLastposition = new Position();
