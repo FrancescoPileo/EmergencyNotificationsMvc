@@ -6,11 +6,6 @@ import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.sql.Timestamp;
-import java.util.TimeZone;
-
 public class Session implements Jsonable {
 
     protected int id;

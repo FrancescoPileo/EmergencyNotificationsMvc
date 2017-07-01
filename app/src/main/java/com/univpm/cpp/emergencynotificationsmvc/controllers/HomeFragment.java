@@ -11,30 +11,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
-
-import com.univpm.cpp.emergencynotificationsmvc.EmergencyNotificationsMvc;
 import com.univpm.cpp.emergencynotificationsmvc.MainActivity;
 import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.MyBluetoothManager;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValues;
-import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteDbHelper;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteUpdateTask;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
 import com.univpm.cpp.emergencynotificationsmvc.models.node.Node;
@@ -49,10 +37,17 @@ import com.univpm.cpp.emergencynotificationsmvc.views.dialog.DialogViewImpl;
 import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeView;
 import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeViewImpl;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static com.univpm.cpp.emergencynotificationsmvc.utils.ImageCoordinates.*;
+import static com.univpm.cpp.emergencynotificationsmvc.utils.ImageCoordinates.getPixelsXFromMetres;
+import static com.univpm.cpp.emergencynotificationsmvc.utils.ImageCoordinates.getPixelsYFromMetres;
 
 public class HomeFragment extends Fragment implements
         HomeView.MapSpnItemSelectedViewListener,
@@ -63,7 +58,7 @@ public class HomeFragment extends Fragment implements
 
     public static final String TAG = "HOME_FRAGMENT";
 
-    private EmergencyNotificationsMvc application;
+    private MainActivity activity;
     private HomeView mHomeView;
     private DialogView mDialogView;
     private Dialog dialog;
@@ -93,8 +88,7 @@ public class HomeFragment extends Fragment implements
 
         mHomeView = new HomeViewImpl(inflater, container, getContext());
         mDialogView = new DialogViewImpl(inflater, container, getContext());
-        application = ((EmergencyNotificationsMvc) getActivity().getApplication());
-        MainActivity activity = (MainActivity) getActivity();
+        activity = (MainActivity) getActivity();
         user = new User();
         map = new Map();
         mLastposition = new Position();
@@ -109,15 +103,15 @@ public class HomeFragment extends Fragment implements
         mDialogView.setOkButtonListener(this);
         mHomeView.setInfoBtnListener(this);
 
-        mMyBluetoothManager = new MyBluetoothManager(getContext(), getActivity());
+        mMyBluetoothManager = new MyBluetoothManager(getContext(), (MainActivity) getActivity());
 
         mHomeView.showProgress(true);
 
         mInitTask = new InitTask();
         mInitTask.execute((Void) null);
 
-        /*LocalSQLiteUpdateTask task = new LocalSQLiteUpdateTask(application);
-        task.execute((Void) null);*/
+        LocalSQLiteUpdateTask task = new LocalSQLiteUpdateTask(activity);
+        task.execute((Void) null);
 
         mSpinnerTask = new SpinnerTask();
         mSpinnerTask.execute((Void) null);
@@ -159,7 +153,6 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void onBeaconClick(Beacon beacon) {
-        dialog.getWindow();
         mEnvValuesTask = new EnvValuesTask(beacon);
         mEnvValuesTask.execute((Void) null);
         dialog.setContentView(mDialogView.getRootView());
@@ -200,7 +193,7 @@ public class HomeFragment extends Fragment implements
     }
 
     public void start() {
-        if (application.isConnectionEnabled()) {
+        if (activity.isConnectionEnabled()) {
             mMyBluetoothManager.scanning();
         }
         mFirstMapTask = new FirstMapTask();
@@ -249,9 +242,9 @@ public class HomeFragment extends Fragment implements
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            user = application.getUserModel().getUser(application.getLocalPreferences().getUser().getUsername());
-            if (application.isConnectionEnabled()) {
-                session = application.getSessionModel().getLastSession(user);
+            user = activity.getUserModel().getUser(activity.getLocalPreferences().getUser().getUsername());
+            if (activity.isConnectionEnabled()) {
+                session = activity.getSessionModel().getLastSession(user);
             }
             return true;
         }
@@ -277,7 +270,7 @@ public class HomeFragment extends Fragment implements
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            this.stringArrayList = application.getMapModel().getAllNames();
+            this.stringArrayList = activity.getMapModel().getAllNames();
             return true;
         }
 
@@ -312,14 +305,11 @@ public class HomeFragment extends Fragment implements
 
 
            for (String mapname:stringArrayList){
-               try {
-                   Bitmap bitmap = HttpUtils.getMapBitmap(mapname);
-                   if (bitmap != null)
-                   {
-                       saveBitmap(bitmap, mapname);
-                   }
-               } catch (Exception e) {
-                   e.printStackTrace();
+               HttpUtils httpUtils = new HttpUtils((MainActivity) getActivity());
+               Bitmap bitmap = httpUtils.getMapBitmap(mapname);
+               if (bitmap != null)
+               {
+                   saveBitmap(bitmap, mapname);
                }
            }
 
@@ -366,19 +356,19 @@ public class HomeFragment extends Fragment implements
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            beacons = application.getBeaconModel().getAllBeacons();
+            beacons = activity.getBeaconModel().getAllBeacons();
 
-            Position lastPosition = application.getPositionModel().getLastPositionByUser(user);
+            Position lastPosition = activity.getPositionModel().getLastPositionByUser(user);
             //Log.w("Position", lastPosition.toString());
 
             Boolean flag = false;
 
             if (lastPosition == null){
-                map = application.getMapModel().getMapByName(application.getMapModel().getAllNames().get(0));
+                map = activity.getMapModel().getMapByName(activity.getMapModel().getAllNames().get(0));
                 flag = true;
             } else if (lastPosition != mLastposition) {                 //todo controllare
-                positionNode = application.getNodeModel().getNodeById(lastPosition.getNode().getIdNode());
-                map = application.getMapModel().getMapById(positionNode.getMap().getIdMap());
+                positionNode = activity.getNodeModel().getNodeById(lastPosition.getNode().getIdNode());
+                map = activity.getMapModel().getMapById(positionNode.getMap().getIdMap());
                 mLastposition = lastPosition;
                 flag = true;
             }
@@ -436,11 +426,11 @@ public class HomeFragment extends Fragment implements
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            Log.w("MapModel", application.getMapModel().toString());
-            beacons = application.getBeaconModel().getAllBeacons();
-            map = application.getMapModel().getMapByName(nameMap);
+            Log.w("MapModel", activity.getMapModel().toString());
+            beacons = activity.getBeaconModel().getAllBeacons();
+            map = activity.getMapModel().getMapByName(nameMap);
 
-            if (positionNode.getIdNode() != -1) positionMap = application.getMapModel().getMapById(positionNode.getMap().getIdMap());
+            if (positionNode.getIdNode() != -1) positionMap = activity.getMapModel().getMapById(positionNode.getMap().getIdMap());
 
             return true;
 
@@ -492,13 +482,13 @@ public class HomeFragment extends Fragment implements
         @Override
         protected Boolean doInBackground(Void... voids) {
 
-            if (application.isConnectionEnabled()) {
+            if (activity.isConnectionEnabled()) {
                 Date date = new Date();
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
                 //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+1"));
 
                 session.setTimeOut(dateFormat.format(date));
-                return new SessionModelImpl().updateSession(session);
+                return new SessionModelImpl((MainActivity) getActivity()).updateSession(session);
             }
             return true;
         }
@@ -507,8 +497,8 @@ public class HomeFragment extends Fragment implements
         protected void onPostExecute(Boolean success) {
             if (success){
 
-                application.getLocalPreferences().deleteLogin();
-                application.getLocalPreferences().deleteSession();
+                activity.getLocalPreferences().deleteLogin();
+                activity.getLocalPreferences().deleteSession();
 
                 //carica il fragment di login
                 Fragment newFragment = new LoginFragment();
@@ -543,7 +533,7 @@ public class HomeFragment extends Fragment implements
         protected Boolean doInBackground(Void... voids) {
 
             ArrayList<EnviromentalValues> enviromentalValuesArrayList =
-                    application.getEnviromentalValuesModel().getLastValuesForEachBeacon();
+                    activity.getEnviromentalValuesModel().getLastValuesForEachBeacon();
 
             if (enviromentalValuesArrayList != null) {
                 for (int i = 0; i < enviromentalValuesArrayList.size(); i++) {

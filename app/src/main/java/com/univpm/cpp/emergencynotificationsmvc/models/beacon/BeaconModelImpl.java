@@ -1,14 +1,12 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.beacon;
 
-import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValues;
-import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
-import com.univpm.cpp.emergencynotificationsmvc.utils.DbUtils;
+import android.util.Log;
+
+import com.univpm.cpp.emergencynotificationsmvc.utils.Broadcaster;
 import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -18,16 +16,22 @@ import java.util.ArrayList;
 
 public class BeaconModelImpl implements BeaconModel {
 
+    Broadcaster broadcaster;
+    HttpUtils httpUtils;
+
+    public BeaconModelImpl(Broadcaster broadcaster){
+
+        this.broadcaster = broadcaster;
+        this.httpUtils = new HttpUtils(this.broadcaster);
+
+    }
+
     @Override
     public Beacon getBeaconById (String idBeacon) {
 
         Beacon beacon = null;
-        String response = null;
-        try {
-            response = HttpUtils.sendGet("beacon/" + idBeacon);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        String response = httpUtils.sendGet("beacon/" + idBeacon);
 
         if (response != null){
             beacon = new Beacon(response);
@@ -38,12 +42,8 @@ public class BeaconModelImpl implements BeaconModel {
     @Override
     public ArrayList<Beacon> getAllBeacons() {
         ArrayList<Beacon> values = null;
-        String response = null;
-        try {
-            response = HttpUtils.sendGet("beacon/getAll");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        String response = httpUtils.sendGet("beacon/getAll");
 
         if (response != null){
             try {

@@ -1,7 +1,6 @@
 package com.univpm.cpp.emergencynotificationsmvc.views;
 
 import android.os.Bundle;
-import android.view.View;
 
 /**
  * Interfaccia generica di una ViewMvc MVC

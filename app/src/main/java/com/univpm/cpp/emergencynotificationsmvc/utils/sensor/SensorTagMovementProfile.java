@@ -9,6 +9,7 @@ import android.util.Log;
 import com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.BluetoothLeService;
 
 import java.util.List;
+
 ;
 
 public class SensorTagMovementProfile extends GenericBluetoothProfile {

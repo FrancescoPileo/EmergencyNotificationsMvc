@@ -1,13 +1,9 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.user;
 
 import com.univpm.cpp.emergencynotificationsmvc.models.Jsonable;
-import com.univpm.cpp.emergencynotificationsmvc.models.position.Position;
-import com.univpm.cpp.emergencynotificationsmvc.models.session.Session;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Collection;
 
 public class User extends UserGuest implements Jsonable {
 

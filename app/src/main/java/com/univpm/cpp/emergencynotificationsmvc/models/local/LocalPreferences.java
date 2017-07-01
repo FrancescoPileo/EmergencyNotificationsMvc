@@ -1,7 +1,5 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.local;
 
-import android.content.Context;
-
 import com.univpm.cpp.emergencynotificationsmvc.models.session.Session;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 

@@ -33,11 +33,8 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.ImageView;
 import android.widget.OverScroller;
 import android.widget.Scroller;
-
-import com.univpm.cpp.emergencynotificationsmvc.views.home.HomeView;
 
 public class TouchImageView extends android.support.v7.widget.AppCompatImageView {
 

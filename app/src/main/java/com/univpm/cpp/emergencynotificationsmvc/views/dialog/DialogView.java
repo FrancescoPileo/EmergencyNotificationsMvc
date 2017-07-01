@@ -1,7 +1,5 @@
 package com.univpm.cpp.emergencynotificationsmvc.views.dialog;
 
-import android.view.View;
-
 import com.univpm.cpp.emergencynotificationsmvc.views.ViewMvc;
 
 

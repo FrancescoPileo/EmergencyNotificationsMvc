@@ -10,7 +10,6 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.View;
-import android.util.Log;
 
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.node.Node;

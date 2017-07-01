@@ -5,12 +5,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract.NodeTable;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteDbHelper;
-import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract.*;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.MapModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.MapModelLocalImpl;
 
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 
 public class NodeModelLocalImpl implements NodeModel {

@@ -34,7 +34,6 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/username_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -82,7 +81,6 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/not_registered_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"

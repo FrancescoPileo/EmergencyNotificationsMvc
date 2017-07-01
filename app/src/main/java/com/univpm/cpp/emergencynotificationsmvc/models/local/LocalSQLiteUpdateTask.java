@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.univpm.cpp.emergencynotificationsmvc.EmergencyNotificationsMvc;
+import com.univpm.cpp.emergencynotificationsmvc.MainActivity;
 import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValues;
@@ -12,7 +12,6 @@ import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
 import com.univpm.cpp.emergencynotificationsmvc.models.node.Node;
 import com.univpm.cpp.emergencynotificationsmvc.models.position.Position;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
-
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,11 +23,11 @@ public class LocalSQLiteUpdateTask extends AsyncTask<Void, Void, Boolean> {
     private Context context;
 
     LocalSQLiteDbHelper helper = null;
-    EmergencyNotificationsMvc application = null;
+    MainActivity activity = null;
 
-    public LocalSQLiteUpdateTask(EmergencyNotificationsMvc application){
-        this.application = application;
-        this.context = application.getApplicationContext();
+    public LocalSQLiteUpdateTask(MainActivity activity){
+        this.activity = activity;
+        this.context = activity.getApplicationContext();
         helper = LocalSQLiteDbHelper.getInstance(context);
     }
 
@@ -40,14 +39,14 @@ public class LocalSQLiteUpdateTask extends AsyncTask<Void, Void, Boolean> {
         ArrayList<Node> nodes = null;
         ArrayList<Beacon> beacons = null;
         ArrayList<EnviromentalValues> enviromentalValues = null;
-        user = application.getLocalPreferences().getUser();
+        user = activity.getLocalPreferences().getUser();
 
-        if (application.isConnectionEnabled()) {
-            lastPosition = application.getPositionModel().getLastPositionByUser(user);
-            maps = application.getMapModel().getAllMaps();
-            nodes = application.getNodeModel().getAllNodes();
-            beacons = application.getBeaconModel().getAllBeacons();
-            enviromentalValues = application.getEnviromentalValuesModel().getLastValuesForEachBeacon();
+        if (activity.isConnectionEnabled()) {
+            lastPosition = activity.getPositionModel().getLastPositionByUser(user);
+            maps = activity.getMapModel().getAllMaps();
+            nodes = activity.getNodeModel().getAllNodes();
+            beacons = activity.getBeaconModel().getAllBeacons();
+            enviromentalValues = activity.getEnviromentalValuesModel().getLastValuesForEachBeacon();
         } else if (user.isGuest() && helper.isDbEmpty()){
             Log.w("ImportDaResources", "ok");
             //se l'utente è guest e il db è vuoto
@@ -58,17 +57,17 @@ public class LocalSQLiteUpdateTask extends AsyncTask<Void, Void, Boolean> {
             beacons = new ArrayList<>();
             JSONArray jsonArray = null;
             try {
-                jsonArray = new JSONArray(application.getResources().getString(R.string.DB_maps));
+                jsonArray = new JSONArray(activity.getResources().getString(R.string.DB_maps));
                 for (int i = 0; i < jsonArray.length(); i++) {
                     maps.add(new Map(jsonArray.getJSONObject(i).toString()));
                 }
 
-                jsonArray = new JSONArray(application.getResources().getString(R.string.DB_nodes));
+                jsonArray = new JSONArray(activity.getResources().getString(R.string.DB_nodes));
                 for (int i = 0; i < jsonArray.length(); i++) {
                     nodes.add(new Node(jsonArray.getJSONObject(i).toString()));
                 }
 
-                jsonArray = new JSONArray(application.getResources().getString(R.string.DB_beacons));
+                jsonArray = new JSONArray(activity.getResources().getString(R.string.DB_beacons));
                 for (int i = 0; i < jsonArray.length(); i++) {
                     beacons.add(new Beacon(jsonArray.getJSONObject(i).toString()));
                 }

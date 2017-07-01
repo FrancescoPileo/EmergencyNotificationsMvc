@@ -1,7 +1,7 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.envValues;
 
-import com.univpm.cpp.emergencynotificationsmvc.models.node.Node;
-import com.univpm.cpp.emergencynotificationsmvc.utils.DbUtils;
+
+import com.univpm.cpp.emergencynotificationsmvc.utils.Broadcaster;
 import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
 
 import org.json.JSONArray;
@@ -11,27 +11,26 @@ import java.util.ArrayList;
 
 public class EnviromentalValuesModelImpl implements EnviromentalValuesModel {
 
+    Broadcaster broadcaster;
+    HttpUtils httpUtils;
+
+    public EnviromentalValuesModelImpl(Broadcaster broadcaster){
+        this.broadcaster = broadcaster;
+        this.httpUtils = new HttpUtils(this.broadcaster);
+    }
+
     @Override
     public boolean newValues(EnviromentalValues values) {
 
-        Boolean success = false;
-        try {
-            success = HttpUtils.sendPost("enviromentalvalues", values);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return success;
+        return httpUtils.sendPost("enviromentalvalues", values);
+
     }
 
     @Override
     public ArrayList<EnviromentalValues> getAllValues() {
         ArrayList<EnviromentalValues> values = null;
-        String response = null;
-        try {
-            response = HttpUtils.sendGet("enviromentalvalues");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        String response = httpUtils.sendGet("enviromentalvalues");
 
         if (response != null){
             try {
@@ -50,12 +49,8 @@ public class EnviromentalValuesModelImpl implements EnviromentalValuesModel {
     @Override
     public ArrayList<EnviromentalValues> getLastValuesForEachBeacon() {
         ArrayList<EnviromentalValues> values = null;
-        String response = null;
-        try {
-            response = HttpUtils.sendGet("enviromentalvalues/lasts");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        String response = httpUtils.sendGet("enviromentalvalues/lasts");
 
         if (response != null){
             try {

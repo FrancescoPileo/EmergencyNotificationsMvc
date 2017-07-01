@@ -9,7 +9,12 @@ import android.util.Log;
 
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValues;
-import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract.*;
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract.AppuserTable;
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract.BeaconTable;
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract.EnviromentalvaluesTable;
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract.MapTable;
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract.NodeTable;
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract.UserpositionTable;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
 import com.univpm.cpp.emergencynotificationsmvc.models.node.Node;
 import com.univpm.cpp.emergencynotificationsmvc.models.position.Position;

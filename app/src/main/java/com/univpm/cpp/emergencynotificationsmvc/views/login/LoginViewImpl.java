@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.univpm.cpp.emergencynotificationsmvc.R;
-import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 
 /**
  * Una implementazione dell'interfaccia {@link LoginView}

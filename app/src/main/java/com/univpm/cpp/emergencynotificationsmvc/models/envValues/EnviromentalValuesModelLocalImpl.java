@@ -5,13 +5,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import java.util.ArrayList;
-
-
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModelLocalImpl;
-import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract.*;
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract.EnviromentalvaluesTable;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteDbHelper;
+
+import java.util.ArrayList;
 
 public class EnviromentalValuesModelLocalImpl implements EnviromentalValuesModel {
 

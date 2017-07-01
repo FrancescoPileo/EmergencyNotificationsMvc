@@ -5,9 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract;
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract.AppuserTable;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteDbHelper;
-import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract.*;
 
 public class UserModelLocalImpl implements UserModel {
 

@@ -1,46 +1,36 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.session;
 
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
+import com.univpm.cpp.emergencynotificationsmvc.utils.Broadcaster;
 import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
-import android.util.Log;
 
 public class SessionModelImpl implements SessionModel {
+
+    Broadcaster broadcaster;
+    HttpUtils httpUtils;
+    public SessionModelImpl(Broadcaster broadcaster){
+        this.broadcaster = broadcaster;
+        this.httpUtils = new HttpUtils(broadcaster);
+    }
 
     @Override
     public boolean newSession(Session session) {
 
-        boolean success = false;
-        try {
-            success = HttpUtils.sendPost("appsession/", session);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return success;
+        return httpUtils.sendPost("appsession/", session);
     }
 
     @Override
     public boolean updateSession(Session session) {
 
-        boolean success = false;
-        try {
-            success = HttpUtils.sendPut("appsession/id/" + session.getId(), session);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return success;    }
+        return httpUtils.sendPut("appsession/id/" + session.getId(), session);
+    }
 
     @Override
     public Session getLastSession(User user) {
         Session session = null;
-        String response = null;
 
-        try {
-            response = HttpUtils.sendGet("appsession/username/" + user.getUsername() + "/last");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String response = httpUtils.sendGet("appsession/username/" + user.getUsername() + "/last");
+
         if (response != null){
             session = new Session(response);
         }

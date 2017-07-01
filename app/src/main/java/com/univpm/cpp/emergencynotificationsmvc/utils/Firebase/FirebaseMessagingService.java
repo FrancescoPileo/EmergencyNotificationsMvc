@@ -12,6 +12,7 @@ import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModelImpl;
+import com.univpm.cpp.emergencynotificationsmvc.utils.Broadcaster;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +21,7 @@ import static com.univpm.cpp.emergencynotificationsmvc.utils.Firebase.FirebaseMe
 import static com.univpm.cpp.emergencynotificationsmvc.utils.Firebase.FirebaseMessagingService.Message.NOTIFICATION_HUM;
 import static com.univpm.cpp.emergencynotificationsmvc.utils.Firebase.FirebaseMessagingService.Message.NOTIFICATION_TEMP;
 
-public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
+public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService implements Broadcaster{
 
     public class Message{
 
@@ -117,9 +118,11 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 mex = "Rilevata emergenza in ";
         }
 
-        BeaconModel beaconModel = new BeaconModelImpl();
+
+        BeaconModel beaconModel = new BeaconModelImpl(this);
         Beacon beacon = beaconModel.getBeaconById(message.getIdBeacon());
         mex += beacon.getNode().getNodename();
+
 
         return mex;
     }

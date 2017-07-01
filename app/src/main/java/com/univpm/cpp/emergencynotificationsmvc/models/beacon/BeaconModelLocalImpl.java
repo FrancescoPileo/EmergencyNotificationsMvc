@@ -5,8 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract.BeaconTable;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteDbHelper;
-import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract.*;
 import com.univpm.cpp.emergencynotificationsmvc.models.node.NodeModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.node.NodeModelLocalImpl;
 

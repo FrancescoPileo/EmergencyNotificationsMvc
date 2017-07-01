@@ -1,7 +1,5 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.map;
 
-import android.media.Image;
-
 import com.univpm.cpp.emergencynotificationsmvc.models.Jsonable;
 
 import org.json.JSONException;

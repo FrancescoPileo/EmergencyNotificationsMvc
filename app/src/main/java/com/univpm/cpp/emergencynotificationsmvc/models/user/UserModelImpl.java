@@ -1,27 +1,25 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.user;
 
 
-import android.util.Log;
-
-import com.univpm.cpp.emergencynotificationsmvc.utils.DbUtils;
+import com.univpm.cpp.emergencynotificationsmvc.utils.Broadcaster;
 import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
-
-import org.apache.http.*;
 
 /**
  * Implementazione del model utente usando un db
  */
 public class UserModelImpl implements UserModel {
 
+    Broadcaster broadcaster;
+    HttpUtils httpUtils;
+    public UserModelImpl(Broadcaster broadcaster){
+        this.broadcaster = broadcaster;
+        this.httpUtils = new HttpUtils(this.broadcaster);
+    }
+
     @Override
     public User getUser(String username) {
         User user = null;
-        String response = null;
-        try {
-            response = HttpUtils.sendGet("appuser/username/" + username);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String response = httpUtils.sendGet("appuser/username/" + username);
 
         if (response != null){
             user = new User(response);
@@ -32,12 +30,9 @@ public class UserModelImpl implements UserModel {
     @Override
     public User getLastGuestUser() {
         User user = null;
-        String response = null;
-        try {
-            response = HttpUtils.sendGet("appuser/lastguest");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        String response = httpUtils.sendGet("appuser/lastguest");
+
         if (response != null){
             user = new User(response);
         }
@@ -48,13 +43,7 @@ public class UserModelImpl implements UserModel {
     @Override
     public boolean newUser(User user) {
 
-        Boolean success = false;
-        try {
-            success = HttpUtils.sendPost("appuser", user);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return success;
+        return httpUtils.sendPost("appuser", user);
     }
 
     @Override

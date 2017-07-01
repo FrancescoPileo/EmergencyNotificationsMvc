@@ -1,7 +1,6 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.node;
 
-import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
-import com.univpm.cpp.emergencynotificationsmvc.utils.DbUtils;
+import com.univpm.cpp.emergencynotificationsmvc.utils.Broadcaster;
 import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
 
 import org.json.JSONArray;
@@ -15,16 +14,20 @@ import java.util.ArrayList;
 
 public class NodeModelImpl implements NodeModel {
 
+    Broadcaster broadcaster;
+    HttpUtils httpUtils = new HttpUtils(this.broadcaster);
+
+    public NodeModelImpl(Broadcaster broadcaster){
+        this.broadcaster = broadcaster;
+        this.httpUtils = new HttpUtils(this.broadcaster);
+    }
+
     @Override
     public Node getNodeById(int idNode) {
 
         Node node = null;
-        String response = null;
-        try {
-            response = HttpUtils.sendGet("node/id/" + idNode);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String response = httpUtils.sendGet("node/id/" + idNode);
+
         //user = DbUtils.getUser(username);
         if (response != null){
             node = new Node(response);
@@ -34,12 +37,7 @@ public class NodeModelImpl implements NodeModel {
     @Override
     public ArrayList<Node> getAllNodes() {
         ArrayList<Node> nodes = null;
-        String response = null;
-        try {
-            response = HttpUtils.sendGet("node");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String response = httpUtils.sendGet("node");
 
         if (response != null){
             try {
@@ -57,7 +55,6 @@ public class NodeModelImpl implements NodeModel {
 
     @Override
     public ArrayList<Node> getNodeByMap(int idMap) {
-
 
         return null;//DbUtils.getNodeByMap(idMap);
     }

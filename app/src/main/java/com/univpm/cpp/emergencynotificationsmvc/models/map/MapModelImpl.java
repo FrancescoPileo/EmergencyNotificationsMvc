@@ -1,29 +1,29 @@
 package com.univpm.cpp.emergencynotificationsmvc.models.map;
 
-import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
-import com.univpm.cpp.emergencynotificationsmvc.utils.DbUtils;
+import com.univpm.cpp.emergencynotificationsmvc.utils.Broadcaster;
 import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class MapModelImpl implements MapModel {
+
+    Broadcaster broadcaster;
+    HttpUtils httpUtils;
+
+    public MapModelImpl(Broadcaster broadcaster){
+        this.broadcaster = broadcaster;
+        this.httpUtils = new HttpUtils(this.broadcaster);
+    }
 
     @Override
     public Map getMapById(int idMap) {
 
         Map map = null;
-        String response = null;
-        try {
-            response = HttpUtils.sendGet("map/" + idMap);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String response = httpUtils.sendGet("map/" + idMap);
 
         if (response != null){
             map = new Map(response);
@@ -45,12 +45,8 @@ public class MapModelImpl implements MapModel {
     public Map getMapByName (String mapName) {
 
         Map map = null;
-        String response = null;
-        try {
-            response = HttpUtils.sendGet("map/mapname/" + mapName);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        String response = httpUtils.sendGet("map/mapname/" + mapName);
 
         if (response != null){
             map = new Map(response);
@@ -63,12 +59,7 @@ public class MapModelImpl implements MapModel {
     public ArrayList<Map> getAllMaps () {
 
         ArrayList<Map> maps = null;
-        String response = null;
-        try {
-            response = HttpUtils.sendGet("map");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String response = httpUtils.sendGet("map");
 
         if (response != null){
             try {

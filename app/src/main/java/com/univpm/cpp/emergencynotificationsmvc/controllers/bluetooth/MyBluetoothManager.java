@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.univpm.cpp.emergencynotificationsmvc.MainActivity;
 import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModel;
@@ -32,9 +33,9 @@ import com.univpm.cpp.emergencynotificationsmvc.models.position.PositionModelImp
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelImpl;
+import com.univpm.cpp.emergencynotificationsmvc.utils.sensor.GenericBluetoothProfile;
 import com.univpm.cpp.emergencynotificationsmvc.utils.sensor.MovementInfo;
 import com.univpm.cpp.emergencynotificationsmvc.utils.sensor.Sensor;
-import com.univpm.cpp.emergencynotificationsmvc.utils.sensor.GenericBluetoothProfile;
 import com.univpm.cpp.emergencynotificationsmvc.utils.sensor.SensorTagAmbientTemperatureProfile;
 import com.univpm.cpp.emergencynotificationsmvc.utils.sensor.SensorTagHumidityProfile;
 import com.univpm.cpp.emergencynotificationsmvc.utils.sensor.SensorTagMovementProfile;
@@ -50,7 +51,7 @@ import static com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.Blu
 public class MyBluetoothManager {
 
     Context context;
-    Activity activity;
+    MainActivity activity;
 
     // Requests to other activities
     private static final int REQ_ENABLE_BT = 0;
@@ -89,7 +90,7 @@ public class MyBluetoothManager {
 
 
 
-    public MyBluetoothManager(Context context, Activity activity){
+    public MyBluetoothManager(Context context, MainActivity activity){
 
         this.context = context;
         this.activity = activity;
@@ -105,11 +106,11 @@ public class MyBluetoothManager {
 
 
 
-        mEnvValuesModel = new EnviromentalValuesModelImpl();
+        mEnvValuesModel = new EnviromentalValuesModelImpl(activity);
         mLocalPreferences = new LocalPreferencesImpl(getContext());
-        mUserModel = new UserModelImpl();
-        mPositionModel = new PositionModelImpl();
-        mBeaconModel = new BeaconModelImpl();
+        mUserModel = new UserModelImpl(activity);
+        mPositionModel = new PositionModelImpl(activity);
+        mBeaconModel = new BeaconModelImpl(activity);
 
         if (BluetoothLeService.getInstance() != null){
             init();
@@ -150,6 +151,7 @@ public class MyBluetoothManager {
                 getActivity().startActivityForResult(enableIntent, REQ_ENABLE_BT);
             }
             mInitialised = true;
+            activity.unregisterReceiver(initReceiver);
         }
        //scanning();
     }

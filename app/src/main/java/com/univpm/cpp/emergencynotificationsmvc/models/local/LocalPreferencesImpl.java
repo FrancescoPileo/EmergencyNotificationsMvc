@@ -8,8 +8,6 @@ import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.models.session.Session;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 
-import org.json.JSONObject;
-
 public class LocalPreferencesImpl implements  LocalPreferences {
 
     Context context;

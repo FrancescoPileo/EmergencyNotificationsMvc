@@ -6,11 +6,9 @@ import android.view.MenuInflater;
 
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
-import com.univpm.cpp.emergencynotificationsmvc.models.node.Node;
 import com.univpm.cpp.emergencynotificationsmvc.views.ViewMvc;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 public interface HomeView extends ViewMvc{
 

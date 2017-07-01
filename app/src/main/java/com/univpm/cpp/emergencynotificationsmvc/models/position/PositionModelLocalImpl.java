@@ -5,12 +5,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract.UserpositionTable;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteDbHelper;
 import com.univpm.cpp.emergencynotificationsmvc.models.node.NodeModel;
-import com.univpm.cpp.emergencynotificationsmvc.models.node.NodeModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.node.NodeModelLocalImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
-import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract.*;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelLocalImpl;
 

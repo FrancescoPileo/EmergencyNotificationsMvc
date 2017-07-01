@@ -2,12 +2,12 @@ package com.univpm.cpp.emergencynotificationsmvc.utils;
 
 import android.util.Log;
 
-import com.univpm.cpp.emergencynotificationsmvc.models.session.Session;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValues;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
 import com.univpm.cpp.emergencynotificationsmvc.models.node.Node;
 import com.univpm.cpp.emergencynotificationsmvc.models.position.Position;
+import com.univpm.cpp.emergencynotificationsmvc.models.session.Session;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 
 import java.sql.Connection;

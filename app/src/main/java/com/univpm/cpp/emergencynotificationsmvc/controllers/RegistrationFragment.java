@@ -12,10 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.univpm.cpp.emergencynotificationsmvc.MainActivity;
 import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
-import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModel;
-import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.views.registration.RegistrationView;
 import com.univpm.cpp.emergencynotificationsmvc.views.registration.RegistrationViewImpl;
 
@@ -28,8 +27,8 @@ public class RegistrationFragment extends Fragment implements
     public static final String TAG = "REGISTRATION_FRAGMENT";
 
     private RegistrationView mRegistrationView;
-    private UserModel mUserModel;
     private RegistrationFragment.UserRegTask mRegTask;
+    private MainActivity activity;
 
 
     @Nullable
@@ -41,7 +40,7 @@ public class RegistrationFragment extends Fragment implements
         mRegistrationView.setUsernameListener(this);
         mRegistrationView.setToolbar(this);
 
-        mUserModel = new UserModelImpl();
+        activity = (MainActivity) getActivity();
 
         return mRegistrationView.getRootView();
     }
@@ -169,7 +168,7 @@ public class RegistrationFragment extends Fragment implements
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            return mUserModel.newUser(user);
+            return activity.getUserModel().newUser(user);
         }
 
         @Override
@@ -215,7 +214,7 @@ public class RegistrationFragment extends Fragment implements
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            User user = mUserModel.getUser(username);
+            User user = activity.getUserModel().getUser(username);
             return (user == null);
         }
 
