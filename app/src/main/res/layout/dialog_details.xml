@@ -84,7 +84,7 @@
                     android:id="@+id/Hum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="- Umidità: (%)"
+                    android:text="- Umidità: (%rH)"
                     android:textStyle="bold"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"/>
@@ -108,7 +108,7 @@
                     android:id="@+id/Acc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="- Accelerazione (m/s): "
+                    android:text="- Accelerazione (G): "
                     android:textStyle="bold"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"

@@ -24,15 +24,18 @@ public class LocalSQLiteUpdateTask extends AsyncTask<Void, Void, Boolean> {
 
     LocalSQLiteDbHelper helper = null;
     MainActivity activity = null;
+    Runnable onPostExecuteRun = null;
 
-    public LocalSQLiteUpdateTask(MainActivity activity){
+    public LocalSQLiteUpdateTask(MainActivity activity, Runnable onPostExecuteRun){
         this.activity = activity;
         this.context = activity.getApplicationContext();
+        this.onPostExecuteRun = onPostExecuteRun;
         helper = LocalSQLiteDbHelper.getInstance(context);
     }
 
     @Override
     protected Boolean doInBackground(Void... voids) {
+        Log.w("UpdateTask", "start");
         User user = null;
         Position lastPosition = null;
         ArrayList<Map> maps = null;
@@ -86,9 +89,10 @@ public class LocalSQLiteUpdateTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean aBoolean) {
-        helper.close();
         Log.w("LocalSQLiteUpdated", "true");
-        super.onPostExecute(aBoolean);
+        if (onPostExecuteRun != null){
+            onPostExecuteRun.run();
+        }
     }
 
     public Context getContext() {

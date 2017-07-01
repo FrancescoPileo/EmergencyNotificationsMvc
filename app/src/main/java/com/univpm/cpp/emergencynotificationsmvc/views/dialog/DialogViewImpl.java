@@ -119,28 +119,34 @@ public class DialogViewImpl implements DialogView {
 
     @Override
     public void setTempValueText(String string) {
-        this.tempValue.setText(string);
+        this.tempValue.setText(subString(string));
     }
 
     @Override
     public void setHumValueText(String string) {
-        this.humValue.setText(string);
+        this.humValue.setText(subString(string));
     }
 
     @Override
     public void setAccXValueText(String string) {
-        this.accXValue.setText(string);
+        this.accXValue.setText(subString(string));
     }
 
     @Override
     public void setAccYValueText(String string) {
-        this.accYValue.setText(string);
+        this.accYValue.setText(subString(string));
     }
 
 
     @Override
     public void setAccZValueText(String string) {
-        this.accZValue.setText(string);
+        this.accZValue.setText(subString(string));
+    }
+
+    private String subString(String string){
+        int beginIndex = 0;
+        int endIndex = Math.min(string.length(), 10);
+        return string.substring(beginIndex,endIndex);
     }
 
 

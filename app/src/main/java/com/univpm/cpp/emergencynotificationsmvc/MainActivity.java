@@ -26,6 +26,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.univpm.cpp.emergencynotificationsmvc.controllers.LoginFragment;
 import com.univpm.cpp.emergencynotificationsmvc.controllers.RegistrationFragment;
+import com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.MyBluetoothManager;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModelImpl;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.BeaconModelLocalImpl;
@@ -74,6 +75,10 @@ public class MainActivity extends AppCompatActivity implements Broadcaster {
     private SessionModel mSessionModel = null;
     private UserModel mUserModel = null;
 
+    private Fragment loginFragment;
+
+    private MyBluetoothManager mBluetoothManager = null;
+
     //Gestione connessione
     public static ConnectivityManager mConnectivityManager;
     //public boolean mConnectionEnabled = false;
@@ -89,9 +94,13 @@ public class MainActivity extends AppCompatActivity implements Broadcaster {
         checkPermissions();
         checkFolders();
 
+        loginFragment = new LoginFragment();
+
         mFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         mFilter.addAction(HttpUtils.INTENT_CONNECTION_REFUSED);
         registerReceiver(mReceiver, mFilter);
+
+        mBluetoothManager = new MyBluetoothManager(getApplicationContext(), this);
 
         mConnectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         testConnection();
@@ -160,8 +169,10 @@ public class MainActivity extends AppCompatActivity implements Broadcaster {
                 FirebaseInstanceId.getInstance().getToken();
             }
 
-            LocalSQLiteInitTask task = new LocalSQLiteInitTask();
-            task.execute((Void) null);
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_GRANTED) {
+                checkLocalDb();
+            }
         }
     }
 
@@ -175,6 +186,17 @@ public class MainActivity extends AppCompatActivity implements Broadcaster {
         /*String s = getIntent().getStringExtra("prova");
         if (s!= null) Log.w("prova2", s);*/
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == MyBluetoothManager.REQ_ENABLE_BT){
+            if (resultCode == RESULT_OK){
+                if (mBluetoothManager != null)
+                    mBluetoothManager.init();
+            }
+        }
     }
 
     @Override
@@ -252,12 +274,18 @@ public class MainActivity extends AppCompatActivity implements Broadcaster {
         }
     }
 
+    private void checkLocalDb(){
+        LocalSQLiteInitTask task = new LocalSQLiteInitTask();
+        task.execute((Void) null);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode){
             case REQUEST_PERMISSIONS:
                 checkFolders();
+                checkLocalDb();
                 break;
         }
     }
@@ -292,6 +320,7 @@ public class MainActivity extends AppCompatActivity implements Broadcaster {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
+
             helper = LocalSQLiteDbHelper.getInstance(getApplicationContext());
             db = helper.getReadableDatabase();
             return (db != null);
@@ -317,12 +346,20 @@ public class MainActivity extends AppCompatActivity implements Broadcaster {
     };
 
     private void loadLoginFragment(){
-        LoginFragment loginFragment =  (LoginFragment) getSupportFragmentManager().findFragmentByTag(LoginFragment.TAG);
+        //Se non è stato mai istanziato
         if (loginFragment == null) {
+            Log.e("Solo una volta", "!!!");
             loginFragment  = new LoginFragment();
-        } else {
-            loginFragment.showReconnect(mConnectionStatus == CONNECTION_SERVER_OFFLINE);
         }
+
+        //Se è stato instanziato e visualizzato
+        LoginFragment displayedLoginFragment = (LoginFragment) getSupportFragmentManager().findFragmentByTag(LoginFragment.TAG);
+        if (displayedLoginFragment != null){
+            displayedLoginFragment.showReconnect(mConnectionStatus == CONNECTION_SERVER_OFFLINE);
+            loginFragment = displayedLoginFragment;
+        }
+
+        //Visualizza il fragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, loginFragment, LoginFragment.TAG);
         transaction.addToBackStack(null);
@@ -363,5 +400,9 @@ public class MainActivity extends AppCompatActivity implements Broadcaster {
 
     public int getmConnectionStatus() {
         return mConnectionStatus;
+    }
+
+    public MyBluetoothManager getBluetoothManager() {
+        return mBluetoothManager;
     }
 }

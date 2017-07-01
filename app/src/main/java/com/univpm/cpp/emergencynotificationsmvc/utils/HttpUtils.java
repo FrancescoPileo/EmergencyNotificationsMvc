@@ -38,7 +38,7 @@ public class HttpUtils {
        try {
 
            URL obj = new URL("http://" + SERVER_HOST + "/" + SERVER_NAME + "/webresources/" + url);
-           Log.w("Url_GET", "http://" + SERVER_HOST + "/" + SERVER_NAME + "/webresources/" + url);
+           //Log.w("Url_GET", "http://" + SERVER_HOST + "/" + SERVER_NAME + "/webresources/" + url);
            java.net.HttpURLConnection con = (java.net.HttpURLConnection) obj.openConnection();
 
            // optional default is GET
@@ -51,7 +51,7 @@ public class HttpUtils {
 
            int responseCode = con.getResponseCode();
 
-           Log.w("Responsecode:", String.valueOf(responseCode));
+           //Log.w("Responsecode:", String.valueOf(responseCode));
 
            if (responseCode == HttpURLConnection.HTTP_OK) {
                BufferedReader in = new BufferedReader(
@@ -66,8 +66,7 @@ public class HttpUtils {
 
                responseString = response.toString();
 
-               //print result
-               Log.w("ResponseToGetRequest:", response.toString());
+               //Log.w("ResponseToGetRequest:", response.toString());
 
            }
        } catch (Exception e){
@@ -85,7 +84,7 @@ public class HttpUtils {
         int responseCode = -1;
 
         try {
-            Log.w("Url_POST", "http://" + SERVER_HOST + "/" + SERVER_NAME + "/webresources/" + url);
+            //Log.w("Url_POST", "http://" + SERVER_HOST + "/" + SERVER_NAME + "/webresources/" + url);
             URL urlObj = new URL("http://" + SERVER_HOST + "/" + SERVER_NAME + "/webresources/" + url);
             HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
 
@@ -96,7 +95,7 @@ public class HttpUtils {
 
             // Send post request
             OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-            Log.w("JsonString_PostRequest", obj.toJson().toString());
+            //Log.w("JsonString_PostRequest", obj.toJson().toString());
             wr.write(obj.toJson().toString());
             wr.flush();
 
@@ -109,7 +108,7 @@ public class HttpUtils {
             return false;
         }
 
-        Log.w("Response_PostRequest", String.valueOf(responseCode));
+        //Log.w("Response_PostRequest", String.valueOf(responseCode));
        return (responseCode == HttpURLConnection.HTTP_NO_CONTENT);
     }
 
@@ -118,7 +117,7 @@ public class HttpUtils {
         int responseCode = -1;
 
         try {
-            Log.w("Url_PUT", "http://" + SERVER_HOST + "/" + SERVER_NAME + "/webresources/" + url);
+            //Log.w("Url_PUT", "http://" + SERVER_HOST + "/" + SERVER_NAME + "/webresources/" + url);
             URL urlObj = new URL("http://" + SERVER_HOST + "/" + SERVER_NAME + "/webresources/" + url);
             HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
 
@@ -129,7 +128,7 @@ public class HttpUtils {
 
             // Send put request
             OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-            Log.w("JsonString", obj.toJson().toString());
+            //Log.w("JsonString", obj.toJson().toString());
             wr.write(obj.toJson().toString());
             wr.flush();
 
@@ -140,7 +139,7 @@ public class HttpUtils {
             return false;
         }
 
-        Log.w("Response", String.valueOf(responseCode));
+        //Log.w("Response", String.valueOf(responseCode));
         return (responseCode == HttpURLConnection.HTTP_NO_CONTENT);
     }
 
@@ -155,17 +154,17 @@ public class HttpUtils {
 
             //add request header
             String fileUrl = Directories.MAPS + File.separator + mapname + ".png";
-            Log.w("FileUrl", fileUrl);
+            //Log.w("FileUrl", fileUrl);
             File imageFile = new File(fileUrl);
             if (imageFile.exists()) {
                 Long lastModified = imageFile.lastModified();
                 Date lastModifiedDate = new Date(lastModified);
-                Log.w("DataModifica: ", lastModifiedDate.toString());
+                //Log.w("DataModifica: ", lastModifiedDate.toString());
 
                 SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy", Locale.ENGLISH);
                 String parsedDate = formatter.format(lastModifiedDate);
 
-                Log.w("DataModificaPars", parsedDate);
+                //Log.w("DataModificaPars", parsedDate);
 
                 connection.setRequestProperty("If-Modified-Since", parsedDate);
             }
@@ -175,7 +174,7 @@ public class HttpUtils {
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 img = BitmapFactory.decodeStream(is);
             } else if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_MODIFIED) {
-                Log.w("Image:", "not-modified");
+                //Log.w("Image:", "not-modified");
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -198,9 +197,9 @@ public class HttpUtils {
 
             con.getResponseCode();
 
-            Log.w("Connessione", "ok");
+            //Log.w("Connessione", "ok");
         } catch (IOException e) {
-            Log.w("Connessione", e.getMessage());
+            //Log.w("Connessione", e.getMessage());
             if (e.getMessage().equals("Connection refused"))
                     return false;
         }

@@ -359,6 +359,9 @@ public class BluetoothLeService extends Service {
             }
         };
 
+		Intent intnet = new Intent(ACTION_BLESRV_INIT);
+		sendBroadcast(intnet);
+
         queueThread.start();
 		return true;
 	}
@@ -370,8 +373,7 @@ public class BluetoothLeService extends Service {
 		// stopped, so return sticky.
         Log.w("BleService", "initialize");
 		this.initialize();
-		Intent intnet = new Intent("com.univpm.cpp.emergencynotificationsmvc.INIT");
-		sendBroadcast(intnet);
+
 
 		return START_STICKY;
 	}

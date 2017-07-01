@@ -73,9 +73,6 @@ public class EmergencyNotificationsMvc extends Application {
         public void onServiceConnected(ComponentName componentName, IBinder service) {
             mBluetoothLeService = ((BluetoothLeService.LocalBinder) service)
                     .getService();
-            if (!mBluetoothLeService.initialize()) {
-                return;
-            }
         }
 
         public void onServiceDisconnected(ComponentName componentName) {

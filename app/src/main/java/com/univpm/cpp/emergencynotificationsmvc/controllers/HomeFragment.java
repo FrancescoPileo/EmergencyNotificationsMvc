@@ -68,7 +68,6 @@ public class HomeFragment extends Fragment implements
     private FirstMapTask mFirstMapTask;
     private MapTask mMapTask;
     private EnvValuesTask mEnvValuesTask;
-    private MyBluetoothManager mMyBluetoothManager;
     private Map map;
     private User user;
     private Session session;
@@ -81,6 +80,11 @@ public class HomeFragment extends Fragment implements
     //todo (opt) dialogo dettagli caricamento
     //todo cosa succede se premo le notifiche
     //todo server non raggiungibile
+
+    public HomeFragment(){
+        super();
+        Log.w("HomeFragment", "NewInstance");
+    }
 
 
     @Nullable
@@ -105,21 +109,10 @@ public class HomeFragment extends Fragment implements
         mDialogView.setOkButtonListener(this);
         mHomeView.setInfoBtnListener(this);
 
-        mMyBluetoothManager = new MyBluetoothManager(getContext(), (MainActivity) getActivity());
-
         mHomeView.showProgress(true);
 
         mInitTask = new InitTask();
         mInitTask.execute((Void) null);
-
-        LocalSQLiteUpdateTask task = new LocalSQLiteUpdateTask(activity);
-        task.execute((Void) null);
-
-        mSpinnerTask = new SpinnerTask();
-        mSpinnerTask.execute((Void) null);
-
-
-
 
         return mHomeView.getRootView();
     }
@@ -128,7 +121,19 @@ public class HomeFragment extends Fragment implements
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        start();
+
+        Log.w("HomeFragment", "OnViewCreated");
+
+        LocalSQLiteUpdateTask task = new LocalSQLiteUpdateTask(activity, new Runnable() {
+            @Override
+            public void run() {
+                mSpinnerTask = new SpinnerTask();
+                mSpinnerTask.execute((Void) null);
+                start();
+            }
+        });
+        task.execute((Void) null);
+        //start()
     }
 
     @Override
@@ -193,12 +198,12 @@ public class HomeFragment extends Fragment implements
 
     public void start() {
         if (activity.getmConnectionStatus() == MainActivity.CONNECTION_ONLINE) {
-            mMyBluetoothManager.scanning();
+            activity.getBluetoothManager().scanning();
         }
         mFirstMapTask = new FirstMapTask();
         mFirstMapTask.execute((Void) null);
         started = true;
-        handler.postDelayed(runnable, 60000);
+        handler.postDelayed(runnable, 40000);
     }
 
 

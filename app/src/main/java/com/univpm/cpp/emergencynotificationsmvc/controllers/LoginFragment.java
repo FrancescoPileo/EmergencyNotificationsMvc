@@ -42,6 +42,11 @@ public class LoginFragment extends Fragment implements
     private UserLoginTask mAuthTask;
     private RegisterNewGuestTask mRegisterNewGuestTask;
 
+    public LoginFragment(){
+        super();
+        Log.w("LoginFragment", "NewInstance");
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 

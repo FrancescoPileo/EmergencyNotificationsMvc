@@ -14,6 +14,7 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.v4.app.ShareCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -54,7 +55,7 @@ public class MyBluetoothManager {
     MainActivity activity;
 
     // Requests to other activities
-    private static final int REQ_ENABLE_BT = 0;
+    public static final int REQ_ENABLE_BT = 0;
 
     // BLE service management
     private boolean mBtAdapterEnabled = false;
@@ -88,6 +89,11 @@ public class MyBluetoothManager {
     private BeaconModel mBeaconModel;
     private PositionModel mPositionModel;
 
+    private IntentFilter initFilter;
+    private IntentFilter btFilter;
+    private IntentFilter gattFilter;
+
+
 
 
     public MyBluetoothManager(Context context, MainActivity activity){
@@ -96,14 +102,18 @@ public class MyBluetoothManager {
         this.activity = activity;
 
         //BluetoothLeService ready broadcast
-        IntentFilter initFilter = new IntentFilter(ACTION_BLESRV_INIT);
+        initFilter = new IntentFilter(ACTION_BLESRV_INIT);
         activity.registerReceiver(initReceiver, initFilter);
 
-        IntentFilter btFilter = new IntentFilter(ACTION_BLESRV_INIT);
-        btFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        btFilter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
         activity.registerReceiver(btReceiver, btFilter);
 
-
+        gattFilter = new IntentFilter(BluetoothLeService.ACTION_GATT_DISCONNECTED);
+        gattFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
+        gattFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
+        gattFilter.addAction(BluetoothLeService.ACTION_DATA_NOTIFY);
+        gattFilter.addAction(BluetoothLeService.ACTION_DATA_READ);
+        gattFilter.addAction(BluetoothLeService.ACTION_DATA_WRITE);
 
 
         mEnvValuesModel = new EnviromentalValuesModelImpl(activity);
@@ -114,10 +124,12 @@ public class MyBluetoothManager {
 
         if (BluetoothLeService.getInstance() != null){
             init();
+        } else {
+            Log.e("Errore:", "BluetoothLeService");
         }
     }
 
-    private void init(){
+    public void init(){
 
         //Inizializzazione Bluetooth
         mSensorList = new ArrayList<Sensor>();
@@ -143,31 +155,24 @@ public class MyBluetoothManager {
 
             mBtAdapterEnabled = mBtAdapter.isEnabled();
             if (mBtAdapterEnabled) {
-                // Start straight away
-                //startBluetoothLeService();
+                mInitialised = true;
             } else {
                 // Request BT adapter to be turned on
                 Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 getActivity().startActivityForResult(enableIntent, REQ_ENABLE_BT);
+                scanQueue = true;
             }
-            mInitialised = true;
-            activity.unregisterReceiver(initReceiver);
+            //activity.unregisterReceiver(initReceiver);
         }
        //scanning();
     }
 
     public void scanning(){
-
-        IntentFilter mFilter2 = new IntentFilter(BluetoothLeService.ACTION_GATT_DISCONNECTED);
-        mFilter2.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
-        mFilter2.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
-        mFilter2.addAction(BluetoothLeService.ACTION_DATA_NOTIFY);
-        mFilter2.addAction(BluetoothLeService.ACTION_DATA_READ);
-        mFilter2.addAction(BluetoothLeService.ACTION_DATA_WRITE);
-        activity.registerReceiver(mGattUpdateReceiver, mFilter2);
+        activity.registerReceiver(mGattUpdateReceiver, gattFilter);
 
         if (mInitialised && mBtAdapter.isEnabled()) {
             //Inizia la scansione dei dispositivi ble
+            Log.w("Scanning", "start");
             startScan();
 
             //Interrompe la scansione dopo 5000ms (5s)
@@ -206,9 +211,9 @@ public class MyBluetoothManager {
                         }
                     }
                 }
-            }, 5000);
+            }, 8000);
         } else {
-            scanQueue = true;
+            init();
         }
     }
 
@@ -290,6 +295,7 @@ public class MyBluetoothManager {
                     mBluetoothLeService.disconnect(null);
                     break;
                 case BluetoothGatt.STATE_DISCONNECTED:
+                    Log.w("Servizio", this.toString());
                     boolean ok = mBluetoothLeService.connect(mSensor.getBluetoothDevice().getAddress());
                     if (!ok) {
                         setError("Connect failed");
@@ -366,11 +372,9 @@ public class MyBluetoothManager {
             final int status = intent.getIntExtra(BluetoothLeService.EXTRA_STATUS, BluetoothGatt.GATT_FAILURE);
 
             if (ACTION_BLESRV_INIT.equals(action)) {
-                //BluetoothLeService ok
                 init();
                 activity.unregisterReceiver(this);
                 if (scanQueue) {
-                    //Log.w("ScanQueue", "matteo si sbaglia");
                     scanning();
                     scanQueue = false;
                 }
@@ -417,6 +421,7 @@ public class MyBluetoothManager {
                 // GATT connect
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                     //se avviene la connessione richiedo i servizi
+                    Toast.makeText(activity.getApplicationContext(), "Connesso a: " + mSensor.getBluetoothDevice().getAddress(), Toast.LENGTH_LONG).show();
                     mSensor.discoverServices();
                     BeaconTask task = new BeaconTask();
                     task.execute((Void) null);
@@ -509,7 +514,7 @@ public class MyBluetoothManager {
                             onDisconnect();
                             firstNotify = true;
                         }
-                    }, 5000);
+                    }, 8000);
 
                 }
 
