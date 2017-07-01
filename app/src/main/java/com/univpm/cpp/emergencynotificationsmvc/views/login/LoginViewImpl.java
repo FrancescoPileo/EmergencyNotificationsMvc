@@ -26,6 +26,7 @@ public class LoginViewImpl implements LoginView {
     private LoginBtnViewListener loginListener;
     private LogAsGuestBtnViewListner guestListener;
     private RegistrationBtnViewListener registrationListener;
+    private ReconnectBtnViewListener reconnectListener;
 
 
     /**
@@ -39,6 +40,7 @@ public class LoginViewImpl implements LoginView {
     private Button loginBtn;
     private Button registrationBtn;
     private Button logAsGuestBtn;
+    private Button reconnectBtn;
 
     public LoginViewImpl(LayoutInflater inflater, @Nullable ViewGroup container){
         mRootView = inflater.inflate(R.layout.fragment_login, container, false);
@@ -72,6 +74,15 @@ public class LoginViewImpl implements LoginView {
             }
         });
 
+        reconnectBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (reconnectListener != null){
+                    reconnectListener.onReconnectClick();
+                }
+            }
+        });
+
     }
 
     private void init() {
@@ -83,12 +94,23 @@ public class LoginViewImpl implements LoginView {
         loginBtn = (Button) mRootView.findViewById(R.id.sign_in_button);
         registrationBtn = (Button) mRootView.findViewById(R.id.registration_button);
         logAsGuestBtn = (Button) mRootView.findViewById(R.id.sign_as_guest_button);
+        reconnectBtn = (Button) mRootView.findViewById(R.id.reconnect_button);
+        reconnectVisible(false);
 
         usernameETxt.setError(null);
         passwordETxt.setError(null);
 
         usernameETxt.requestFocus();
 
+    }
+
+    @Override
+    public void reconnectVisible(boolean flag) {
+        if (flag){
+            reconnectBtn.setVisibility(View.VISIBLE);
+        } else {
+            reconnectBtn.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -110,6 +132,11 @@ public class LoginViewImpl implements LoginView {
     @Override
     public void setGuestListener(LogAsGuestBtnViewListner listener) {
         guestListener = listener;
+    }
+
+    @Override
+    public void setReconnectListener(ReconnectBtnViewListener listener) {
+        this.reconnectListener = listener;
     }
 
     @Override

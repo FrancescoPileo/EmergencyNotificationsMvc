@@ -60,6 +60,10 @@ public class MainActivity extends AppCompatActivity implements Broadcaster {
 
     public static final int REQUEST_PERMISSIONS = 0;
 
+    public static final int CONNECTION_ONLINE = 0; //Connessione internet online, server online
+    public static final int CONNECTION_OFFLINE = 1; //Connessione internet offline, (server indifferente)
+    public static final int CONNECTION_SERVER_OFFLINE = 2; //Connessione internet online, server offline
+
     //Models
     private MapModel mMapModel = null;
     private BeaconModel mBeaconModel = null;
@@ -72,7 +76,8 @@ public class MainActivity extends AppCompatActivity implements Broadcaster {
 
     //Gestione connessione
     public static ConnectivityManager mConnectivityManager;
-    public boolean mConnectionEnabled = false;
+    //public boolean mConnectionEnabled = false;
+    private int mConnectionStatus;
     IntentFilter mFilter = null;
 
 
@@ -95,9 +100,9 @@ public class MainActivity extends AppCompatActivity implements Broadcaster {
         if (s!= null) Log.w("prova", s);*/
     }
 
-    private void modelsInit(boolean connectionEnabled){
+    private void modelsInit(){
         mLocalPreferences = new LocalPreferencesImpl(getApplicationContext());
-        if (connectionEnabled){
+        if (mConnectionStatus == CONNECTION_ONLINE){
             mMapModel = new MapModelImpl(this);
             mUserModel = new UserModelImpl(this);
             mNodeModel = new NodeModelImpl(this);
@@ -115,16 +120,19 @@ public class MainActivity extends AppCompatActivity implements Broadcaster {
         }
     }
 
-    private void testConnection(){
+    public void testConnection(){
         NetworkInfo activeNetwork = mConnectivityManager.getActiveNetworkInfo();
         if (activeNetwork != null && activeNetwork.isConnectedOrConnecting() ) {
             ServerTestTask task = new ServerTestTask();
             task.execute((Void) null);
         } else {
             Toast.makeText(getApplicationContext(), "Nessuna connessione", Toast.LENGTH_LONG).show();
-            mConnectionEnabled = false;
+            mConnectionStatus = CONNECTION_OFFLINE;
+
+            modelsInit();
+            loadLoginFragment();
         }
-        modelsInit(mConnectionEnabled);
+        //modelsInit();
     }
 
     public class ServerTestTask extends AsyncTask<Void, Void, Boolean> {
@@ -139,18 +147,19 @@ public class MainActivity extends AppCompatActivity implements Broadcaster {
         protected void onPostExecute(Boolean success) {
             if (success) {
                 Toast.makeText(getApplicationContext(), "Modalità online", Toast.LENGTH_LONG).show();
-                mConnectionEnabled = true;
+                mConnectionStatus = CONNECTION_ONLINE;
             } else {
                 Toast.makeText(getApplicationContext(), "Server offline", Toast.LENGTH_LONG).show();
-                mConnectionEnabled = false;
+                mConnectionStatus = CONNECTION_SERVER_OFFLINE;
             }
             //models initializations
-            modelsInit(mConnectionEnabled);
+            modelsInit();
 
-            if (mConnectionEnabled) {
+            if (mConnectionStatus == CONNECTION_ONLINE) {
                 FirebaseMessaging.getInstance().subscribeToTopic("EN");
                 FirebaseInstanceId.getInstance().getToken();
             }
+
             LocalSQLiteInitTask task = new LocalSQLiteInitTask();
             task.execute((Void) null);
         }
@@ -301,20 +310,23 @@ public class MainActivity extends AppCompatActivity implements Broadcaster {
             if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
                 testConnection();
             } else if (HttpUtils.INTENT_CONNECTION_REFUSED.equals(action)){
-                Log.w("Connection", "refused");
-                //todo: il login fragment deve visualizzare il bottone di riconnessone
+                Toast.makeText(getApplicationContext(), "Connessione al server persa", Toast.LENGTH_LONG).show();
+                testConnection();
             }
         }
     };
 
     private void loadLoginFragment(){
-        Fragment loginFragment =  getSupportFragmentManager().findFragmentByTag(LoginFragment.TAG);
+        LoginFragment loginFragment =  (LoginFragment) getSupportFragmentManager().findFragmentByTag(LoginFragment.TAG);
         if (loginFragment == null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, new LoginFragment(), LoginFragment.TAG);
-            transaction.addToBackStack(null);
-            transaction.commit();
+            loginFragment  = new LoginFragment();
+        } else {
+            loginFragment.showReconnect(mConnectionStatus == CONNECTION_SERVER_OFFLINE);
         }
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, loginFragment, LoginFragment.TAG);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     public MapModel getMapModel() {
@@ -349,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements Broadcaster {
         return mUserModel;
     }
 
-    public boolean isConnectionEnabled() {
-        return mConnectionEnabled;
+    public int getmConnectionStatus() {
+        return mConnectionStatus;
     }
 }

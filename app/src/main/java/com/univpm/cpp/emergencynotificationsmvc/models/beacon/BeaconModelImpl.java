@@ -56,8 +56,6 @@ public class BeaconModelImpl implements BeaconModel {
                 e.printStackTrace();
             }
         }
-        for (int j = 0; j<values.size(); j++){
-        Log.w("getAllBeacons", values.get(j).toString());}
         return values;
     }
 

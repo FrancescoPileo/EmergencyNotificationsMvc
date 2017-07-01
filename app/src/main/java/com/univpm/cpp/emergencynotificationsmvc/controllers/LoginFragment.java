@@ -26,11 +26,13 @@ import com.univpm.cpp.emergencynotificationsmvc.views.login.LoginViewImpl;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.MissingFormatArgumentException;
 
 public class LoginFragment extends Fragment implements
         LoginView.LogAsGuestBtnViewListner,
         LoginView.LoginBtnViewListener,
-        LoginView.RegistrationBtnViewListener
+        LoginView.RegistrationBtnViewListener,
+        LoginView.ReconnectBtnViewListener
 {
 
     public static final String TAG = "LOGIN_FRAGMENT";
@@ -50,6 +52,7 @@ public class LoginFragment extends Fragment implements
         mLoginView.setLoginListener(this);
         mLoginView.setGuestListener(this);
         mLoginView.setRegistrationListener(this);
+        mLoginView.setReconnectListener(this);
         mLoginView.setToolbar(this);
 
         return mLoginView.getRootView();
@@ -58,8 +61,10 @@ public class LoginFragment extends Fragment implements
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
+        mLoginView.reconnectVisible(activity.getmConnectionStatus() == MainActivity.CONNECTION_SERVER_OFFLINE);
+
         //Controllo connessione
-        if (!activity.isConnectionEnabled()){
+        if (!(activity.getmConnectionStatus() == MainActivity.CONNECTION_ONLINE)){
             AlertDialog.Builder builder;
             builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_DeviceDefault_Dialog_Alert);
 
@@ -78,6 +83,12 @@ public class LoginFragment extends Fragment implements
             mAuthTask = new UserLoginTask(user.getUsername(), user.getPassword());
             mAuthTask.execute((Void) null);
         }
+    }
+
+    @Override
+    public void onResume() {
+        mLoginView.reconnectVisible(activity.getmConnectionStatus() == MainActivity.CONNECTION_SERVER_OFFLINE);
+        super.onResume();
     }
 
     @Override
@@ -104,9 +115,6 @@ public class LoginFragment extends Fragment implements
             mAuthTask.execute((Void) null);
         }
     }
-
-
-
 
     /**
      * Controlla che i campi inseriti nella view siano validi
@@ -138,7 +146,7 @@ public class LoginFragment extends Fragment implements
 
     @Override
     public void onRegistrationClick() {
-        if (activity.isConnectionEnabled()) {
+        if (activity.getmConnectionStatus() == MainActivity.CONNECTION_ONLINE) {
             Fragment newFragment = new RegistrationFragment();
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
@@ -160,6 +168,15 @@ public class LoginFragment extends Fragment implements
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         }
+    }
+
+    @Override
+    public void onReconnectClick() {
+        ((MainActivity) activity).testConnection();
+    }
+
+    public void showReconnect(boolean flag){
+        mLoginView.reconnectVisible(flag);
     }
 
     /**
@@ -199,7 +216,7 @@ public class LoginFragment extends Fragment implements
                 }
 
                 //inizia la sessione se c'è connessione
-                if (activity.isConnectionEnabled()){
+                if (activity.getmConnectionStatus() == MainActivity.CONNECTION_ONLINE){
                     SessionTask mSessionTask = new SessionTask(username);
                     mSessionTask.execute((Void) null);
                 } else {
@@ -210,8 +227,6 @@ public class LoginFragment extends Fragment implements
                     transaction.addToBackStack(null);
                     transaction.commit();
                 }
-
-
             }
 
             else {
@@ -256,7 +271,7 @@ public class LoginFragment extends Fragment implements
                 SessionTask mSessionTask = new SessionTask(guestUser.getUsername());
                 mSessionTask.execute((Void) null);
 
-            } else if (!activity.isConnectionEnabled()){
+            } else if (!(activity.getmConnectionStatus() == MainActivity.CONNECTION_ONLINE)){
 
                 //salva le credenziali in locale
                 LocalPreferencesImpl localPreferences = new LocalPreferencesImpl(getContext());

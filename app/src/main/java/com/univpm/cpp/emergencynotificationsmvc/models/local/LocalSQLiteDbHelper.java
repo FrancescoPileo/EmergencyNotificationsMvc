@@ -77,7 +77,7 @@ public class LocalSQLiteDbHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + BeaconTable.TABLE_NAME + " (" +
                     BeaconTable._ID + " TEXT PRIMARY KEY," +
                     BeaconTable.COLUMN_NAME_IDNODE + " INTEGER, " +
-                    BeaconTable.COLUMN_NAME_EMERGENCY + "TEXT )";
+                    BeaconTable.COLUMN_NAME_EMERGENCY + " TEXT )";
 
     private static final String SQL_DELETE_TABLE_BEACON =  "DROP TABLE IF EXISTS " + BeaconTable.TABLE_NAME;
 

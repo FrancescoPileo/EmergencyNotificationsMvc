@@ -61,7 +61,8 @@ public class HomeFragment extends Fragment implements
     private MainActivity activity;
     private HomeView mHomeView;
     private DialogView mDialogView;
-    private Dialog dialog;
+    private Dialog detailsDialog;
+    private Dialog infoDialog;
     private InitTask mInitTask;
     private SpinnerTask mSpinnerTask;
     private FirstMapTask mFirstMapTask;
@@ -94,7 +95,8 @@ public class HomeFragment extends Fragment implements
         mLastposition = new Position();
         positionNode = new Node();
         session = new Session();
-        dialog = new Dialog(getContext());
+        detailsDialog = new Dialog(getContext());
+        infoDialog = new Dialog(getContext());
 
         mHomeView.setMapSelectedListener(this);
         mHomeView.setLogoutListener(this);
@@ -155,20 +157,17 @@ public class HomeFragment extends Fragment implements
     public void onBeaconClick(Beacon beacon) {
         mEnvValuesTask = new EnvValuesTask(beacon);
         mEnvValuesTask.execute((Void) null);
-        dialog.setContentView(mDialogView.getRootView());
-        dialog.show();
+        detailsDialog.setContentView(mDialogView.getRootView());
+        detailsDialog.show();
     }
 
     @Override
     public void onOkButtonClick() {
-        dialog.cancel();
+        detailsDialog.cancel();
     }
 
     @Override
     public void onInfoClick() {
-        Log.w("info", "");
-        Dialog infoDialog = new Dialog(getContext());
-        infoDialog.getWindow();
         infoDialog.setContentView(R.layout.dialog_info);
         infoDialog.show();
     }
@@ -193,7 +192,7 @@ public class HomeFragment extends Fragment implements
     }
 
     public void start() {
-        if (activity.isConnectionEnabled()) {
+        if (activity.getmConnectionStatus() == MainActivity.CONNECTION_ONLINE) {
             mMyBluetoothManager.scanning();
         }
         mFirstMapTask = new FirstMapTask();
@@ -218,8 +217,9 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void onPause() {
-        //stop();
         super.onPause();
+        detailsDialog.cancel();
+        infoDialog.cancel();
     }
 
     @Override
@@ -243,7 +243,7 @@ public class HomeFragment extends Fragment implements
         @Override
         protected Boolean doInBackground(Void... params) {
             user = activity.getUserModel().getUser(activity.getLocalPreferences().getUser().getUsername());
-            if (activity.isConnectionEnabled()) {
+            if (activity.getmConnectionStatus() == MainActivity.CONNECTION_ONLINE) {
                 session = activity.getSessionModel().getLastSession(user);
             }
             return true;
@@ -482,7 +482,7 @@ public class HomeFragment extends Fragment implements
         @Override
         protected Boolean doInBackground(Void... voids) {
 
-            if (activity.isConnectionEnabled()) {
+            if (activity.getmConnectionStatus() == MainActivity.CONNECTION_ONLINE) {
                 Date date = new Date();
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
                 //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+1"));

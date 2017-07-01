@@ -11,6 +11,7 @@
     <string name="action_sign_in_short">Accedi</string>
     <string name="action_sign_as_guest">Accedi come ospite</string>
     <string name="action_registration">Registrati</string>
+    <string name="action_reconnect">Riconnettiti</string>
     <string name="error_field_required">Campo obbligatorio</string>
     <string name="error_invalid_credentials">Credenziali errate</string>
     <string name="prompt_not_registered_text">Non sei registrato?</string>

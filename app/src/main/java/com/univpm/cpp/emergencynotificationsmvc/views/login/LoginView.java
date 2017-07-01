@@ -30,6 +30,11 @@ public interface LoginView extends ViewMvc {
         void onLogAsGuestClick();
     }
 
+    interface ReconnectBtnViewListener {
+
+        void onReconnectClick();
+    }
+
     /**
      * Imposta un listener che verrà notificato da questa ViewMvc
      * @param listener
@@ -39,6 +44,8 @@ public interface LoginView extends ViewMvc {
     void setRegistrationListener(RegistrationBtnViewListener listener);
 
     void setGuestListener(LogAsGuestBtnViewListner listener);
+
+    void setReconnectListener(ReconnectBtnViewListener listener);
 
     String getUsername();
 
@@ -51,6 +58,8 @@ public interface LoginView extends ViewMvc {
     void showProgress(boolean show);
 
     void setToolbar(Fragment fragment);
+
+    void reconnectVisible(boolean flag);
 
 }
 

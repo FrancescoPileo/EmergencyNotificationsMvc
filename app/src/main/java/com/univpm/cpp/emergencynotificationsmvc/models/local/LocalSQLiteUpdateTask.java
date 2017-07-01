@@ -41,13 +41,13 @@ public class LocalSQLiteUpdateTask extends AsyncTask<Void, Void, Boolean> {
         ArrayList<EnviromentalValues> enviromentalValues = null;
         user = activity.getLocalPreferences().getUser();
 
-        if (activity.isConnectionEnabled()) {
+        if (activity.getmConnectionStatus() == MainActivity.CONNECTION_ONLINE) {
             lastPosition = activity.getPositionModel().getLastPositionByUser(user);
             maps = activity.getMapModel().getAllMaps();
             nodes = activity.getNodeModel().getAllNodes();
             beacons = activity.getBeaconModel().getAllBeacons();
             enviromentalValues = activity.getEnviromentalValuesModel().getLastValuesForEachBeacon();
-        } else if (user.isGuest() && helper.isDbEmpty()){
+        } else if (user.isGuest() /*&& helper.isDbEmpty()*/){
             Log.w("ImportDaResources", "ok");
             //se l'utente è guest e il db è vuoto
             lastPosition = null;
