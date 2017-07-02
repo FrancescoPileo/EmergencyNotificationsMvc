@@ -115,7 +115,8 @@
                 android:layout_marginLeft="5dp"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/action_reconnect" />
+                android:text="@string/action_reconnect"
+                android:drawableLeft="@drawable/ic_action_refresh"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
