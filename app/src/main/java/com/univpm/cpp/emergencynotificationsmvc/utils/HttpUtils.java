@@ -199,8 +199,9 @@ public class HttpUtils {
 
             //Log.w("Connessione", "ok");
         } catch (IOException e) {
-            //Log.w("Connessione", e.getMessage());
-            if (e.getMessage().equals("Connection refused"))
+            String message = e.getMessage();
+            Log.w("Connessione", e.getMessage());
+            if (message.equals("Connection refused") || message.equals("No route to host"))
                     return false;
         }
         return true;
@@ -209,6 +210,7 @@ public class HttpUtils {
     private void handleException(Exception e){
         switch (e.getMessage()){
             case "Connection refused":
+            case "No route to host":
                 Intent intnet = new Intent(INTENT_CONNECTION_REFUSED);
                 broadcaster.sendBroadcast(intnet);
                 break;

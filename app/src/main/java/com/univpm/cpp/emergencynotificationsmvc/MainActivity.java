@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements Broadcaster {
         mBluetoothManager = new MyBluetoothManager(getApplicationContext(), this);
 
         mConnectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
         testConnection();
 
         /*String s = getIntent().getStringExtra("prova");
