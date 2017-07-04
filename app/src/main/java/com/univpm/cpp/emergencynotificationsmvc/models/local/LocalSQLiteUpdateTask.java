@@ -45,7 +45,8 @@ public class LocalSQLiteUpdateTask extends AsyncTask<Void, Void, Boolean> {
         user = activity.getLocalPreferences().getUser();
 
         if (activity.getmConnectionStatus() == MainActivity.CONNECTION_ONLINE) {
-            lastPosition = activity.getPositionModel().getLastPositionByUser(user);
+            User serverUser = activity.getUserModel().getUser(user.getUsername());
+            lastPosition = activity.getPositionModel().getLastPositionByUser(serverUser);
             maps = activity.getMapModel().getAllMaps();
             nodes = activity.getNodeModel().getAllNodes();
             beacons = activity.getBeaconModel().getAllBeacons();

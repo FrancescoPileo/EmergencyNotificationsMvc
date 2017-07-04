@@ -22,6 +22,7 @@ import com.univpm.cpp.emergencynotificationsmvc.MainActivity;
 import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValues;
+import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteDbHelper;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteUpdateTask;
 import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
 import com.univpm.cpp.emergencynotificationsmvc.models.node.Node;
@@ -192,6 +193,8 @@ public class HomeFragment extends Fragment implements
     public void start() {
         if (activity.getmConnectionStatus() == MainActivity.CONNECTION_ONLINE) {
             activity.getBluetoothManager().scanning();
+            UpdateLocalEnvValuesTask task = new UpdateLocalEnvValuesTask();
+            task.execute((Void) null);
         }
         mFirstMapTask = new FirstMapTask();
         mFirstMapTask.execute((Void) null);
@@ -551,6 +554,36 @@ public class HomeFragment extends Fragment implements
             detailsDialog.setContentView(mDialogView.getRootView());
             detailsDialog.show();
 
+
+        }
+    }
+
+    private class UpdateLocalEnvValuesTask extends AsyncTask<Void, Void, Boolean> {
+
+        LocalSQLiteDbHelper helper;
+        ArrayList<EnviromentalValues> enviromentalValues = null;
+        Position lastPosition = null;
+
+        UpdateLocalEnvValuesTask() {
+            helper = LocalSQLiteDbHelper.getInstance(activity.getApplicationContext());
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            enviromentalValues = activity.getEnviromentalValuesModel().getLastValuesForEachBeacon();
+            if (user != null) {
+                lastPosition = activity.getPositionModel().getLastPositionByUser(user);
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            if (success){
+                if (enviromentalValues != null) helper.importEnviromentalValues(enviromentalValues);
+                if (lastPosition != null) helper.importUserposition(lastPosition);
+
+            }
 
         }
     }
