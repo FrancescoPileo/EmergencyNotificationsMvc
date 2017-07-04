@@ -18,7 +18,6 @@ import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 import com.univpm.cpp.emergencynotificationsmvc.views.registration.RegistrationView;
 import com.univpm.cpp.emergencynotificationsmvc.views.registration.RegistrationViewImpl;
 
-//todo controllo email esistente
 public class RegistrationFragment extends Fragment implements
         RegistrationView.RegisterBtnViewListener,
         RegistrationView.UsernameChangeViewListener
@@ -113,7 +112,6 @@ public class RegistrationFragment extends Fragment implements
             f = false;
         }
 
-        // todo da controllare
         if (!TextUtils.isEmpty(mobilephone)) {
             if (mobilephone.length() > 20) {
                 mRegistrationView.setMobilephoneError(getString(R.string.error_lenght_mobilephone));

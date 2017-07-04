@@ -6,10 +6,10 @@ import com.univpm.cpp.emergencynotificationsmvc.models.map.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by marcociotti on 09/05/17.
- */
 
+/**
+ * Classe che modella un nodo
+ */
 public class Node implements Jsonable {
 
     private int idNode;
@@ -37,6 +37,10 @@ public class Node implements Jsonable {
 
     }
 
+    /**
+     * Costruttore della classe node
+     * @param jsonString Stringa che contiente la rappresentazione JSON dell'oggetto da istanziare
+     */
     public Node(String jsonString){
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
@@ -90,6 +94,10 @@ public class Node implements Jsonable {
         this.nodename = nodename;
     }
 
+    /**
+     * Metodo che produce il JSONObject che rappresenta l'oggetto
+     * @return JSONOBject che rappresenta l'oggetto
+     */
     @Override
     public JSONObject toJson() {
         JSONObject jsonObject = new JSONObject();

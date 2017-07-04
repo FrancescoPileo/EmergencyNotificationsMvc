@@ -8,6 +8,9 @@ import android.util.Log;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteContract.AppuserTable;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteDbHelper;
 
+/**
+ * Implementazione del modello degli utenti che fa riferimento al database interno
+ */
 public class UserModelLocalImpl implements UserModel {
 
     LocalSQLiteDbHelper mLocalSQLiteDbHelper;

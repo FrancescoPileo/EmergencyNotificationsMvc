@@ -5,6 +5,9 @@ import com.univpm.cpp.emergencynotificationsmvc.models.Jsonable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Classe che modella un Token relativo al servizio Firebase
+ */
 public class Token implements Jsonable{
 
     private int idToken;
@@ -31,6 +34,10 @@ public class Token implements Jsonable{
         this.token = token;
     }
 
+    /**
+     * Metodo che produce il JSONObject che rappresenta l'oggetto
+     * @return JSONOBject che rappresenta l'oggetto
+     */
     @Override
     public JSONObject toJson() {
             JSONObject jsonObject = new JSONObject();

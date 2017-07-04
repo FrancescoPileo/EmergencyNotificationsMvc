@@ -14,7 +14,6 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.support.v4.app.ShareCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -49,6 +48,9 @@ import java.util.List;
 
 import static com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.BluetoothLeService.ACTION_BLESRV_INIT;
 
+/**
+ * Classe che gestisce la connettività bluetooth
+ */
 public class MyBluetoothManager {
 
     Context context;
@@ -428,7 +430,7 @@ public class MyBluetoothManager {
                 } else
                     setError("Connect failed. Status: " + status);
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
-                //todo gestire
+               Toast.makeText(activity.getApplicationContext(), "Disconnesso", Toast.LENGTH_LONG).show();
                 // GATT onDisconnect
                 //stopDeviceActivity();
                 if (status == BluetoothGatt.GATT_SUCCESS) {

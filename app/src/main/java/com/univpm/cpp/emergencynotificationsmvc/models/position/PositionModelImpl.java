@@ -5,13 +5,12 @@ import com.univpm.cpp.emergencynotificationsmvc.utils.Broadcaster;
 import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
 
 /**
- * Created by marcociotti on 11/05/17.
+ * Implementazione del modello delle posizioni utente che fa riferimento al server REST
  */
-
 public class PositionModelImpl implements PositionModel {
 
-    Broadcaster broadcaster;
-    HttpUtils httpUtils;
+    private Broadcaster broadcaster;     //Classe capace di inviare messaggi broadcast
+    private HttpUtils httpUtils;        //Classe che gestisce la connessione HTTP
 
     public PositionModelImpl(Broadcaster broadcaster){
         this.broadcaster = broadcaster;

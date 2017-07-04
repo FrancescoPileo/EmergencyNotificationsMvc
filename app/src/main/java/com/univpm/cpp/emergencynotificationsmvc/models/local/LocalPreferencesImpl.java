@@ -8,9 +8,12 @@ import com.univpm.cpp.emergencynotificationsmvc.R;
 import com.univpm.cpp.emergencynotificationsmvc.models.session.Session;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 
+/**
+ * Implementazione del modello delle preferenze locali
+ */
 public class LocalPreferencesImpl implements  LocalPreferences {
 
-    Context context;
+    private Context context;
 
     private static final String LOGIN_PERFERENCES = "login";
 

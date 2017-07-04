@@ -17,6 +17,9 @@ import com.univpm.cpp.emergencynotificationsmvc.models.node.Node;
 import java.util.HashSet;
 import java.util.Random;
 
+/**
+ * Classe che permette di disegnare e gestire sulla mappa i cerchi che rappresentano i beacon
+ */
 public class CirclesDrawingView extends View{
 
     private static final String TAG = "CirclesDrawingView";

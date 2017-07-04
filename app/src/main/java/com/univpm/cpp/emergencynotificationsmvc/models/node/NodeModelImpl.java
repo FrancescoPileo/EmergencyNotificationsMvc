@@ -9,13 +9,12 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 /**
- * Created by marcociotti on 09/05/17.
+ * Implementazione del modello dei nodi che fa riferimento al server REST
  */
-
 public class NodeModelImpl implements NodeModel {
 
-    Broadcaster broadcaster;
-    HttpUtils httpUtils = new HttpUtils(this.broadcaster);
+    private Broadcaster broadcaster;        //Classe capace di inviare messaggi broadcast
+    private HttpUtils httpUtils;            //Classe che gestisce la connessione HTTP
 
     public NodeModelImpl(Broadcaster broadcaster){
         this.broadcaster = broadcaster;
@@ -28,7 +27,6 @@ public class NodeModelImpl implements NodeModel {
         Node node = null;
         String response = httpUtils.sendGet("node/id/" + idNode);
 
-        //user = DbUtils.getUser(username);
         if (response != null){
             node = new Node(response);
         }
@@ -53,9 +51,4 @@ public class NodeModelImpl implements NodeModel {
         return nodes;
     }
 
-    @Override
-    public ArrayList<Node> getNodeByMap(int idMap) {
-
-        return null;//DbUtils.getNodeByMap(idMap);
-    }
 }

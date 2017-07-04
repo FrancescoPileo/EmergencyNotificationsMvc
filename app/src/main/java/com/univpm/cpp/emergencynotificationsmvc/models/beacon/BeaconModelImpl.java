@@ -11,13 +11,12 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 /**
- * Created by matteo on 24/04/17.
+ * Implementazione del modello del beacon che fa riferimento al server REST
  */
-
 public class BeaconModelImpl implements BeaconModel {
 
-    Broadcaster broadcaster;
-    HttpUtils httpUtils;
+    private Broadcaster broadcaster; //Classe capace di inviare messaggi broadcast
+    private HttpUtils httpUtils;     //Classe che gestisce la connessione HTTP
 
     public BeaconModelImpl(Broadcaster broadcaster){
 

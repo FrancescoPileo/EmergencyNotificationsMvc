@@ -2,7 +2,9 @@ package com.univpm.cpp.emergencynotificationsmvc.views.dialog;
 
 import com.univpm.cpp.emergencynotificationsmvc.views.ViewMvc;
 
-
+/**
+ * Interfaccia che rappresenta la finestra di dialogo che visualizza le informazioni di un beacon
+ */
 public interface DialogView extends ViewMvc {
 
     interface OkButtonListener {

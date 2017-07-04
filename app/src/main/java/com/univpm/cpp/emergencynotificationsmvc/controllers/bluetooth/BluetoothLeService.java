@@ -81,8 +81,7 @@ import java.util.concurrent.locks.ReentrantLock;
 // import android.util.Log;
 
 /**
- * Service for managing connection and data communication with a GATT server
- * hosted on a given Bluetooth LE device.
+ * Servizio che gestisce la connessione BLE e i dispositivi GATT
  */
 public class BluetoothLeService extends Service {
 	static final String TAG = "BluetoothLeService";
@@ -886,7 +885,7 @@ public class BluetoothLeService extends Service {
         while (this.blocking) {
             timeout ++;
             waitIdle(1);
-            if (timeout > GATT_TIMEOUT) {this.blocking = false; request.status = bleRequestStatus.timeout; return -1;}  //Read failed TODO: Fix this to follow connection interval !
+            if (timeout > GATT_TIMEOUT) {this.blocking = false; request.status = bleRequestStatus.timeout; return -1;}
         }
         request.status = bleRequestStatus.done;
         return lastGattStatus;
@@ -904,7 +903,7 @@ public class BluetoothLeService extends Service {
         while (this.blocking) {
             timeout ++;
             waitIdle(1);
-            if (timeout > GATT_TIMEOUT) {this.blocking = false; request.status = bleRequestStatus.timeout; return -1;}  //Read failed TODO: Fix this to follow connection interval !
+            if (timeout > GATT_TIMEOUT) {this.blocking = false; request.status = bleRequestStatus.timeout; return -1;}
         }
         request.status = bleRequestStatus.done;
         return lastGattStatus;
@@ -942,7 +941,7 @@ public class BluetoothLeService extends Service {
                 while (this.blocking) {
                     timeout ++;
                     waitIdle(1);
-                    if (timeout > GATT_TIMEOUT) {this.blocking = false; request.status = bleRequestStatus.timeout; return -1;}  //Read failed TODO: Fix this to follow connection interval !
+                    if (timeout > GATT_TIMEOUT) {this.blocking = false; request.status = bleRequestStatus.timeout; return -1;}
                 }
                 request.status = bleRequestStatus.done;
                 return lastGattStatus;

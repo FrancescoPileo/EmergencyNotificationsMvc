@@ -36,6 +36,7 @@ import com.univpm.cpp.emergencynotificationsmvc.utils.CirclesDrawingView;
 import com.univpm.cpp.emergencynotificationsmvc.utils.Directories;
 import com.univpm.cpp.emergencynotificationsmvc.utils.Firebase.FirebaseMessagingService;
 import com.univpm.cpp.emergencynotificationsmvc.utils.TouchImageView;
+import com.univpm.cpp.emergencynotificationsmvc.views.login.LoginView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -43,7 +44,9 @@ import java.util.ArrayList;
 import static com.univpm.cpp.emergencynotificationsmvc.utils.ImageCoordinates.getPixelsXFromMetres;
 import static com.univpm.cpp.emergencynotificationsmvc.utils.ImageCoordinates.getPixelsYFromMetres;
 
-
+/**
+ * Implementazione dell'interfaccia {@link HomeView}
+ */
 public class HomeViewImpl implements HomeView{
 
     private View mRootView;

@@ -6,11 +6,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Le mappe vengono caricate nella cartella maps e nel db c'è solo il nome dell'immagine
+ * Classe che modella una mappa
  **/
-
-
-
 public class Map implements Jsonable {
 
     private int idMap;
@@ -36,6 +33,10 @@ public class Map implements Jsonable {
         this.yRefpx = 0;
     }
 
+    /**
+     * Costruttore della classe Map
+     * @param jsonString Stringa che contiente la rappresentazione JSON dell'oggetto da istanziare
+     */
     public Map(String jsonString){
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
@@ -53,6 +54,10 @@ public class Map implements Jsonable {
         }
     }
 
+    /**
+     * Metodo che produce il JSONObject che rappresenta l'oggetto
+     * @return JSONOBject che rappresenta l'oggetto
+     */
     @Override
     public JSONObject toJson() {
         JSONObject jsonObject = new JSONObject();

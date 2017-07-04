@@ -13,6 +13,9 @@ import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModel;
 import com.univpm.cpp.emergencynotificationsmvc.models.user.UserModelLocalImpl;
 
+/**
+ * Implementazione del modello delle posizioni utente che fa riferimento al database interno
+ */
 public class PositionModelLocalImpl implements PositionModel {
 
     Context context;

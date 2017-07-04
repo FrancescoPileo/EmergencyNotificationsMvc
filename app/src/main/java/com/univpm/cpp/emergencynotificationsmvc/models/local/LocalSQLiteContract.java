@@ -2,6 +2,9 @@ package com.univpm.cpp.emergencynotificationsmvc.models.local;
 
 import android.provider.BaseColumns;
 
+/**
+ * Classe statica che contiene la struttura del database interno
+ */
 public class LocalSQLiteContract {
 
     private LocalSQLiteContract(){}

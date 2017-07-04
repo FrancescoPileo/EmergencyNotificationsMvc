@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import com.univpm.cpp.emergencynotificationsmvc.views.ViewMvc;
 
 /**
- * Questa interfaccia rappresenta la schermata di login nell'applicazione
+ * Interfaccia che rappresenta la schermata di login nell'applicazione
  */
 public interface LoginView extends ViewMvc {
 

@@ -12,10 +12,13 @@ import com.univpm.cpp.emergencynotificationsmvc.models.node.NodeModelLocalImpl;
 
 import java.util.ArrayList;
 
+/**
+ * Implementazione del modello del beacon che fa riferimento al database interno
+ */
 public class BeaconModelLocalImpl implements BeaconModel{
 
-    Context context;
-    LocalSQLiteDbHelper mLocalSQLiteDbHelper = null;
+    private Context context;    //Constesto dell'applicazione
+    private LocalSQLiteDbHelper mLocalSQLiteDbHelper = null; //Helper che gestisce al connessione al Db interno
 
     public BeaconModelLocalImpl(Context context){
         this.context = context;
@@ -32,7 +35,7 @@ public class BeaconModelLocalImpl implements BeaconModel{
                 new String[] { BeaconTable._ID, BeaconTable.COLUMN_NAME_IDNODE, BeaconTable.COLUMN_NAME_EMERGENCY }
                 , BeaconTable._ID + "=?",
                 new String[] { idBeacon }, null, null, null, null);
-        if (cursor != null) {
+        if (cursor != null  && cursor.getCount() != 0) {
             cursor.moveToFirst();
             beacon = new Beacon();
             beacon.setIdBeacon(cursor.getString(0));
@@ -53,7 +56,7 @@ public class BeaconModelLocalImpl implements BeaconModel{
         NodeModel nodeModel = new NodeModelLocalImpl(context);
 
         Cursor cursor = db.rawQuery(selectQuery, null);
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() != 0) {
             if (cursor.moveToFirst()) {
                 beacons = new ArrayList<>();
                 do {

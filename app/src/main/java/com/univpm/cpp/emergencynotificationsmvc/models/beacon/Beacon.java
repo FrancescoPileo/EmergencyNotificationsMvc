@@ -8,18 +8,17 @@ import com.univpm.cpp.emergencynotificationsmvc.models.node.Node;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by matteo on 24/04/17.
- */
 
+/**
+ * Classe che modella un sernsore Beacon
+ */
 public class Beacon implements Jsonable{
 
-    private String idBeacon;
-    private Node node;
-    private String emergency;
+    private String idBeacon; //identificativo univoco del sensore
+    private Node node;       //node in cui è installato il sensore
+    private String emergency;   //status di emergenza rilevato dal beacon
 
     public Beacon() {
-
         super();
         this.node = null;
         this.emergency = null;
@@ -31,11 +30,15 @@ public class Beacon implements Jsonable{
         this.emergency = emergency;
     }
 
-    public Beacon(String JsonString){
+    /**
+     * Costruttore della classe Beacon
+     * @param jsonString Stringa che contiente la rappresentazione JSON dell'oggetto da istanziare
+     */
+    public Beacon(String jsonString){
         JSONObject jsonObject = null;
         try {
-            Log.w("Beaconnnnn: ", JsonString);
-            jsonObject = new JSONObject(JsonString);
+            Log.w("Beaconnnnn: ", jsonString);
+            jsonObject = new JSONObject(jsonString);
             this.idBeacon = jsonObject.getString("idbeacon");
             this.node = new Node(jsonObject.getJSONObject("idnode").toString());
             this.emergency = jsonObject.optString("emergency", null);
@@ -44,6 +47,10 @@ public class Beacon implements Jsonable{
         }
     }
 
+    /**
+     * Metodo che produce il JSONObject che rappresenta l'oggetto
+     * @return JSONOBject che rappresenta l'oggetto
+     */
     @Override
     public JSONObject toJson() {
         JSONObject jsonObject = new JSONObject();

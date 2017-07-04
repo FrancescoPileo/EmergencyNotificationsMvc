@@ -26,7 +26,6 @@ import com.univpm.cpp.emergencynotificationsmvc.views.login.LoginViewImpl;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.MissingFormatArgumentException;
 
 public class LoginFragment extends Fragment implements
         LoginView.LogAsGuestBtnViewListner,

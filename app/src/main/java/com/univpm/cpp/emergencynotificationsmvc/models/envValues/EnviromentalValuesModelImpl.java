@@ -9,10 +9,13 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
+/**
+ * Implementazione del modello dei dati ambientali che fa riferimento al server REST
+ */
 public class EnviromentalValuesModelImpl implements EnviromentalValuesModel {
 
-    Broadcaster broadcaster;
-    HttpUtils httpUtils;
+    private Broadcaster broadcaster;    //Classe capace di inviare messaggi broadcast
+    private HttpUtils httpUtils;        //Classe che gestisce la connessione HTTP
 
     public EnviromentalValuesModelImpl(Broadcaster broadcaster){
         this.broadcaster = broadcaster;
@@ -64,5 +67,18 @@ public class EnviromentalValuesModelImpl implements EnviromentalValuesModel {
             }
         }
         return values;
+    }
+
+    @Override
+    public EnviromentalValues getLastValuesForBeaconid(String beaconid) {
+
+        EnviromentalValues enviromentalValues = null;
+        String response = httpUtils.sendGet("enviromentalvalues/beacon/" + beaconid + "/last");
+
+        if (response != null){
+            enviromentalValues = new EnviromentalValues(response);
+        }
+
+        return enviromentalValues;
     }
 }

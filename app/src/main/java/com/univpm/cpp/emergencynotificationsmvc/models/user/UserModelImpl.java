@@ -5,12 +5,13 @@ import com.univpm.cpp.emergencynotificationsmvc.utils.Broadcaster;
 import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
 
 /**
- * Implementazione del model utente usando un db
+ * Implementazione del modello dei nodi che fa riferimento al server REST
  */
 public class UserModelImpl implements UserModel {
 
-    Broadcaster broadcaster;
-    HttpUtils httpUtils;
+    private Broadcaster broadcaster;     //Classe capace di inviare messaggi broadcast
+    private HttpUtils httpUtils;        //Classe che gestisce la connessione HTTP
+
     public UserModelImpl(Broadcaster broadcaster){
         this.broadcaster = broadcaster;
         this.httpUtils = new HttpUtils(this.broadcaster);

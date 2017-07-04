@@ -18,7 +18,7 @@ import android.widget.EditText;
 import com.univpm.cpp.emergencynotificationsmvc.R;
 
 /**
- * Una implementazione dell'interfaccia {@link LoginView}
+ * Implementazione dell'interfaccia {@link LoginView}
  */
 public class LoginViewImpl implements LoginView {
 

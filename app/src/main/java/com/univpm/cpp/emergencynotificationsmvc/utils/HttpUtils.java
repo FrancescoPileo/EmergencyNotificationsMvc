@@ -19,12 +19,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * Classe che gestisce le connessoni
+ */
 public class HttpUtils {
 
-    //172.23.170.169
     private Broadcaster broadcaster;
-    private static final String SERVER_HOST = "192.168.1.64:8080";
-    private static final String SERVER_NAME = "EmergencyNotificationsServer";
+    private static final String SERVER_HOST = "90.147.44.150:8080"; //Host del server
+    private static final String SERVER_NAME = "EmergencyNotificationsServer"; //Nome del server
 
     public static final String INTENT_CONNECTION_REFUSED = "com.univpm.cpp.emergencynotificationsmvc.CONNECTION_REFUSED";
 
@@ -178,7 +180,6 @@ public class HttpUtils {
             }
         } catch (Exception e){
             e.printStackTrace();
-            handleException(e);
             return null;
         }
         return img;
@@ -191,6 +192,8 @@ public class HttpUtils {
             HttpURLConnection con  = (HttpURLConnection) urlObj.openConnection();
             con.setRequestMethod("GET");
 
+            con.setConnectTimeout(2000);
+
             //add request header
             con.setRequestProperty("Content-Type", "application/json");
             con.setRequestProperty("Accept", "application/json");
@@ -201,8 +204,7 @@ public class HttpUtils {
         } catch (IOException e) {
             String message = e.getMessage();
             Log.w("Connessione", e.getMessage());
-            if (message.equals("Connection refused") || message.equals("No route to host"))
-                    return false;
+            return false;
         }
         return true;
     }

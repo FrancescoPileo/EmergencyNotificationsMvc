@@ -36,6 +36,9 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.OverScroller;
 import android.widget.Scroller;
 
+/**
+ * Classe che estende la classe ImageView permettendo zoom e scroll dell'immagine
+ */
 public class TouchImageView extends android.support.v7.widget.AppCompatImageView {
 
     private static final String DEBUG = "DEBUG";
@@ -406,7 +409,7 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
     /**
      * Set zoom parameters equal to another TouchImageView. Including scale, position,
      * and ScaleType.
-     * @param TouchImageView
+     * @param img
      */
     public void setZoom(TouchImageView img) {
         PointF center = img.getScrollPosition();

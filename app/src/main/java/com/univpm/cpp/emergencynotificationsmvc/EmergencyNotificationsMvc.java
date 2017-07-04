@@ -15,6 +15,9 @@ import android.widget.Toast;
 
 import com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.BluetoothLeService;
 
+/**
+ * Classe che modella l'applicazione
+ */
 public class EmergencyNotificationsMvc extends Application {
 
 

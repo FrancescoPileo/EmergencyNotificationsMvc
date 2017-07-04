@@ -57,6 +57,9 @@ import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Classe che modella l'activity principale dell'applcazione
+ */
 public class MainActivity extends AppCompatActivity implements Broadcaster {
 
     public static final int REQUEST_PERMISSIONS = 0;
@@ -131,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements Broadcaster {
     }
 
     public void testConnection(){
+        Log.w("Test connection", "ok");
         NetworkInfo activeNetwork = mConnectivityManager.getActiveNetworkInfo();
         if (activeNetwork != null && activeNetwork.isConnectedOrConnecting() ) {
             ServerTestTask task = new ServerTestTask();
@@ -149,7 +153,6 @@ public class MainActivity extends AppCompatActivity implements Broadcaster {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-
             return HttpUtils.serverOn();
         }
 
@@ -182,10 +185,6 @@ public class MainActivity extends AppCompatActivity implements Broadcaster {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-
-        //todo oasjdnakjosdnoaskndkoasn
-        /*String s = getIntent().getStringExtra("prova");
-        if (s!= null) Log.w("prova2", s);*/
 
     }
 

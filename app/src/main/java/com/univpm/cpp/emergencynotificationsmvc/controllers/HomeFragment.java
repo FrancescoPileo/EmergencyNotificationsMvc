@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 
 import com.univpm.cpp.emergencynotificationsmvc.MainActivity;
 import com.univpm.cpp.emergencynotificationsmvc.R;
-import com.univpm.cpp.emergencynotificationsmvc.controllers.bluetooth.MyBluetoothManager;
 import com.univpm.cpp.emergencynotificationsmvc.models.beacon.Beacon;
 import com.univpm.cpp.emergencynotificationsmvc.models.envValues.EnviromentalValues;
 import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteUpdateTask;
@@ -74,12 +73,7 @@ public class HomeFragment extends Fragment implements
     private Node positionNode;  //è il nodo relativo alla posizione dell'utente
     private Position mLastposition;
 
-    //todo commentare
-    //todo visualizzare errori
     //todo (opt) gestione utente
-    //todo (opt) dialogo dettagli caricamento
-    //todo cosa succede se premo le notifiche
-    //todo server non raggiungibile
 
     public HomeFragment(){
         super();
@@ -162,8 +156,7 @@ public class HomeFragment extends Fragment implements
     public void onBeaconClick(Beacon beacon) {
         mEnvValuesTask = new EnvValuesTask(beacon);
         mEnvValuesTask.execute((Void) null);
-        detailsDialog.setContentView(mDialogView.getRootView());
-        detailsDialog.show();
+
     }
 
     @Override
@@ -537,20 +530,9 @@ public class HomeFragment extends Fragment implements
         @Override
         protected Boolean doInBackground(Void... voids) {
 
-            ArrayList<EnviromentalValues> enviromentalValuesArrayList =
-                    activity.getEnviromentalValuesModel().getLastValuesForEachBeacon();
+            envValues = activity.getEnviromentalValuesModel().getLastValuesForBeaconid(beacon.getIdBeacon());
 
-            if (enviromentalValuesArrayList != null) {
-                for (int i = 0; i < enviromentalValuesArrayList.size(); i++) {
-
-                    if (enviromentalValuesArrayList.get(i).getBeacon().getIdBeacon().equals(beacon.getIdBeacon())) {
-                        envValues = enviromentalValuesArrayList.get(i);
-                        flag = true;
-                    }
-                }
-            }
-
-            return flag;
+            return (envValues != null);
         }
 
         @Override
@@ -566,6 +548,10 @@ public class HomeFragment extends Fragment implements
 
                 //mDialogView.setGyrValueText("X:" + String.valueOf(envValues.getGyrX()) + ", Y:" + String.valueOf(envValues.getGyrY()) + ", Z:" + String.valueOf(envValues.getGyrZ()));
             }
+            detailsDialog.setContentView(mDialogView.getRootView());
+            detailsDialog.show();
+
+
         }
     }
 

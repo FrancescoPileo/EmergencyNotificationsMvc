@@ -5,8 +5,13 @@ import com.univpm.cpp.emergencynotificationsmvc.models.Jsonable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class User extends UserGuest implements Jsonable {
+/**
+ * Classe che modella un utente
+ */
+public class User implements Jsonable {
 
+    private int id;
+    private String name;
     private String surname;
     private String username;
     private int age;
@@ -16,7 +21,8 @@ public class User extends UserGuest implements Jsonable {
     private boolean isGuest;
 
     public User(){
-        super();
+        this.id = -1;
+        this.name = null;
         this.surname = null;
         this.username = null;
         this.age = -1;
@@ -27,7 +33,8 @@ public class User extends UserGuest implements Jsonable {
     }
 
     public User(int id, String name, String surname, String username, int age, String mobilephone, String email, String password){
-        super(id, name);
+        this.id = id;
+        this.name = name;
         this.surname = surname;
         this.username = username;
         this.age = age;
@@ -36,6 +43,10 @@ public class User extends UserGuest implements Jsonable {
         this.password = password;
     }
 
+    /**
+     * Costruttore della classe User
+     * @param jsonString Stringa che contiente la rappresentazione JSON dell'oggetto da istanziare
+     */
     public User(String jsonString){
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
@@ -50,9 +61,16 @@ public class User extends UserGuest implements Jsonable {
             this.isGuest = jsonObject.optBoolean("isguest", false);
         } catch (JSONException e) {
             e.printStackTrace();
-        }
+        }/**
+     * Metodo che produce il JSONObject che rappresenta l'oggetto
+     * @return JSONOBject che rappresenta l'oggetto
+     */
     }
 
+    /**
+     * Metodo che produce il JSONObject che rappresenta l'oggetto
+     * @return JSONOBject che rappresenta l'oggetto
+     */
     @Override
     public JSONObject toJson() {
         JSONObject jsonObject = new JSONObject();
@@ -126,6 +144,22 @@ public class User extends UserGuest implements Jsonable {
 
     public void setGuest(boolean guest) {
         isGuest = guest;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

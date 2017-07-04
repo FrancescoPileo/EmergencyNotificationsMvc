@@ -4,10 +4,14 @@ import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 import com.univpm.cpp.emergencynotificationsmvc.utils.Broadcaster;
 import com.univpm.cpp.emergencynotificationsmvc.utils.HttpUtils;
 
+/**
+ * Implementazione del modello delle sessioni utente che fa riferimento al server REST
+ */
 public class SessionModelImpl implements SessionModel {
 
-    Broadcaster broadcaster;
-    HttpUtils httpUtils;
+    private Broadcaster broadcaster;     //Classe capace di inviare messaggi broadcast
+    private HttpUtils httpUtils;        //Classe che gestisce la connessione HTTP
+
     public SessionModelImpl(Broadcaster broadcaster){
         this.broadcaster = broadcaster;
         this.httpUtils = new HttpUtils(broadcaster);

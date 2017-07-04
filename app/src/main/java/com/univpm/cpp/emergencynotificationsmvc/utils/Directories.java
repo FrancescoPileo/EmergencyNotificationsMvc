@@ -4,6 +4,9 @@ import android.os.Environment;
 
 import java.io.File;
 
+/**
+ * Classe statica che contiene le directory utili all'applicazione
+ */
 public class Directories {
 
     public final static String MAIN = Environment.getExternalStorageDirectory() + File.separator + "EmergencyNotifications";

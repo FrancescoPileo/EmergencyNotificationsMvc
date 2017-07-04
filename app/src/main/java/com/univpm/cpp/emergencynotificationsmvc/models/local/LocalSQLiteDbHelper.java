@@ -24,6 +24,9 @@ import com.univpm.cpp.emergencynotificationsmvc.utils.Directories;
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ * Classe che gestisce le operazioni sul database interno
+ */
 public class LocalSQLiteDbHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_TABLE_APPUSER =

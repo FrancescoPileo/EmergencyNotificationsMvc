@@ -19,10 +19,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.univpm.cpp.emergencynotificationsmvc.R;
+import com.univpm.cpp.emergencynotificationsmvc.views.login.LoginView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementazione dell'interfaccia {@link RegistrationView}
+ */
 public class RegistrationViewImpl implements RegistrationView {
 
     private View mRootView;

@@ -8,9 +8,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by marcociotti on 11/05/17.
+ * Classe che modella la posizione di un utente
  */
-
 public class Position implements Jsonable{
 
     private int idPosition;
@@ -35,6 +34,10 @@ public class Position implements Jsonable{
     }
 
 
+    /**
+     * Costruttore della classe Position
+     * @param jsonString Stringa che contiente la rappresentazione JSON dell'oggetto da istanziare
+     */
     public Position(String jsonString){
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
@@ -79,6 +82,10 @@ public class Position implements Jsonable{
         this.time = time;
     }
 
+    /**
+     * Metodo che produce il JSONObject che rappresenta l'oggetto
+     * @return JSONOBject che rappresenta l'oggetto
+     */
     @Override
     public JSONObject toJson() {
         JSONObject jsonObject = new JSONObject();

@@ -6,6 +6,9 @@ import com.univpm.cpp.emergencynotificationsmvc.models.user.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Classe che modella una sessione
+ */
 public class Session implements Jsonable {
 
     protected int id;
@@ -27,6 +30,10 @@ public class Session implements Jsonable {
         this.timeOut = timeOut;
     }
 
+    /**
+     * Costruttore della classe Session
+     * @param jsonString Stringa che contiente la rappresentazione JSON dell'oggetto da istanziare
+     */
     public Session(String jsonString){
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
@@ -73,6 +80,10 @@ public class Session implements Jsonable {
         this.timeOut = timeOut;
     }
 
+    /**
+     * Metodo che produce il JSONObject che rappresenta l'oggetto
+     * @return JSONOBject che rappresenta l'oggetto
+     */
     @Override
     public JSONObject toJson() {
 

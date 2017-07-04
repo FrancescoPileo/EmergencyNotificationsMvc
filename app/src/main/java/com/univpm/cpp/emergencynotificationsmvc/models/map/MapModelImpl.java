@@ -8,11 +8,13 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-
+/**
+ * Implementazione del modello delle mappe che fa riferimento al server REST
+ */
 public class MapModelImpl implements MapModel {
 
-    Broadcaster broadcaster;
-    HttpUtils httpUtils;
+    private Broadcaster broadcaster;    //Classe capace di inviare messaggi broadcast
+    private HttpUtils httpUtils;        //Classe che gestisce la connessione HTTP
 
     public MapModelImpl(Broadcaster broadcaster){
         this.broadcaster = broadcaster;
@@ -32,14 +34,6 @@ public class MapModelImpl implements MapModel {
         return map;
     }
 
-    //todo da fare sul server
-    @Override
-    public Map getMapByFloor(String building, String floor) {
-
-        Map map = null;
-        //map = DbUtils.getMapByFloor(building, floor);
-        return map;
-    }
 
     @Override
     public Map getMapByName (String mapName) {

@@ -10,6 +10,10 @@ import com.univpm.cpp.emergencynotificationsmvc.views.ViewMvc;
 
 import java.util.ArrayList;
 
+/**
+ * Intefaccia che rappresenta la schermata principale dell'applicazione che prmette la
+ * visualizzazione delle mappe
+ */
 public interface HomeView extends ViewMvc{
 
     interface MapSpnItemSelectedViewListener {

@@ -4,6 +4,9 @@ import android.support.v4.app.Fragment;
 
 import com.univpm.cpp.emergencynotificationsmvc.views.ViewMvc;
 
+/**
+ * Interfaccia che rappresenta L'UI delal schermata di registrazione
+ */
 public interface RegistrationView extends ViewMvc {
 
     interface RegisterBtnViewListener {

@@ -12,10 +12,13 @@ import com.univpm.cpp.emergencynotificationsmvc.models.map.MapModelLocalImpl;
 
 import java.util.ArrayList;
 
+/**
+ * Implementazione del modello dei nodi che fa riferimento al database interno
+ */
 public class NodeModelLocalImpl implements NodeModel {
 
-    Context context;
-    LocalSQLiteDbHelper mLocalSQLiteDbHelper = null;
+    Context context;        //contesto dell'applicazione
+    LocalSQLiteDbHelper mLocalSQLiteDbHelper = null;    //Classe che gestisce la connessione al database
 
     public NodeModelLocalImpl(Context context){
         this.context = context;
@@ -33,7 +36,7 @@ public class NodeModelLocalImpl implements NodeModel {
                         NodeTable.COLUMN_NAME_X, NodeTable.COLUMN_NAME_Y}
                 , NodeTable._ID + "=?",
                 new String[] { String.valueOf(idNode) }, null, null, null, null);
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() != 0) {
             cursor.moveToFirst();
             node = new Node();
             node.setIdNode(cursor.getInt(0));
@@ -55,7 +58,7 @@ public class NodeModelLocalImpl implements NodeModel {
         MapModel mapModel = new MapModelLocalImpl(context);
 
         Cursor cursor = db.rawQuery(selectQuery, null);
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() != 0) {
             if (cursor.moveToFirst()) {
                 nodes = new ArrayList<>();
                 do {
@@ -73,8 +76,4 @@ public class NodeModelLocalImpl implements NodeModel {
         return nodes;
     }
 
-    @Override
-    public ArrayList<Node> getNodeByMap(int idMap) {
-        return null;
-    }
 }

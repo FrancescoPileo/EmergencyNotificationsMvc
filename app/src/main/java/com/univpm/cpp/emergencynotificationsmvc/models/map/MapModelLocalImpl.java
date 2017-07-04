@@ -10,13 +10,15 @@ import com.univpm.cpp.emergencynotificationsmvc.models.local.LocalSQLiteDbHelper
 
 import java.util.ArrayList;
 
+/**
+ * Implementazione del modello delle mappe che fa riferimento al database interno
+ */
 public class MapModelLocalImpl implements MapModel {
 
-    LocalSQLiteDbHelper mLocalSQLiteDbHelper = null;
+    LocalSQLiteDbHelper mLocalSQLiteDbHelper = null; //Classe che gestisce la connessione al database
 
     public MapModelLocalImpl(Context context){
         mLocalSQLiteDbHelper = LocalSQLiteDbHelper.getInstance(context);
-        Log.w("LocalMapModel", "ok");
     }
 
     @Override
@@ -31,7 +33,7 @@ public class MapModelLocalImpl implements MapModel {
                 MapTable.COLUMN_NAME_YREF, MapTable.COLUMN_NAME_YREFPX}
                 , MapTable._ID + "=?",
                 new String[] { String.valueOf(idMap) }, null, null, null, null);
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() != 0) {
             cursor.moveToFirst();
             map = new Map();
             map.setIdMap(cursor.getInt(0));
@@ -60,7 +62,7 @@ public class MapModelLocalImpl implements MapModel {
                         MapTable.COLUMN_NAME_YREF, MapTable.COLUMN_NAME_YREFPX}
                 , MapTable.COLUMN_NAME_MAPNAME+ "=?",
                 new String[] { name }, null, null, null, null);
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() != 0) {
             cursor.moveToFirst();
             map = new Map();
             map.setIdMap(cursor.getInt(0));
@@ -78,10 +80,6 @@ public class MapModelLocalImpl implements MapModel {
         return map;
     }
 
-    @Override
-    public Map getMapByFloor(String building, String floor) {
-        return null;
-    }
 
     @Override
     public ArrayList<Map> getAllMaps() {
@@ -90,7 +88,7 @@ public class MapModelLocalImpl implements MapModel {
         SQLiteDatabase db = mLocalSQLiteDbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(selectQuery, null);
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() != 0) {
             if (cursor.moveToFirst()) {
                 maps = new ArrayList<>();
                 do {
@@ -119,7 +117,7 @@ public class MapModelLocalImpl implements MapModel {
         SQLiteDatabase db = mLocalSQLiteDbHelper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(selectQuery, null);
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() != 0) {
             if (cursor.moveToFirst()) {
                 names = new ArrayList<>();
                 do {
